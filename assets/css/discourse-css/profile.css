@@ -1,0 +1,17 @@
+.profile-tab { cursor: pointer; padding-bottom: 8px; border-bottom: 2px solid transparent; transition: all 0.2s ease; }
+.profile-tab:hover { color: #1A8B44 !important; }
+.profile-tab.active { color: #1A8B44 !important; border-bottom-color: #1A8B44; }
+.activity-card { transition: background 0.15s ease; }
+.activity-card:hover { background-color: #fafafa; }
+.vote-btn { transition: all 0.15s ease; cursor: pointer; }
+.vote-btn:hover { background-color: #f1f1f2 !important; }
+.tag-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.avatar-circle { overflow: hidden; }
+.avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.page-banner {
+    background-color: #0c3823;
+    border-radius: 0;
+}

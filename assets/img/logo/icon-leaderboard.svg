@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 151.88 168.48">
+  <!-- Generator: Adobe Illustrator 29.7.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 8)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #0c3329;
+      }
+
+      .st1 {
+        fill: #196f3d;
+      }
+    </style>
+    <symbol id="Leaderboard_Logomark" viewBox="0 0 282.87 313.78">
+      <g>
+        <path class="st1" d="M192.04,214.88v-127.45c0-4.46-3.61-8.07-8.07-8.07h-74.68c-4.46,0-8.07,3.61-8.07,8.07v218.28c0,4.46,3.61,8.07,8.07,8.07h165.51c4.46,0,8.07-3.61,8.07-8.07v-74.68c0-4.46-3.61-8.07-8.07-8.07h-74.68c-4.46,0-8.07-3.61-8.07-8.07Z"/>
+        <rect class="st0" y="151.15" width="90.4" height="162.63" rx="8.07" ry="8.07"/>
+        <circle class="st0" cx="146.7" cy="34.35" r="34.35"/>
+        <circle class="st0" cx="45.2" cy="106.22" r="34.35"/>
+        <circle class="st0" cx="237.79" cy="177.86" r="34.35"/>
+      </g>
+    </symbol>
+  </defs>
+  <use width="282.87" height="313.78" transform="scale(.54)" xlink:href="#Leaderboard_Logomark"/>
+</svg>
