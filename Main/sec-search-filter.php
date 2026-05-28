@@ -1,10 +1,3 @@
-<!-- Refactored: custom CSS → Bootstrap/Metronic utilities -->
-<!-- ============================================================
-     DISCOURSE — Search Bar + Tab Filters Section
-     File: Main/sec-search-filter.php
-     CSS:  assets/css/sec-search-filter.css
-     JS:   assets/js/sec-search-filter.js
-============================================================ -->
 <div class="mb-5" id="discourse-search-filter">
 
   <!-- Search + New Post Row -->
@@ -27,29 +20,29 @@
   
 
   <!-- Tab Filters + Topics Dropdown Row -->
-  <div class="d-flex align-items-center justify-content-between border-bottom border-2 border-gray-200 mb-5">
-    <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold mb-0" id="discoursePostTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active text-active-success border-active-success px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" id="tab-hot" data-bs-toggle="tab" data-bs-target="#posts-hot" type="button" role="tab" aria-controls="posts-hot" aria-selected="true">
-          <i class="bi bi-fire me-1"></i> HOT
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link text-active-success border-active-success px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" id="tab-new" data-bs-toggle="tab" data-bs-target="#posts-new" type="button" role="tab" aria-controls="posts-new" aria-selected="false">
-          <i class="bi bi-lightning-charge me-1"></i> NEW
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link text-active-success border-active-success px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" id="tab-top" data-bs-toggle="tab" data-bs-target="#posts-top" type="button" role="tab" aria-controls="posts-top" aria-selected="false">
-          <i class="bi bi-trophy me-1"></i> TOP
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link text-active-success border-active-success px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" id="tab-rising" data-bs-toggle="tab" data-bs-target="#posts-rising" type="button" role="tab" aria-controls="posts-rising" aria-selected="false">
-          <i class="bi bi-graph-up-arrow me-1"></i> RISING
-        </button>
-      </li>
-    </ul>
+<div class="d-flex align-items-center justify-content-between border-bottom border-2 border-gray-200 mb-5">
+  <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold mb-0" id="discoursePostTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" id="tab-hot" data-bs-toggle="tab" data-bs-target="#posts-hot" type="button" role="tab" aria-controls="posts-hot" aria-selected="true">
+        <i class="bi bi-fire me-1"></i> HOT
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" id="tab-new" data-bs-toggle="tab" data-bs-target="#posts-new" type="button" role="tab" aria-controls="posts-new" aria-selected="false">
+        <i class="bi bi-lightning-charge me-1"></i> NEW
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" id="tab-top" data-bs-toggle="tab" data-bs-target="#posts-top" type="button" role="tab" aria-controls="posts-top" aria-selected="false">
+        <i class="bi bi-trophy me-1"></i> TOP
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" id="tab-rising" data-bs-toggle="tab" data-bs-target="#posts-rising" type="button" role="tab" aria-controls="posts-rising" aria-selected="false">
+        <i class="bi bi-graph-up-arrow me-1"></i> RISING
+      </button>
+    </li>
+  </ul>
 
     <!-- All Topics Dropdown -->
     <div class="dropdown">

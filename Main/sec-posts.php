@@ -15,7 +15,7 @@
       <div class="d-flex">
 
         <!-- Vote Column -->
-        <div class="d-flex flex-column align-items-center gap-1 bg-light-success p-3" style="width:55px;flex-shrink:0;">
+        <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
           <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
             <i class="bi bi-hand-thumbs-up p-0"></i>
           </button>
@@ -32,7 +32,7 @@
             <!-- Row 1: Community badge + Report button -->
             <div class="col-12 mb-2">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">FEUTech</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">FEUTech</span>
                 <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                   <i class="bi bi-flag me-1"></i> Report
                 </button>
@@ -47,7 +47,7 @@
                   <a href="#other-profile" class="fs-6 fw-bold text-gray-800 text-hover-primary">Ravi Joshi</a>
                   <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i>1d ago</span>
                 </div>
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">TECHNOLOGY</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">TECHNOLOGY</span>
               </div>
             </div>
 
@@ -83,7 +83,7 @@
       <div class="d-flex">
 
         <!-- Vote Column -->
-        <div class="d-flex flex-column align-items-center gap-1 bg-light-success p-3" style="width:55px;flex-shrink:0;">
+        <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
           <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
             <i class="bi bi-hand-thumbs-up p-0"></i>
           </button>
@@ -100,7 +100,7 @@
             <!-- Row 1: Community badge + Report button -->
             <div class="col-12 mb-2">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">FEUTech</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">FEUTech</span>
                 <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                   <i class="bi bi-flag me-1"></i> Report
                 </button>
@@ -115,7 +115,7 @@
                   <a href="#other-profile" class="fs-6 fw-bold text-gray-800 text-hover-primary">John Doe</a>
                   <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i>1d ago</span>
                 </div>
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">TECHNOLOGY</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">TECHNOLOGY</span>
               </div>
             </div>
 
@@ -151,7 +151,7 @@
       <div class="d-flex">
 
         <!-- Vote Column -->
-        <div class="d-flex flex-column align-items-center gap-1 bg-light-success p-3" style="width:55px;flex-shrink:0;">
+        <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
           <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
             <i class="bi bi-hand-thumbs-up p-0"></i>
           </button>
@@ -168,7 +168,7 @@
             <!-- Row 1: Community badge + Report button -->
             <div class="col-12 mb-2">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">FEUTech</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">FEUTech</span>
                 <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                   <i class="bi bi-flag me-1"></i> Report
                 </button>
@@ -183,7 +183,7 @@
                   <a href="#other-profile" class="fs-6 fw-bold text-gray-800 text-hover-primary">Anonymous</a>
                   <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i>1d ago</span>
                 </div>
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">TECHNOLOGY</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">TECHNOLOGY</span>
               </div>
             </div>
 
@@ -219,7 +219,7 @@
       <div class="d-flex">
 
         <!-- Vote Column -->
-        <div class="d-flex flex-column align-items-center gap-1 bg-light-success p-3" style="width:55px;flex-shrink:0;">
+        <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
           <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
             <i class="bi bi-hand-thumbs-up p-0"></i>
           </button>
@@ -236,7 +236,7 @@
             <!-- Row 1: Community badge + Report button -->
             <div class="col-12 mb-2">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">FEUTech</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">FEUTech</span>
                 <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                   <i class="bi bi-flag me-1"></i> Report
                 </button>
@@ -251,7 +251,7 @@
                   <a href="#other-profile" class="fs-6 fw-bold text-gray-800 text-hover-primary">John Doe</a>
                   <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i>1d ago</span>
                 </div>
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">TECHNOLOGY</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">TECHNOLOGY</span>
               </div>
             </div>
 
@@ -287,7 +287,7 @@
       <div class="d-flex">
 
         <!-- Vote Column -->
-        <div class="d-flex flex-column align-items-center gap-1 bg-light-success p-3" style="width:55px;flex-shrink:0;">
+        <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
           <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
             <i class="bi bi-hand-thumbs-up p-0"></i>
           </button>
@@ -304,7 +304,7 @@
             <!-- Row 1: Community badge + Report button -->
             <div class="col-12 mb-2">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">FEULife</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">FEULife</span>
                 <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                   <i class="bi bi-flag me-1"></i> Report
                 </button>
@@ -319,7 +319,7 @@
                   <a href="#other-profile" class="fs-6 fw-bold text-gray-800 text-hover-primary">Marco Torres</a>
                   <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i>4h ago</span>
                 </div>
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">FEU</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">FEU</span>
               </div>
             </div>
 
@@ -383,7 +383,7 @@
       <div class="d-flex">
 
         <!-- Vote Column -->
-        <div class="d-flex flex-column align-items-center gap-1 bg-light-success p-3" style="width:55px;flex-shrink:0;">
+        <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
           <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
             <i class="bi bi-hand-thumbs-up p-0"></i>
           </button>
@@ -400,7 +400,7 @@
             <!-- Row 1: Community badge + Report button -->
             <div class="col-12 mb-2">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">FEUTech</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">FEUTech</span>
                 <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                   <i class="bi bi-flag me-1"></i> Report
                 </button>
@@ -415,7 +415,7 @@
                   <a href="#other-profile" class="fs-6 fw-bold text-gray-800 text-hover-primary">Catalina Smith</a>
                   <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i>1d ago</span>
                 </div>
-                <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">TECHNOLOGY</span>
+                <span class="badge rounded-pill px-5 py-2 fs-8" style="background-color:#dce8df;color:#3a5c45;">TECHNOLOGY</span>
               </div>
             </div>
 

@@ -54,3 +54,24 @@
   color: #fff !important;
   border-color: #0d5c3a !important;
 }
+/* ── Sidebar green overrides ─────────────────────────── */
+
+.discourse-stat-item .bg-light-success,
+.discourse-community-item .bg-light-success {
+  background-color: #e8ede9 !important;
+}
+
+.discourse-stat-item .bg-light-success i,
+.discourse-community-item .bg-light-success i {
+  color: #3a5c45 !important;
+}
+
+.dc-see-all-btn,
+.dc-topic-tag {
+  background-color: #dce8df !important;
+  color: #3a5c45 !important;
+}
+
+.dc-topic-tag i {
+  color: #3a5c45 !important;
+}

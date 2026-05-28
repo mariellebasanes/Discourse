@@ -48,7 +48,7 @@
 .dc-tb-switch {
   margin-left: auto;
   font-size: 12px;
-  color: #2D6A4F;
+  color: #3a5c45;
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
@@ -87,8 +87,8 @@
 }
 
 .dc-tag-wrap:focus-within {
-  border-color: #2D6A4F;
-  box-shadow: 0 0 0 3px rgba(45, 106, 79, .1);
+  border-color: #3a5c45;
+  box-shadow: 0 0 0 3px rgba(58, 92, 69, .1);
   background: #fff;
 }
 
@@ -175,12 +175,12 @@
 }
 
 .dc-table-preview thead th {
-  background: #f0faf5;
+  background: #e8ede9;
 }
 
 .dc-table-preview td[contenteditable]:focus,
 .dc-table-preview th[contenteditable]:focus {
-  background: #f0faf5;
+  background: #e8ede9;
   outline: none;
 }
 
@@ -206,9 +206,9 @@
 
 /* ── Poll builder (create-post only) ─────────────────────── */
 .dc-poll-builder {
-  border: 1.5px solid #c8e6c9;
+  border: 1.5px solid #c2d4c8;
   border-radius: 10px;
-  background: #f0faf5;
+  background: #e8ede9;
   padding: 16px;
   margin: 10px 0;
 }
@@ -216,7 +216,7 @@
 .dc-poll-builder-title {
   font-size: 12px;
   font-weight: 700;
-  color: #2D6A4F;
+  color: #3a5c45;
   text-transform: uppercase;
   letter-spacing: .06em;
   margin-bottom: 12px;
@@ -244,7 +244,7 @@
 }
 
 .dc-poll-opt-row input:focus {
-  border-color: #2D6A4F;
+  border-color: #3a5c45;
 }
 
 .dc-poll-opt-del {
@@ -264,12 +264,12 @@
 
 .dc-poll-add {
   background: none;
-  border: 1.5px dashed #a5d6a7;
+  border: 1.5px dashed #c2d4c8;
   border-radius: 7px;
   padding: 6px 14px;
   font-size: 12px;
   font-weight: 600;
-  color: #2D6A4F;
+  color: #3a5c45;
   cursor: pointer;
   margin-top: 4px;
   display: inline-flex;
@@ -278,7 +278,7 @@
 }
 
 .dc-poll-add:hover {
-  background: #e8f5e9;
+  background: #dce8df;
 }
 
 /* ── Toggle switch (edit-poll) ───────────────────────────── */
@@ -318,7 +318,7 @@
 }
 
 .dc-toggle-wrap input:checked + .dc-toggle-slider {
-  background: #2D6A4F;
+  background: #3a5c45;
 }
 
 .dc-toggle-wrap input:checked + .dc-toggle-slider:before {
@@ -364,7 +364,7 @@
   border-radius: 8px;
   overflow: hidden;
   margin: 0;
-  display: none; /* hidden until image is loaded */
+  display: none;
 }
 
 .dc-image-wrapper.has-image,
@@ -416,8 +416,8 @@
 }
 
 .dc-image-replace-btn:hover {
-  background: #f0faf5;
-  color: #2D6A4F;
+  background: #e8ede9;
+  color: #3a5c45;
 }
 
 .dc-image-remove-btn {
@@ -444,6 +444,35 @@
 }
 
 .dc-no-image-placeholder:hover {
-  border-color: #2D6A4F;
-  background: #f0faf5;
+  border-color: #3a5c45;
+  background: #e8ede9;
+}
+
+/* ── Save button override ────────────────────────────────── */
+.btn-success {
+  background-color: #3a5c45 !important;
+  border-color: #3a5c45 !important;
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+  background-color: #2e4a38 !important;
+  border-color: #2e4a38 !important;
+}
+
+/* Add to dc-editor.css */
+.dc-toolbar .btn-light-success {
+  background-color: #e8ede9 !important;
+  color: #3a5c45 !important;
+}
+
+.dc-toolbar .btn-light-success:hover {
+  background-color: #dce8df !important;
+  color: #3a5c45 !important;
+}
+
+/* Add to dc-editor.css */
+.bg-light-success {
+  background-color: #e8ede9 !important;
 }

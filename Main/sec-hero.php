@@ -1,10 +1,3 @@
-<!-- Refactored: custom CSS → Bootstrap/Metronic utilities -->
-<!-- ============================================================
-     DISCOURSE — Hero Section
-     File: Main/sec-hero.php
-     CSS:  assets/css/sec-hero.css
-     JS:   assets/js/sec-hero.js
-============================================================ -->
 <section class="card border-0 position-relative rounded-4 shadow mt-10 mb-5" style="background-color: #0b3220;" id="discourse-hero">
 
   <!-- Radial glow overlay — CSS only (no Bootstrap equivalent for radial-gradient) -->

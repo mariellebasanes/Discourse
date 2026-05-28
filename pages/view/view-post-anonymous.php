@@ -14,6 +14,19 @@ $META_DESC  = "An anonymous post from FEU Tech Discourse community.";
   <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet" type="text/css" />
     <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet" type="text/css" />
 
+  <style>
+    /* ── Muted dark-green overrides (supervisor requirement) ─────────────── */
+    .bg-light-success                          { background-color: #e8ede9 !important; }
+    .btn-light-success                         { background-color: #e8ede9 !important; color: #3a5c45 !important; }
+    .btn-light-success:hover,
+    .btn-light-success:focus                   { background-color: #dce8df !important; color: #3a5c45 !important; }
+    .badge-light-success                       { background-color: #dce8df; color: #3a5c45; }
+    .border-success                            { border-color: #c2d4c8 !important; }
+    .btn-success                               { background-color: #3a5c45 !important; border-color: #3a5c45 !important; }
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active                        { background-color: #2e4a38 !important; border-color: #2e4a38 !important; }
+  </style>
 </head>
 
 <body id="kt_app_body"
@@ -36,7 +49,7 @@ $META_DESC  = "An anonymous post from FEU Tech Discourse community.";
             <main>
 
               <!-- HERO -->
-              <div style="background: linear-gradient(135deg, #0b3220 0%, #1a5c38 60%, #2D6A4F 100%); padding: 28px 0 22px;">
+              <div style="background: linear-gradient(135deg, #0b3220 0%, #1a5c38 60%, #3a5c45 100%); padding: 28px 0 22px;">
                 <div class="app-container container-xxl position-relative">
                   <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
                     <div>
@@ -76,13 +89,13 @@ $META_DESC  = "An anonymous post from FEU Tech Discourse community.";
                             <i class="bi bi-shield-check-fill text-success fs-5 mt-1 flex-shrink-0"></i>
                             <span class="fs-7 text-gray-700">
                               <strong>This post was shared anonymously.</strong> The author's identity is completely hidden from all readers, including moderators.
-                              <a href="#" class="fw-semibold" style="color:#2D6A4F;">Respect their privacy.</a>
+                              <a href="#" class="fw-semibold" style="color:#3a5c45;">Respect their privacy.</a>
                             </span>
                           </div>
 
                           <!-- Community badge + Report -->
                           <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#2D6A4F;">FEUTech</span>
+                            <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8" style="color:#3a5c45;">FEUTech</span>
                             <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                               <i class="bi bi-flag me-1"></i> Report
                             </button>
@@ -264,7 +277,7 @@ $META_DESC  = "An anonymous post from FEU Tech Discourse community.";
                       <div class="card border-0 shadow-sm mb-5">
                         <div class="card-body p-5 text-center">
                           <div class="d-flex align-items-center justify-content-center bg-light-success rounded-circle mx-auto mb-4" style="width:56px;height:56px;">
-                            <i class="bi bi-shield-lock-fill" style="color:#2D6A4F;"></i>
+                            <i class="bi bi-shield-lock-fill" style="color:#3a5c45;"></i>
                           </div>
                           <h6 class="fs-5 fw-bold text-gray-800 mb-2">Identity Protected</h6>
                           <p class="fs-7 text-gray-600 mb-4">
@@ -272,13 +285,13 @@ $META_DESC  = "An anonymous post from FEU Tech Discourse community.";
                           </p>
                           <ul class="list-unstyled text-start d-flex flex-column gap-2">
                             <li class="d-flex align-items-center gap-2 fs-7 text-gray-700">
-                              <i class="bi bi-check-circle-fill fs-7" style="color:#2D6A4F;"></i> Identity hidden from all users
+                              <i class="bi bi-check-circle-fill fs-7" style="color:#3a5c45;"></i> Identity hidden from all users
                             </li>
                             <li class="d-flex align-items-center gap-2 fs-7 text-gray-700">
-                              <i class="bi bi-check-circle-fill fs-7" style="color:#2D6A4F;"></i> Hidden from moderators
+                              <i class="bi bi-check-circle-fill fs-7" style="color:#3a5c45;"></i> Hidden from moderators
                             </li>
                             <li class="d-flex align-items-center gap-2 fs-7 text-gray-700">
-                              <i class="bi bi-check-circle-fill fs-7" style="color:#2D6A4F;"></i> No profile link to author shown
+                              <i class="bi bi-check-circle-fill fs-7" style="color:#3a5c45;"></i> No profile link to author shown
                             </li>
                           </ul>
                         </div>
@@ -291,14 +304,14 @@ $META_DESC  = "An anonymous post from FEU Tech Discourse community.";
                         </div>
                         <div class="card-body p-0">
                           <a href="#" class="d-flex align-items-start gap-3 p-4 border-bottom text-decoration-none text-hover-primary">
-                            <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0" style="color:#2D6A4F;">#76</span>
+                            <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0" style="color:#3a5c45;">#76</span>
                             <div>
                               <div class="fs-7 fw-semibold text-gray-800 mb-1">CS curriculum changes — honest discussion</div>
                               <div class="text-muted fs-8">Ideas · 2d ago</div>
                             </div>
                           </a>
                           <a href="#" class="d-flex align-items-start gap-3 p-4 text-decoration-none text-hover-primary">
-                            <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0" style="color:#2D6A4F;">#54</span>
+                            <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0" style="color:#3a5c45;">#54</span>
                             <div>
                               <div class="fs-7 fw-semibold text-gray-800 mb-1">Is "third culture" identity the dominant student experience?</div>
                               <div class="text-muted fs-8">FEU · 1w ago</div>
@@ -310,12 +323,12 @@ $META_DESC  = "An anonymous post from FEU Tech Discourse community.";
                       <!-- Community Rules -->
                       <div class="card border border-success bg-light-success">
                         <div class="card-body p-5">
-                          <p class="fs-6 fw-bold" style="color:#2D6A4F;">Community Rules</p>
+                          <p class="fs-6 fw-bold" style="color:#3a5c45;">Community Rules</p>
                           <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
-                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0">✓</span>Be respectful and constructive</li>
-                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0">✓</span>No personal attacks or harassment</li>
-                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0">✓</span>Keep posts relevant to FEU Tech</li>
-                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0">✓</span>Verify information before sharing</li>
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span>Be respectful and constructive</li>
+                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span>No personal attacks or harassment</li>
+                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span>Keep posts relevant to FEU Tech</li>
+                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span>Verify information before sharing</li>
                           </ul>
                         </div>
                       </div>

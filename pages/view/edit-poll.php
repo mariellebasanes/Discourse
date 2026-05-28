@@ -67,8 +67,8 @@ $META_DESC  = "Edit your existing poll.";
 
                         <div class="card-header border-0 bg-light py-4">
                           <div class="d-flex align-items-center gap-3 w-100">
-                            <div class="bg-light-success rounded-2 p-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
-                              <i class="bi bi-bar-chart fs-6"style="color:#2D6A4F;"></i>
+                            <div class="bg-light-success rounded-2 p-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background-color:#e8ede9 !important;">
+                              <i class="bi bi-bar-chart fs-6" style="color:#3a5c45;"></i>
                             </div>
                             <h5 class="card-title mb-0 fw-bold fs-6">Edit Poll</h5>
                           </div>
@@ -88,35 +88,35 @@ $META_DESC  = "Edit your existing poll.";
                             <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">Context</label>
 
                             <div class="dc-toolbar" id="poll-edit-toolbar">
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Bold" onclick="fmt('bold')"><b>B</b></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" title="Italic" onclick="fmt('italic')">
-                                <i style="font-style:italic; color: #2D6A4F !important;">I</i>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Bold" onclick="fmt('bold')"><b>B</b></button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;" title="Italic" onclick="fmt('italic')">
+                                <i style="font-style:italic;color:#3a5c45;">I</i>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Strikethrough" onclick="fmt('strikeThrough')"><s>S</s></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Superscript" onclick="fmt('superscript')">x<sup>2</sup></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Paragraph" onclick="fmt('formatBlock','p')">¶T</button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Strikethrough" onclick="fmt('strikeThrough')"><s>S</s></button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Superscript" onclick="fmt('superscript')">x<sup>2</sup></button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Paragraph" onclick="fmt('formatBlock','p')">¶T</button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success"style="color:#2D6A4F;" title="Insert Link" onclick="openModal('modal-link')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Link" onclick="openModal('modal-link')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Insert Image" onclick="document.getElementById('pollReplaceImageInput').click()">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Image" onclick="document.getElementById('pollReplaceImageInput').click()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <rect x="3" y="3" width="18" height="18" rx="2" />
                                   <circle cx="8.5" cy="8.5" r="1.5" />
                                   <polyline points="21 15 16 10 5 21" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Embed Video" onclick="openModal('modal-video')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Embed Video" onclick="openModal('modal-video')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <circle cx="12" cy="12" r="10" />
                                   <polygon points="10 8 16 12 10 16 10 8" />
                                 </svg>
                               </button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Ordered List" onclick="insertList('ol')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Ordered List" onclick="insertList('ol')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <line x1="9" y1="6" x2="20" y2="6" />
                                   <line x1="9" y1="12" x2="20" y2="12" />
@@ -126,7 +126,7 @@ $META_DESC  = "Edit your existing poll.";
                                   <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Unordered List" onclick="insertList('ul')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Unordered List" onclick="insertList('ul')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <line x1="9" y1="6" x2="20" y2="6" />
                                   <line x1="9" y1="12" x2="20" y2="12" />
@@ -137,32 +137,32 @@ $META_DESC  = "Edit your existing poll.";
                                 </svg>
                               </button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Inline Code" onclick="fmt('insertHTML','<code style=&quot;background:#f0faf5;border-radius:4px;padding:1px 5px;font-family:monospace;font-size:12px;color:#1a5c38;&quot;>code</code>')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Inline Code" onclick="fmt('insertHTML','<code style=&quot;background:#f0faf5;border-radius:4px;padding:1px 5px;font-family:monospace;font-size:12px;color:#1a5c38;&quot;>code</code>')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <polyline points="16 18 22 12 16 6" />
                                   <polyline points="8 6 2 12 8 18" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Blockquote" onclick="fmt('formatBlock','blockquote')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Blockquote" onclick="fmt('formatBlock','blockquote')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                   <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Code Block" onclick="insertCodeBlock()">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Code Block" onclick="insertCodeBlock()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <polyline points="16 18 22 12 16 6" />
                                   <polyline points="8 6 2 12 8 18" />
                                   <line x1="12" y1="3" x2="12" y2="21" stroke-width="1.5" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Spoiler" onclick="insertSpoiler()">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Spoiler" onclick="insertSpoiler()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
                                   <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
                                   <line x1="1" y1="1" x2="23" y2="23" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Insert Table" onclick="insertTable()">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Table" onclick="insertTable()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <rect x="3" y="3" width="18" height="18" rx="2" />
                                   <line x1="3" y1="9" x2="21" y2="9" />
@@ -312,8 +312,8 @@ $META_DESC  = "Edit your existing poll.";
 
                             <div id="new-options-wrap"></div>
 
-                            <button class="btn btn-light-success w-100 fw-bold border border-dashed border-success mt-2" onclick="addPollOption()" type="button"style="color:#2D6A4F;">
-                              <i class="ki-duotone ki-plus fs-5 me-1"style="color:#2D6A4F;"><span class="path1"></span><span class="path2"></span></i>
+                            <button class="btn btn-light-success w-100 fw-bold border border-dashed mt-2" onclick="addPollOption()" type="button" style="background-color:#e8ede9;color:#3a5c45;border-color:#c2d4c8 !important;">
+                              <i class="ki-duotone ki-plus fs-5 me-1" style="color:#3a5c45;"><span class="path1"></span><span class="path2"></span></i>
                               Add another option
                             </button>
 
@@ -361,7 +361,7 @@ $META_DESC  = "Edit your existing poll.";
                               </h6>
 
                               <div class="d-flex align-items-center gap-3 py-2">
-                                <span class="rounded-circle bg-success flex-shrink-0" style="width: 8px; height: 8px; display: inline-block;"></span>
+                                <span class="rounded-circle flex-shrink-0" style="width:8px;height:8px;display:inline-block;background-color:#3a5c45;"></span>
                                 <div>
                                   <span class="fw-bold text-gray-900 fs-7">New</span>
                                   <span class="text-muted fs-8"> — current version being edited</span>
@@ -369,7 +369,7 @@ $META_DESC  = "Edit your existing poll.";
                               </div>
 
                               <div class="d-flex align-items-center gap-3 py-2">
-                                <span class="rounded-circle bg-gray-400 flex-shrink-0" style="width: 8px; height: 8px;"></span>
+                                <span class="rounded-circle bg-gray-400 flex-shrink-0" style="width:8px;height:8px;"></span>
                                 <div>
                                   <span class="fw-bold text-gray-600 fs-7">Original</span>
                                   <span class="text-muted fs-8"> — published version</span>
@@ -382,12 +382,13 @@ $META_DESC  = "Edit your existing poll.";
                         </div>
                       </div>
                     </div>
+
                     <div class="col-lg-4">
 
                       <div class="card border-0 shadow-sm mb-5">
                         <div class="card-body p-5">
                           <p class="fs-6 text-gray-600 mb-5">Your edits will be visible to everyone in the community.</p>
-                          <button class="btn btn-success w-100 fw-bold" onclick="savePoll()">
+                          <button class="btn w-100 fw-bold" style="background-color:#1a4731;color:#fff;" onclick="savePoll()">
                             <i class="bi bi-check-lg me-1"></i> Save Changes
                           </button>
                           <button class="btn btn-light w-100 fw-bold mt-3" onclick="history.back()">Cancel</button>
@@ -431,31 +432,32 @@ $META_DESC  = "Edit your existing poll.";
                       </div>
 
                       <div class="card border-0 shadow-sm mb-5">
-  <div class="card-header border-0 bg-light py-4 ps-7">
-    <div class="d-flex align-items-center gap-3 w-100">
-      <div class="bg-light-success rounded-2 p-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
-        <i class="bi bi-info-circle fs-6"style="color:#2D6A4F;"></i>
-      </div>
-      <h5 class="card-title mb-0 fw-bold fs-6">Edit Guidelines</h5>
-    </div>
-  </div>
-  <div class="card-body p-5">
-    <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
-      <li class="d-flex align-items-start gap-2 fs-7 text-gray-600"><span class="fw-bold flex-shrink-0" style="color:#2D6A4F;">✓</span><span>Keep your <strong>title</strong> clear and informative for better discoverability</span></li>
-      <li class="d-flex align-items-start gap-2 fs-7 text-gray-600"><span class="fw-bold flex-shrink-0" style="color:#2D6A4F;">✓</span><span>Substantial edits may be <strong>flagged</strong> to show the post was modified</span></li>
-      <li class="d-flex align-items-start gap-2 fs-7 text-gray-600"><span class="fw-bold flex-shrink-0" style="color:#2D6A4F;">✓</span><span>You can <strong>delete</strong> a post from the danger zone if needed</span></li>
-      <li class="d-flex align-items-start gap-2 fs-7 text-gray-600"><span class="fw-bold flex-shrink-0" style="color:#2D6A4F;">✓</span><span>For polls, only option labels can be changed; votes already cast remain valid</span></li>
-    </ul>
-  </div>
-</div>
-                      <div class="card border border-success bg-light-success">
+                        <div class="card-header border-0 bg-light py-4 ps-7">
+                          <div class="d-flex align-items-center gap-3 w-100">
+                            <div class="bg-light-success rounded-2 p-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background-color:#e8ede9 !important;">
+                              <i class="bi bi-info-circle fs-6" style="color:#3a5c45;"></i>
+                            </div>
+                            <h5 class="card-title mb-0 fw-bold fs-6">Edit Guidelines</h5>
+                          </div>
+                        </div>
                         <div class="card-body p-5">
-                          <p class="fs-6 fw-bold mb-3"style="color:#2D6A4F;">Community Rules</p>
                           <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
-                            <li class="d-flex align-items-start gap-2 fs-7"style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0" style="color:#2D6A4F;">✓</span><span>Be respectful and constructive</span></li>
-                            <li class="d-flex align-items-start gap-2 fs-7"style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0" style="color:#2D6A4F;">✓</span><span>No personal attacks or harassment</span></li>
-                            <li class="d-flex align-items-start gap-2 fs-7"style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0" style="color:#2D6A4F;">✓</span><span>Keep posts relevant to FEU Tech</span></li>
-                            <li class="d-flex align-items-start gap-2 fs-7"style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0" style="color:#2D6A4F;">✓</span><span>Verify information before sharing</span></li>
+                            <li class="d-flex align-items-start gap-2 fs-7 text-gray-600"><span class="fw-bold flex-shrink-0" style="color:#3a5c45;">✓</span><span>Keep your <strong>title</strong> clear and informative for better discoverability</span></li>
+                            <li class="d-flex align-items-start gap-2 fs-7 text-gray-600"><span class="fw-bold flex-shrink-0" style="color:#3a5c45;">✓</span><span>Substantial edits may be <strong>flagged</strong> to show the post was modified</span></li>
+                            <li class="d-flex align-items-start gap-2 fs-7 text-gray-600"><span class="fw-bold flex-shrink-0" style="color:#3a5c45;">✓</span><span>You can <strong>delete</strong> a post from the danger zone if needed</span></li>
+                            <li class="d-flex align-items-start gap-2 fs-7 text-gray-600"><span class="fw-bold flex-shrink-0" style="color:#3a5c45;">✓</span><span>For polls, only option labels can be changed; votes already cast remain valid</span></li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div class="card border mb-5" style="background-color:#e8ede9;border-color:#c2d4c8 !important;">
+                        <div class="card-body p-5">
+                          <p class="fs-6 fw-bold mb-3" style="color:#3a5c45;">Community Rules</p>
+                          <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span><span>Be respectful and constructive</span></li>
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span><span>No personal attacks or harassment</span></li>
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span><span>Keep posts relevant to FEU Tech</span></li>
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span><span>Verify information before sharing</span></li>
                           </ul>
                         </div>
                       </div>
@@ -650,7 +652,7 @@ $META_DESC  = "Edit your existing poll.";
       const txt = document.getElementById('link-text').value || document.getElementById('link-url').value;
       const url = document.getElementById('link-url').value;
       if (!url) return;
-      insertAtCursor(`<a href="${url}" target="_blank" style="color:#2D6A4F;font-weight:600;">${txt}</a>`);
+      insertAtCursor(`<a href="${url}" target="_blank" style="color:#3a5c45;font-weight:600;">${txt}</a>`);
       closeModal('modal-link');
       document.getElementById('link-text').value = '';
       document.getElementById('link-url').value = '';

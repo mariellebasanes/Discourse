@@ -63,20 +63,20 @@ $META_DESC = "Share something with the Paraverse community.";
 
                         <!-- Card Header -->
                         <div class="card-header border-0 bg-light d-flex align-items-center gap-3 py-4">
-                          <div class="bg-light-success rounded-2 p-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
-                            <i class="bi bi-pencil-square fs-6" style="color:#2D6A4F;"></i>
+                          <div class="bg-light-success rounded-2 p-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;background-color:#e8ede9 !important;">
+                            <i class="bi bi-pencil-square fs-6" style="color:#3a5c45;"></i>
                           </div>
                           <h5 class="card-title mb-0 fw-bold fs-6">Post Content</h5>
                           <div class="ms-auto">
                             <!-- Posting as dropdown -->
                             <div class="dropdown">
-                              <div class="d-inline-flex align-items-center gap-2 bg-light-success border border-success rounded-pill px-3 py-2 dropdown-toggle"
-                                id="identityDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                              <div class="d-inline-flex align-items-center gap-2 border rounded-pill px-3 py-2 dropdown-toggle"
+                                id="identityDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;background-color:#e8ede9;border-color:#c2d4c8 !important;">
                                 <img id="display_identity_avatar"
                                   src="/Discourse/assets/images/avatars/300-1.jpg" alt="You"
                                   class="rounded-circle" style="width:22px;height:22px;object-fit:cover;"
                                   onerror="this.src='https://ui-avatars.com/api/?name=You&background=2D6A4F&color=fff&size=32'">
-                                <span id="display_identity_text" class="fs-7 fw-bold" style="color:#2D6A4F;">Posting as yourself</span>
+                                <span id="display_identity_text" class="fs-7 fw-bold" style="color:#3a5c45;">Posting as yourself</span>
                               </div>
                               <ul class="dropdown-menu dropdown-menu-end menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3"
                                 aria-labelledby="identityDropdown">
@@ -167,34 +167,35 @@ $META_DESC = "Share something with the Paraverse community.";
 
                             <!-- Toolbar -->
                             <div class="dc-toolbar" id="dc-toolbar">
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Bold" onclick="fmt('bold')"><b>B</b></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" title="Italic" onclick="fmt('italic')">
-                                <i style="font-style:italic; color: #2D6A4F !important;">I</i>
-                              </button> <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Strikethrough" onclick="fmt('strikeThrough')"><s>S</s></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Superscript" onclick="fmt('superscript')">x<sup>2</sup></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Paragraph" onclick="fmt('formatBlock','p')">¶T</button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Bold" onclick="fmt('bold')"><b>B</b></button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;" title="Italic" onclick="fmt('italic')">
+                                <i style="font-style:italic;color:#3a5c45;">I</i>
+                              </button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Strikethrough" onclick="fmt('strikeThrough')"><s>S</s></button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Superscript" onclick="fmt('superscript')">x<sup>2</sup></button>
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Paragraph" onclick="fmt('formatBlock','p')">¶T</button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Insert Link" onclick="openModal('modal-link')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Link" onclick="openModal('modal-link')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Insert Image" onclick="openModal('modal-image')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Image" onclick="openModal('modal-image')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <rect x="3" y="3" width="18" height="18" rx="2" />
                                   <circle cx="8.5" cy="8.5" r="1.5" />
                                   <polyline points="21 15 16 10 5 21" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Embed Video" onclick="openModal('modal-video')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Embed Video" onclick="openModal('modal-video')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <circle cx="12" cy="12" r="10" />
                                   <polygon points="10 8 16 12 10 16 10 8" />
                                 </svg>
                               </button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Ordered List" onclick="insertList('ol')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Ordered List" onclick="insertList('ol')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <line x1="9" y1="6" x2="20" y2="6" />
                                   <line x1="9" y1="12" x2="20" y2="12" />
@@ -204,7 +205,7 @@ $META_DESC = "Share something with the Paraverse community.";
                                   <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Unordered List" onclick="insertList('ul')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Unordered List" onclick="insertList('ul')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <line x1="9" y1="6" x2="20" y2="6" />
                                   <line x1="9" y1="12" x2="20" y2="12" />
@@ -215,33 +216,33 @@ $META_DESC = "Share something with the Paraverse community.";
                                 </svg>
                               </button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Inline Code"
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Inline Code"
                                 onclick="fmt('insertHTML','<code style=&quot;background:#f0faf5;border-radius:4px;padding:1px 5px;font-family:monospace;font-size:12px;color:#1a5c38;&quot;>code</code>')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <polyline points="16 18 22 12 16 6" />
                                   <polyline points="8 6 2 12 8 18" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Blockquote" onclick="fmt('formatBlock','blockquote')">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Blockquote" onclick="fmt('formatBlock','blockquote')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                   <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Code Block" onclick="insertCodeBlock()">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Code Block" onclick="insertCodeBlock()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <polyline points="16 18 22 12 16 6" />
                                   <polyline points="8 6 2 12 8 18" />
                                   <line x1="12" y1="3" x2="12" y2="21" stroke-width="1.5" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Spoiler" onclick="insertSpoiler()">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Spoiler" onclick="insertSpoiler()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
                                   <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
                                   <line x1="1" y1="1" x2="23" y2="23" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="color:#2D6A4F;" title="Insert Table" onclick="insertTable()">
+                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Table" onclick="insertTable()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <rect x="3" y="3" width="18" height="18" rx="2" />
                                   <line x1="3" y1="9" x2="21" y2="9" />
@@ -266,7 +267,7 @@ $META_DESC = "Share something with the Paraverse community.";
                                 </svg>
                                 Link
                               </button>
-                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1" style="color:#2D6A4F;" onclick="openModal('modal-image')">
+                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1" onclick="openModal('modal-image')">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <rect x="3" y="3" width="18" height="18" rx="2" />
                                   <circle cx="8.5" cy="8.5" r="1.5" />
@@ -341,7 +342,7 @@ $META_DESC = "Share something with the Paraverse community.";
                         <div class="card-body p-5">
                           <p class="fs-5 fw-bold text-gray-800 mb-2">Publish</p>
                           <p class="fs-6 text-muted mb-5">Ready to share? Your post will be visible to the entire Paraverse community.</p>
-                          <button class="btn btn-success w-100 fw-bold" onclick="submitPost()">
+                          <button class="btn w-100 fw-bold" style="background-color:#1a4731;color:#fff;" onclick="submitPost()">
                             <i class="bi bi-send me-1"></i> Publish Post
                           </button>
                           <button class="btn btn-light w-100 fw-bold mt-3" onclick="discardPost()">Discard</button>
@@ -374,14 +375,14 @@ $META_DESC = "Share something with the Paraverse community.";
                       </div>
 
                       <!-- Community Rules -->
-                      <div class="card border border-success bg-light-success">
+                      <div class="card border bg-light-success" style="border-color:#c2d4c8 !important;background-color:#e8ede9 !important;">
                         <div class="card-body p-5">
-                          <p class="fs-6 fw-bold mb-3" style="color:#2D6A4F;">Community Rules</p>
+                          <p class="fs-6 fw-bold mb-3" style="color:#3a5c45;">Community Rules</p>
                           <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
-                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0">✓</span>Be respectful and constructive</li>
-                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0">✓</span>No personal attacks or harassment</li>
-                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0">✓</span>Keep posts relevant to FEU Tech</li>
-                            <li class="d-flex align-items-start gap-2 fs-7 " style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0">✓</span>Verify information before sharing</li>
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span>Be respectful and constructive</li>
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span>No personal attacks or harassment</li>
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span>Keep posts relevant to FEU Tech</li>
+                            <li class="d-flex align-items-start gap-2 fs-7" style="color:#3a5c45;"><span class="fw-bold flex-shrink-0">✓</span>Verify information before sharing</li>
                           </ul>
                         </div>
                       </div>
@@ -507,7 +508,8 @@ $META_DESC = "Share something with the Paraverse community.";
       tagWrap.querySelectorAll('.badge').forEach(t => t.remove());
       tags.forEach((tag, i) => {
         const t = document.createElement('span');
-        t.className = 'badge badge-light-success rounded-pill px-3 py-2 fs-8 d-inline-flex align-items-center gap-1';
+        t.className = 'badge rounded-pill px-3 py-2 fs-8 d-inline-flex align-items-center gap-1';
+        t.style.cssText = 'background-color:#dce8df;color:#3a5c45;';
         t.innerHTML = tag + '<button type="button" class="btn-close btn-close-sm ms-1" style="font-size:9px;"></button>';
         t.querySelector('.btn-close').onclick = () => {
           tags.splice(i, 1);
@@ -653,7 +655,7 @@ $META_DESC = "Share something with the Paraverse community.";
       const txt = document.getElementById('link-text').value || document.getElementById('link-url').value;
       const url = document.getElementById('link-url').value;
       if (!url) return;
-      insertAtCursor(`<a href="${url}" target="_blank" style="color:#2D6A4F;font-weight:600;">${txt}</a>`);
+      insertAtCursor(`<a href="${url}" target="_blank" style="color:#3a5c45;font-weight:600;">${txt}</a>`);
       closeModal('modal-link');
       document.getElementById('link-text').value = '';
       document.getElementById('link-url').value = '';

@@ -14,6 +14,19 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
     <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet" type="text/css" />
     <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet" type="text/css" />
 
+  <style>
+    /* ── Muted dark-green overrides (supervisor requirement) ─────────────── */
+    .bg-light-success                          { background-color: #e8ede9 !important; }
+    .btn-light-success                         { background-color: #e8ede9 !important; color: #3a5c45 !important; }
+    .btn-light-success:hover,
+    .btn-light-success:focus                   { background-color: #dce8df !important; color: #3a5c45 !important; }
+    .badge-light-success                       { background-color: #dce8df; color: #3a5c45; }
+    .border-success                            { border-color: #c2d4c8 !important; }
+    .btn-success                               { background-color: #3a5c45 !important; border-color: #3a5c45 !important; }
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active                        { background-color: #2e4a38 !important; border-color: #2e4a38 !important; }
+  </style>
 </head>
 
 <body id="kt_app_body"
@@ -37,7 +50,7 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                         <main>
 
                             <!-- HERO -->
-                            <div style="background: linear-gradient(135deg, #0b3220 0%, #1a5c38 60%, #2D6A4F 100%); padding: 28px 0 22px;">
+                            <div style="background: linear-gradient(135deg, #0b3220 0%, #1a5c38 60%, #3a5c45 100%); padding: 28px 0 22px;">
                                 <div class="app-container container-xxl position-relative">
                                     <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
                                         <div>
@@ -72,7 +85,7 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                                                 <div class="card-body pb-0 pt-5 px-5">
                                                     <!-- Community badge + Report -->
                                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8"style="color:#2D6A4F;">LoremIpsum</span>
+                                                        <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8"style="color:#3a5c45;">LoremIpsum</span>
                                                         <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                                                             <i class="bi bi-flag me-1"></i> Report
                                                         </button>
@@ -85,7 +98,7 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                                                             <a href="#" class="fs-6 fw-bold text-gray-800 text-hover-primary">John Doe</a>
                                                             <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i>3h ago</span>
                                                         </div>
-                                                        <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8"style="color:#2D6A4F;">CONSECTETUR</span>
+                                                        <span class="badge badge-light-success rounded-pill px-5 py-2 fs-8"style="color:#3a5c45;">CONSECTETUR</span>
                                                     </div>
 
                                                     <!-- Title -->
@@ -311,8 +324,8 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                                                             <div class="text-muted fs-8">Following</div>
                                                         </div>
                                                     </div>
-                                                    <a href="#" class="btn btn-sm btn-light-success w-100 fw-bold"style="color:#2D6A4F;">
-                                                        <i class="bi bi-person-plus-fill me-1"style="color:#2D6A4F;"></i> Follow
+                                                    <a href="#" class="btn btn-sm btn-light-success w-100 fw-bold"style="color:#3a5c45;">
+                                                        <i class="bi bi-person-plus-fill me-1"style="color:#3a5c45;"></i> Follow
                                                     </a>
                                                 </div>
                                             </div>
@@ -324,21 +337,21 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                                                 </div>
                                                 <div class="card-body p-0">
                                                     <a href="#" class="d-flex align-items-start gap-3 p-4 border-bottom text-decoration-none text-hover-primary">
-                                                        <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0"style="color:#2D6A4F;">#01</span>
+                                                        <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0"style="color:#3a5c45;">#01</span>
                                                         <div>
                                                             <div class="fs-7 fw-semibold text-gray-800 mb-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit?</div>
                                                             <div class="text-muted fs-8">Consectetur · 4d ago</div>
                                                         </div>
                                                     </a>
                                                     <a href="#" class="d-flex align-items-start gap-3 p-4 border-bottom text-decoration-none text-hover-primary">
-                                                        <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0"style="color:#2D6A4F;">#02</span>
+                                                        <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0"style="color:#3a5c45;">#02</span>
                                                         <div>
                                                             <div class="fs-7 fw-semibold text-gray-800 mb-1">Sed do eiusmod tempor incididunt ut labore et dolore?</div>
                                                             <div class="text-muted fs-8">Consectetur · 1w ago</div>
                                                         </div>
                                                     </a>
                                                     <a href="#" class="d-flex align-items-start gap-3 p-4 text-decoration-none text-hover-primary">
-                                                        <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0"style="color:#2D6A4F;">#03</span>
+                                                        <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0"style="color:#3a5c45;">#03</span>
                                                         <div>
                                                             <div class="fs-7 fw-semibold text-gray-800 mb-1">Ut enim ad minim veniam, quis nostrud exercitation?</div>
                                                             <div class="text-muted fs-8">LoremIpsum · 2d ago</div>
@@ -350,12 +363,12 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                                             <!-- Community Rules -->
                                             <div class="card border border-success bg-light-success">
                                                 <div class="card-body p-5">
-                                                    <p class="fs-6 fw-bold mb-3"style="color:#2D6A4F;">Community Rules</p>
+                                                    <p class="fs-6 fw-bold mb-3"style="color:#3a5c45;">Community Rules</p>
                                                     <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
-                                                        <li class="d-flex align-items-start gap-2 fs-7 "style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0"style="color:#2D6A4F;">✓</span>Be respectful and constructive</li>
-                                                        <li class="d-flex align-items-start gap-2 fs-7 "style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0"style="color:#2D6A4F;">✓</span>No personal attacks or harassment</li>
-                                                        <li class="d-flex align-items-start gap-2 fs-7 "style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0"style="color:#2D6A4F;">✓</span>Keep posts relevant to FEU Tech</li>
-                                                        <li class="d-flex align-items-start gap-2 fs-7 "style="color:#2D6A4F;"><span class="fw-bold flex-shrink-0"style="color:#2D6A4F;">✓</span>Verify information before sharing</li>
+                                                        <li class="d-flex align-items-start gap-2 fs-7 "style="color:#3a5c45;"><span class="fw-bold flex-shrink-0"style="color:#3a5c45;">✓</span>Be respectful and constructive</li>
+                                                        <li class="d-flex align-items-start gap-2 fs-7 "style="color:#3a5c45;"><span class="fw-bold flex-shrink-0"style="color:#3a5c45;">✓</span>No personal attacks or harassment</li>
+                                                        <li class="d-flex align-items-start gap-2 fs-7 "style="color:#3a5c45;"><span class="fw-bold flex-shrink-0"style="color:#3a5c45;">✓</span>Keep posts relevant to FEU Tech</li>
+                                                        <li class="d-flex align-items-start gap-2 fs-7 "style="color:#3a5c45;"><span class="fw-bold flex-shrink-0"style="color:#3a5c45;">✓</span>Verify information before sharing</li>
                                                     </ul>
                                                 </div>
                                             </div>
