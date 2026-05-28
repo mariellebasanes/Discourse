@@ -1,5 +1,4 @@
 <?php
-/* Refactored: custom CSS → Bootstrap/Metronic utilities */
 define('MBG', TRUE);
 include($_SERVER['DOCUMENT_ROOT'] . '/functions-new.php');
 
@@ -16,7 +15,6 @@ $META_DESC  = "A poll from FEU Tech Discourse community.";
   <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet" type="text/css" />
 
   <style>
-    /* ── Muted dark-green overrides (supervisor requirement) ─────────────── */
     .bg-light-success                          { background-color: #e8ede9 !important; }
     .btn-light-success                         { background-color: #e8ede9 !important; color: #3a5c45 !important; }
     .btn-light-success:hover,

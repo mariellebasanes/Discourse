@@ -1,5 +1,4 @@
 <?php
-/* Refactored: custom CSS → Bootstrap/Metronic utilities */
 define('MBG', TRUE);
 include($_SERVER['DOCUMENT_ROOT'] . '/functions-new.php');
 

@@ -1,10 +1,3 @@
-<!-- Refactored: custom CSS → Bootstrap/Metronic utilities -->
-<!-- ============================================================
-     DISCOURSE — Post Feed Section
-     File: Main/sec-posts.php
-     CSS:  assets/css/sec-posts.css
-     JS:   assets/js/sec-posts.js
-============================================================ -->
 <div class="tab-content" id="discoursePostTabsContent">
 
   <!-- ── HOT Tab (default active) ──────────────────────────── -->
