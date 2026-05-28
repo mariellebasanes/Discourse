@@ -89,3 +89,47 @@ body { background-color: #ffffff; }
 
 .vote-btn { transition: all 0.15s ease; cursor: pointer; color: #6b7280; background: transparent; }
 .vote-btn:hover { background-color: #f1f1f2 !important; color: #374151; }
+
+/* Poll option styles for detail view */
+.discourse-poll-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f5f6fa;
+  border: 1.5px solid #e4e6ef;
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.4s ease;
+  width: 100%;
+  position: relative;
+}
+
+.discourse-poll-option:hover {
+  border-color: #1e7145;
+  background: #f0faf5;
+}
+
+.discourse-poll-percentage {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  margin-left: auto;
+}
+
+.discourse-poll-options.show-results .discourse-poll-option {
+  background: linear-gradient(to right, #f0faf5 var(--target-width), #f5f6fa var(--target-width));
+  border-color: #e4e6ef;
+  pointer-events: none;
+}
+
+.discourse-poll-options.show-results .discourse-poll-option.selected {
+  border-color: #1e7145;
+  background: linear-gradient(to right, #e2f5eb var(--target-width), #f5f6fa var(--target-width));
+}
+
+.discourse-poll-options.show-results .discourse-poll-percentage {
+  opacity: 1;
+  visibility: visible;
+}

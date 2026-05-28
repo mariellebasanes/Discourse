@@ -47,7 +47,7 @@ $META_TITLE = "Create a Post - Discourse";
                         <h1 class="text-white fw-bolder fs-2tx mb-2">Create a Post</h1>
                         <p class="text-white text-opacity-75 fs-7 mb-0">Share something with the Paraverse community</p>
                     </div>
-                    <button class="btn btn-sm btn-outline btn-outline-white text-white border-white border-opacity-25 px-6">Back</button>
+                    <button class="btn btn-sm btn-outline btn-outline-white text-white border-white border-opacity-25 px-6" onclick="window.location.href='/Discourse/pages/version/community.php'">Back</button>
                 </div>
               </div>
 

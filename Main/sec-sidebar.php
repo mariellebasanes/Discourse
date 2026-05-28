@@ -14,7 +14,7 @@
 
     <div class="d-flex flex-column gap-1 border-top border-white-10 pt-2 flex-grow-1">
 
-      <a href="/Discourse/pages/view/view-post-poll.php"
+      <a href="/Discourse/pages/version/view-post.php?poll=1"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">📊</span>
         <div class="d-flex flex-column">
@@ -25,7 +25,7 @@
         </div>
       </a>
 
-      <a href="/Discourse/pages/view/view-post-tech.php"
+      <a href="/Discourse/pages/version/view-post.php"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">🔵</span>
         <div class="d-flex flex-column">
@@ -36,7 +36,7 @@
         </div>
       </a>
 
-      <a href="/Discourse/pages/view/view-post-sample.php"
+      <a href="/Discourse/pages/version/view-post.php?sample=1"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">💡</span>
         <div class="d-flex flex-column">

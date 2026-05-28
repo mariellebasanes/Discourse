@@ -54,7 +54,7 @@
             <!-- Row 3: Title + Excerpt -->
             <div class="col-12 mb-2">
               <div class="d-flex flex-column gap-2">
-                <a href="/Discourse/pages/view/view-post-tech.php" class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                <a href="/Discourse/pages/version/view-post.php" class="text-gray-800 text-hover-primary fs-5 fw-bold">
                   The silent revolution in edge AI — why on-device inference is changing everything
                 </a>
                 <span class="fs-7 text-gray-700">
@@ -122,7 +122,7 @@
             <!-- Row 3: Title + Excerpt -->
             <div class="col-12 mb-2">
               <div class="d-flex flex-column gap-2">
-                <a href="/Discourse/pages/view/view-post-sample.php" class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                <a href="/Discourse/pages/version/view-post.php?sample=1" class="text-gray-800 text-hover-primary fs-5 fw-bold">
                   Lorem ipsum dolor sit amet consectetur adipiscing elit.
                 </a>
                 <span class="fs-7 text-gray-700">
@@ -190,7 +190,7 @@
             <!-- Row 3: Title + Excerpt -->
             <div class="col-12 mb-2">
               <div class="d-flex flex-column gap-2">
-                <a href="/Discourse/pages/view/view-post-anonymous.php" class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                <a href="/Discourse/pages/version/view-post.php?anon=1" class="text-gray-800 text-hover-primary fs-5 fw-bold">
                   What if FEU had a no-grade-penalty mental health leave policy?
                 </a>
                 <span class="fs-7 text-gray-700">
@@ -258,7 +258,7 @@
             <!-- Row 3: Title + Excerpt -->
             <div class="col-12 mb-2">
               <div class="d-flex flex-column gap-2">
-                <a href="/Discourse/pages/view/view-post-sample.php" class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                <a href="/Discourse/pages/version/view-post.php?sample=1" class="text-gray-800 text-hover-primary fs-5 fw-bold">
                   Lorem ipsum dolor sit amet consectetur adipiscing elit.
                 </a>
                 <span class="fs-7 text-gray-700">
@@ -326,7 +326,7 @@
             <!-- Row 3: Title + Excerpt -->
             <div class="col-12 mb-2">
               <div class="d-flex flex-column gap-2">
-                <a href="/Discourse/pages/view/view-post-poll.php" class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                <a href="/Discourse/pages/version/view-post.php?poll=1" class="text-gray-800 text-hover-primary fs-5 fw-bold">
                   📊 Poll: How do you actually study for finals? Be honest.
                 </a>
                 <span class="fs-7 text-gray-700 mb-2">
@@ -422,7 +422,7 @@
             <!-- Row 3: Title + Excerpt -->
             <div class="col-12 mb-2">
               <div class="d-flex flex-column gap-2">
-                <a href="/Discourse/pages/view/view-post-review.php" class="text-gray-800 text-hover-primary fs-5 fw-bold">
+                <a href="/Discourse/pages/version/view-post.php?img=1" class="text-gray-800 text-hover-primary fs-5 fw-bold">
                   FEU Tech library study rooms — worth booking or just use the hallway?
                 </a>
                 <span class="fs-7 text-gray-700">

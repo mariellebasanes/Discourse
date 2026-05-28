@@ -243,7 +243,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                                 <h5 class="fw-bolder text-dark mb-4 fs-6">Discover other communities</h5>
                                 <div class="d-flex flex-column">
                                     
-                                    <a href="#" class="d-flex align-items-center justify-content-between text-decoration-none py-2 border-bottom border-gray-200">
+                                    <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center justify-content-between text-decoration-none py-2 border-bottom border-gray-200">
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="w-30px h-30px d-flex align-items-center justify-content-center community-logo-container rounded-1 flex-shrink-0">
                                                 <img src="/Discourse/assets/img/logo/feu-tech.webp" class="h-20px" alt="" onerror="this.style.display='none'">
@@ -256,7 +256,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                                         <i class="ki-duotone ki-arrow-right text-muted fs-8"><span class="path1"></span><span class="path2"></span></i>
                                     </a>
                                     
-                                    <a href="#" class="d-flex align-items-center justify-content-between text-decoration-none py-2 border-bottom border-gray-200">
+                                    <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center justify-content-between text-decoration-none py-2 border-bottom border-gray-200">
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="w-30px h-30px d-flex align-items-center justify-content-center community-logo-container rounded-1 flex-shrink-0">
                                                 <img src="/Discourse/assets/img/logo/feu-tech.webp" class="h-20px" alt="" onerror="this.style.display='none'">
@@ -269,7 +269,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                                         <i class="ki-duotone ki-arrow-right text-muted fs-8"><span class="path1"></span><span class="path2"></span></i>
                                     </a>
                                     
-                                    <a href="#" class="d-flex align-items-center justify-content-between text-decoration-none py-2">
+                                    <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center justify-content-between text-decoration-none py-2">
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="w-30px h-30px d-flex align-items-center justify-content-center community-logo-container rounded-1 flex-shrink-0">
                                                 <img src="/Discourse/assets/img/logo/feu-tech.webp" class="h-20px" alt="" onerror="this.style.display='none'">

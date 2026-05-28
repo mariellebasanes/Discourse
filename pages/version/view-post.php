@@ -1,6 +1,9 @@
 <?php
 $META_TITLE = "View Post - Discourse";
 $showImage = isset($_GET['img']) && $_GET['img'] == '1';
+$showPoll = isset($_GET['poll']) && $_GET['poll'] == '1';
+$showAnon = isset($_GET['anon']) && $_GET['anon'] == '1';
+$showSample = isset($_GET['sample']) && $_GET['sample'] == '1';
 
 if ($showImage) {
     $postTitle = "Review: FEU Tech library study rooms — worth booking or just use the hallway?";
@@ -11,6 +14,33 @@ if ($showImage) {
     $bannerTitle = "FEU Tech library study rooms — honest review";
     $bannerMeta = "FEU • Posted by Catalina Smith • 5d ago";
     $tag = "FEU • Campus Life";
+} elseif ($showPoll) {
+    $postTitle = "📊 Poll: How do you actually study for finals? Be honest.";
+    $postDesc = "Curious how my fellow FEU Tech students survive finals season. Drop your honest answer below 👇";
+    $authorName = "Marco Torres";
+    $authorInitials = "MT";
+    $authorAvatar = "";
+    $bannerTitle = "Poll: How do you actually study for finals?";
+    $bannerMeta = "FEU • Posted by Marco Torres • 4h ago";
+    $tag = "FEU • Academics";
+} elseif ($showAnon) {
+    $postTitle = "What if FEU had a no-grade-penalty mental health leave policy?";
+    $postDesc = "Just thinking — a lot of students I know failed a whole semester because they were dealing with severe anxiety during midterms. The university had no mechanism to help them — just a strict drop policy or failure. Other universities have mental health leaves where students can pause without academic penalty. Should FEU implement something similar?";
+    $authorName = "Anonymous";
+    $authorInitials = "A";
+    $authorAvatar = "";
+    $bannerTitle = "What if FEU had a no-grade-penalty mental health leave?";
+    $bannerMeta = "Ideas • Posted anonymously • 1d ago";
+    $tag = "Ideas";
+} elseif ($showSample) {
+    $postTitle = "Lorem ipsum dolor sit amet consectetur adipiscing elit.";
+    $postDesc = "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam uma tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas.";
+    $authorName = "John Doe";
+    $authorInitials = "JD";
+    $authorAvatar = "";
+    $bannerTitle = "Lorem ipsum dolor sit amet";
+    $bannerMeta = "Technology • Posted by John Doe • 1d ago";
+    $tag = "Technology";
 } else {
     $postTitle = "The silent revolution in edge AI — why on-device inference is changing everything";
     $postDesc = "We spent a decade optimizing for server-side compute, but the thermal envelope of modern SoCs has quietly crossed a threshold nobody was paying attention to. Here's why 2025 is the last year data centers dominate AI inference at scale.<br><br>The numbers are staggering — a modern mobile chip can...";
@@ -124,6 +154,29 @@ if ($showImage) {
                                         </div>
                                         <?php
                                             echo "<p class='mb-0'>" . $parts[1] . "</p>";
+                                        } elseif($showPoll) {
+                                            echo "<p class='mb-4'>" . $postDesc . "</p>";
+                                        ?>
+                                            <div class="d-flex flex-column gap-2 mb-4 discourse-poll-options" style="max-width: 500px;">
+                                                <button class="discourse-poll-option" data-poll-id="finals-poll" data-option="0" style="--target-width: 28%;">
+                                                    <span class="fs-7 fw-bold text-gray-800">Start early, study consistently</span>
+                                                    <span class="fs-7 fw-bold text-gray-800 discourse-poll-percentage">28%</span>
+                                                </button>
+                                                <button class="discourse-poll-option" data-poll-id="finals-poll" data-option="1" style="--target-width: 45%;">
+                                                    <span class="fs-7 fw-bold text-gray-800">Cram the night before</span>
+                                                    <span class="fs-7 fw-bold text-gray-800 discourse-poll-percentage">45%</span>
+                                                </button>
+                                                <button class="discourse-poll-option" data-poll-id="finals-poll" data-option="2" style="--target-width: 19%;">
+                                                    <span class="fs-7 fw-bold text-gray-800">Rely on group chats and past papers</span>
+                                                    <span class="fs-7 fw-bold text-gray-800 discourse-poll-percentage">19%</span>
+                                                </button>
+                                                <button class="discourse-poll-option" data-poll-id="finals-poll" data-option="3" style="--target-width: 8%;">
+                                                    <span class="fs-7 fw-bold text-gray-800">Pray and submit anyway</span>
+                                                    <span class="fs-7 fw-bold text-gray-800 discourse-poll-percentage">8%</span>
+                                                </button>
+                                            </div>
+                                            <span class="fs-8 text-muted d-block mb-4">442 votes · 3 days left</span>
+                                        <?php
                                         } else {
                                             echo "<p>" . $postDesc . "</p>";
                                         }
@@ -157,7 +210,13 @@ if ($showImage) {
                                 <div class="mb-6" id="comments-container">
                                     <div class="d-flex align-items-center gap-2 mb-6">
                                         <h4 class="fw-bolder text-dark m-0 fs-5">Comments</h4>
-                                        <span class="badge bg-light-success text-success fw-bold rounded-circle w-20px h-20px d-flex align-items-center justify-content-center p-0" id="comment-count-badge" style="font-size: 10px;"><?php echo $showImage ? '1' : '2'; ?></span>
+                                        <span class="badge bg-light-success text-success fw-bold rounded-circle w-20px h-20px d-flex align-items-center justify-content-center p-0" id="comment-count-badge" style="font-size: 10px;"><?php 
+                                            if ($showImage) echo '1';
+                                            elseif ($showPoll) echo '1';
+                                            elseif ($showAnon) echo '1';
+                                            elseif ($showSample) echo '1';
+                                            else echo '3'; 
+                                        ?></span>
                                     </div>
                                     
                                     <!-- Comment Thread 1 -->
@@ -175,7 +234,13 @@ if ($showImage) {
                                                     </div>
                                                 </div>
                                                 <p class="text-gray-800 fs-7 mb-2">
-                                                    <?php echo $showImage ? 'The booking system needs a serious UX overhaul. I gave up twice before figuring it out.' : 'Really insightful take! The latency improvements alone justify the switch.'; ?>
+                                                    <?php 
+                                                        if ($showImage) echo 'The booking system needs a serious UX overhaul. I gave up twice before figuring it out.';
+                                                        elseif ($showPoll) echo 'I cram every single time and somehow still pass. Do not recommend the stress though.';
+                                                        elseif ($showAnon) echo 'Absolutely agree. Most other schools already have this. FEU is way behind on mental health support.';
+                                                        elseif ($showSample) echo 'Interesting perspective. I think this could be applied to other areas as well.';
+                                                        else echo 'Really insightful take! The latency improvements alone justify the switch.'; 
+                                                    ?>
                                                 </p>
                                                 <div class="d-flex align-items-center gap-1 mt-2">
                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
@@ -191,7 +256,7 @@ if ($showImage) {
                                             </div>
                                         </div>
                                         
-                                        <?php if(!$showImage) { ?>
+                                        <?php if(!$showImage && !$showPoll && !$showAnon && !$showSample) { ?>
                                         <!-- Nested Replies Wrapper -->
                                         <div class="comment-thread-line mt-3 mb-4">
                                             <!-- Child Comment 1 -->
@@ -224,7 +289,7 @@ if ($showImage) {
                                         <?php } ?>
                                     </div>
                                     
-                                    <?php if(!$showImage) { ?>
+                                    <?php if(!$showImage && !$showPoll && !$showAnon && !$showSample) { ?>
                                     <!-- Comment Thread 2 -->
                                     <div class="mb-2 mt-6">
                                         <div class="d-flex">
@@ -286,7 +351,15 @@ if ($showImage) {
                                     <div class="symbol-label bg-success text-white fw-bolder fs-3"><?php echo $authorInitials; ?></div>
                                 </div>
                                 <h4 class="fw-bolder text-dark fs-5 mb-1"><?php echo $authorName; ?></h4>
-                                <div class="text-muted fs-8 mb-5">T202210202 • Computer Science</div>
+                                <div class="text-muted fs-8 mb-5">
+                                    <?php 
+                                        if ($showImage) echo 'T202210202 • Computer Science';
+                                        elseif ($showPoll) echo 'T202102837 • Information Technology';
+                                        elseif ($showAnon) echo 'Secret • Undergrad';
+                                        elseif ($showSample) echo 'T202008123 • Mechanical Engineering';
+                                        else echo 'T202110294 • Computer Science'; 
+                                    ?>
+                                </div>
                                 
                                 <?php if($showImage) { ?>
                                 <div class="mb-5">
@@ -296,20 +369,44 @@ if ($showImage) {
                                 
                                 <div class="d-flex justify-content-center gap-6 mb-6">
                                     <div class="d-flex flex-column align-items-center">
-                                        <span class="fw-bolder text-dark fs-4"><?php echo $showImage ? '3' : '48'; ?></span>
+                                        <span class="fw-bolder text-dark fs-4">
+                                            <?php 
+                                                if ($showImage) echo '3';
+                                                elseif ($showPoll) echo '14';
+                                                elseif ($showAnon) echo '0';
+                                                elseif ($showSample) echo '2';
+                                                else echo '48'; 
+                                            ?>
+                                        </span>
                                         <span class="text-muted fs-9 fw-bold text-uppercase">POSTS</span>
                                     </div>
                                     <div class="d-flex flex-column align-items-center">
-                                        <span class="fw-bolder text-dark fs-4"><?php echo $showImage ? '304' : '1.2k'; ?></span>
+                                        <span class="fw-bolder text-dark fs-4">
+                                            <?php 
+                                                if ($showImage) echo '304';
+                                                elseif ($showPoll) echo '894';
+                                                elseif ($showAnon) echo '0';
+                                                elseif ($showSample) echo '45';
+                                                else echo '1.2k'; 
+                                            ?>
+                                        </span>
                                         <span class="text-muted fs-9 fw-bold text-uppercase">KARMA</span>
                                     </div>
                                     <div class="d-flex flex-column align-items-center">
-                                        <span class="fw-bolder text-dark fs-4"><?php echo $showImage ? '7' : '132'; ?></span>
+                                        <span class="fw-bolder text-dark fs-4">
+                                            <?php 
+                                                if ($showImage) echo '7';
+                                                elseif ($showPoll) echo '12';
+                                                elseif ($showAnon) echo '0';
+                                                elseif ($showSample) echo '12';
+                                                else echo '132'; 
+                                            ?>
+                                        </span>
                                         <span class="text-muted fs-9 fw-bold text-uppercase">COMMENTS</span>
                                     </div>
                                 </div>
                                 
-                                <?php if(!$showImage) { ?>
+                                <?php if(!$showImage && !$showAnon) { ?>
                                 <button class="btn w-100 btn-green btn-sm fw-bold"><i class="ki-duotone ki-user-tick me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> Follow</button>
                                 <?php } ?>
                             </div>
@@ -323,7 +420,7 @@ if ($showImage) {
                             <div class="card-body p-5">
                                 <div class="d-flex flex-column gap-4">
                                     
-                                    <a href="#" class="d-flex align-items-start gap-3 text-decoration-none">
+                                    <a href="/Discourse/pages/version/view-post.php" class="d-flex align-items-start gap-3 text-decoration-none">
                                         <div class="d-flex align-items-center gap-1 mt-1 text-success">
                                             <i class="ki-duotone ki-arrow-up fs-9"><span class="path1"></span><span class="path2"></span></i>
                                             <span class="vote-count-up"><?php echo $showImage ? '189' : '88'; ?></span>
@@ -341,7 +438,7 @@ if ($showImage) {
                                     
                                     <div class="separator separator-dashed my-1"></div>
                                     
-                                    <a href="#" class="d-flex align-items-start gap-3 text-decoration-none">
+                                    <a href="/Discourse/pages/version/view-post.php?img=1" class="d-flex align-items-start gap-3 text-decoration-none">
                                         <div class="d-flex align-items-center gap-1 mt-1 text-success">
                                             <i class="ki-duotone ki-arrow-up fs-9"><span class="path1"></span><span class="path2"></span></i>
                                             <span class="vote-count-up"><?php echo $showImage ? '127' : '72'; ?></span>
@@ -360,7 +457,7 @@ if ($showImage) {
                                     <?php if(!$showImage) { ?>
                                     <div class="separator separator-dashed my-1"></div>
                                     
-                                    <a href="#" class="d-flex align-items-start gap-3 text-decoration-none">
+                                    <a href="/Discourse/pages/version/view-post.php?anon=1" class="d-flex align-items-start gap-3 text-decoration-none">
                                         <div class="d-flex align-items-center gap-1 mt-1 text-success">
                                             <i class="ki-duotone ki-arrow-up fs-9"><span class="path1"></span><span class="path2"></span></i>
                                             <span class="vote-count-up">54</span>
@@ -547,6 +644,15 @@ if ($showImage) {
                 scrollTop: $("#comments-container").offset().top + $("#comments-container").height() - 200
             }, 300);
         }
+
+        // 4. Poll Option Click Behavior
+        $(document).on('click', '.discourse-poll-option', function(e) {
+            e.preventDefault();
+            const container = $(this).closest('.discourse-poll-options');
+            container.find('.discourse-poll-option').removeClass('selected');
+            $(this).addClass('selected');
+            container.addClass('show-results');
+        });
     });
   </script>
 </body>
