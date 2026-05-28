@@ -1,0 +1,8 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+RewriteRule badge/(.+) badge.php?id=$1
+RewriteRule earned/(.+) earned.php?id=$1
+RewriteRule award/(.+) award.php?id=$1

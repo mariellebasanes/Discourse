@@ -1,0 +1,449 @@
+/* ── Editor area ─────────────────────────────────────────── */
+.dc-editor-area {
+  width: 100%;
+  min-height: 200px;
+  padding: 14px 16px;
+  border: 1.5px solid #e4e6ef;
+  border-top: none;
+  border-bottom: none;
+  font-size: 13px;
+  color: #1a1a2e;
+  background: #f9fafb;
+  outline: none;
+  font-family: inherit;
+  line-height: 1.7;
+  overflow-y: auto;
+}
+
+.dc-editor-area:empty:before {
+  content: attr(data-placeholder);
+  color: #b5b5c3;
+}
+
+.dc-editor-area:focus {
+  background: #fff;
+}
+
+/* ── Toolbar ─────────────────────────────────────────────── */
+.dc-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex-wrap: wrap;
+  padding: 7px 10px;
+  background: #f9fafb;
+  border: 1.5px solid #e4e6ef;
+  border-bottom: 1px solid #e4e6ef;
+  border-radius: 8px 8px 0 0;
+}
+
+.dc-tb-sep {
+  width: 1px;
+  height: 20px;
+  background: #dde;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.dc-tb-switch {
+  margin-left: auto;
+  font-size: 12px;
+  color: #2D6A4F;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.dc-tb-switch:hover {
+  text-decoration: underline;
+}
+
+/* ── Bottom media bar ────────────────────────────────────── */
+.dc-media-bar {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border: 1.5px solid #e4e6ef;
+  border-top: 1px solid #e4e6ef;
+  border-radius: 0 0 8px 8px;
+}
+
+/* ── Tag input ───────────────────────────────────────────── */
+.dc-tag-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  border: 1.5px solid #e4e6ef;
+  border-radius: 8px;
+  padding: 7px 12px;
+  background: #f9fafb;
+  min-height: 42px;
+  cursor: text;
+  transition: border-color .18s, box-shadow .18s;
+}
+
+.dc-tag-wrap:focus-within {
+  border-color: #2D6A4F;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, .1);
+  background: #fff;
+}
+
+.dc-tag-input {
+  flex: 1;
+  min-width: 100px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: #1a1a2e;
+}
+
+.dc-tag-input::placeholder {
+  color: #b5b5c3;
+}
+
+/* ── Editor-inserted elements ────────────────────────────── */
+.dc-code-block {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 6px 0;
+  font-family: monospace;
+  font-size: 13px;
+  outline: none;
+  min-height: 50px;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.dc-code-block:empty:before {
+  content: '// Your code here...';
+  color: #6c7086;
+}
+
+/* Spoiler block */
+.dc-spoiler {
+  background: #fff8e1;
+  border: 1.5px solid #ffe082;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 6px 0;
+  position: relative;
+}
+
+.dc-spoiler-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #795548;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dc-spoiler-content {
+  font-size: 13px;
+  color: #1a1a2e;
+  outline: none;
+  min-height: 30px;
+}
+
+.dc-spoiler-content:empty:before {
+  content: 'Hidden content here...';
+  color: #b5b5c3;
+}
+
+/* Table preview */
+.dc-table-preview {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+}
+
+.dc-table-preview td,
+.dc-table-preview th {
+  border: 1px solid #e4e6ef;
+  padding: 6px 10px;
+  font-size: 13px;
+  min-width: 60px;
+}
+
+.dc-table-preview thead th {
+  background: #f0faf5;
+}
+
+.dc-table-preview td[contenteditable]:focus,
+.dc-table-preview th[contenteditable]:focus {
+  background: #f0faf5;
+  outline: none;
+}
+
+/* Inserted image */
+.dc-img-inserted {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid #e4e6ef;
+  max-height: 260px;
+  object-fit: cover;
+}
+
+/* Video embed */
+.dc-video-embed {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  margin: 8px 0;
+  border: none;
+}
+
+/* ── Poll builder (create-post only) ─────────────────────── */
+.dc-poll-builder {
+  border: 1.5px solid #c8e6c9;
+  border-radius: 10px;
+  background: #f0faf5;
+  padding: 16px;
+  margin: 10px 0;
+}
+
+.dc-poll-builder-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2D6A4F;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dc-poll-opt-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 7px;
+}
+
+.dc-poll-opt-row input {
+  flex: 1;
+  border: 1.5px solid #e4e6ef;
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 13px;
+  background: #fff;
+  outline: none;
+  font-family: inherit;
+}
+
+.dc-poll-opt-row input:focus {
+  border-color: #2D6A4F;
+}
+
+.dc-poll-opt-del {
+  background: none;
+  border: none;
+  color: #b5b5c3;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+.dc-poll-opt-del:hover {
+  color: #c62828;
+  background: #fee;
+}
+
+.dc-poll-add {
+  background: none;
+  border: 1.5px dashed #a5d6a7;
+  border-radius: 7px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2D6A4F;
+  cursor: pointer;
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dc-poll-add:hover {
+  background: #e8f5e9;
+}
+
+/* ── Toggle switch (edit-poll) ───────────────────────────── */
+.dc-toggle-wrap {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.dc-toggle-wrap input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.dc-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #e4e6ef;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.dc-toggle-slider:before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform .2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.15);
+}
+
+.dc-toggle-wrap input:checked + .dc-toggle-slider {
+  background: #2D6A4F;
+}
+
+.dc-toggle-wrap input:checked + .dc-toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* ── Image drop zone (edit-post/edit-poll) ───────────────── */
+.dc-drop-zone {
+  display: none;
+  margin: 8px 14px 12px;
+  border: 2px dashed #e4e6ef;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  color: #b5b5c3;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.dc-drop-zone.active {
+  display: block;
+}
+
+/* ── Toggle switch label alias ───────────────────────────── */
+.dc-toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.dc-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* ── Image wrapper ───────────────────────────────────────── */
+.dc-image-wrapper {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 0;
+  display: none; /* hidden until image is loaded */
+}
+
+.dc-image-wrapper.has-image,
+.dc-image-wrapper[style*="display: block"],
+.dc-image-wrapper[style*="display:block"] {
+  display: block;
+}
+
+/* Hover overlay that reveals Replace / Remove buttons */
+.dc-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 8px;
+  gap: 6px;
+  transition: background .2s;
+}
+
+.dc-image-wrapper:hover .dc-image-overlay {
+  background: rgba(0,0,0,0.22);
+}
+
+.dc-image-action-btn {
+  border: none;
+  border-radius: 7px;
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.dc-image-wrapper:hover .dc-image-action-btn {
+  opacity: 1;
+}
+
+.dc-image-replace-btn {
+  background: #fff;
+  color: #1a1a2e;
+}
+
+.dc-image-replace-btn:hover {
+  background: #f0faf5;
+  color: #2D6A4F;
+}
+
+.dc-image-remove-btn {
+  background: #fff;
+  color: #c62828;
+}
+
+.dc-image-remove-btn:hover {
+  background: #fee;
+}
+
+/* ── No-image placeholder ────────────────────────────────── */
+.dc-no-image-placeholder {
+  display: none;
+  margin: 8px 14px 12px;
+  border: 2px dashed #e4e6ef;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  color: #b5b5c3;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color .18s, background .18s;
+}
+
+.dc-no-image-placeholder:hover {
+  border-color: #2D6A4F;
+  background: #f0faf5;
+}

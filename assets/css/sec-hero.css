@@ -1,0 +1,88 @@
+.discourse-hero-banner {
+  background-color: #0b3220 !important;
+  overflow: visible !important;
+}
+
+/* ── Radial centre glow ──────────────────────────────────────── */
+.discourse-hero-center-glow {
+  background: radial-gradient(
+    circle 350px at 50% 50%,
+    rgba(245, 166, 35, 0.28) 0%,
+    rgba(245, 166, 35, 0.05) 60%,
+    transparent 100%
+  );
+}
+
+/* ── Inner container min-height ──────────────────────────────── */
+.discourse-hero-inner {
+  min-height: 220px;
+}
+
+/* ── Illustration frame ──────────────────────────────────────── */
+.discourse-hero-illustration-frame {
+  position: absolute;
+  right: 25px;
+  bottom: 0;
+  height: 100%;
+  width: 40%;
+  overflow: visible;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Hero image ─────────────────────────────────────────────── */
+.discourse-hero-img-matched {
+  height: 110%;
+  width: auto;
+  object-fit: contain;
+  vertical-align: bottom;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.32));
+  transform-origin: bottom center;
+}
+
+/* ── CTA button hover ────────────────────────────────────────── */
+.discourse-hero-btn {
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.discourse-hero-btn:hover {
+  background-color: #fbc501 !important;
+  color: #000 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 166, 35, 0.55) !important;
+}
+
+/* ── Responsive overrides ────────────────────────────────────── */
+@media (max-width: 1199.98px) {
+  .discourse-hero-img-matched {
+    height: 126%;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .discourse-hero-illustration-frame {
+    width: 44%;
+  }
+  .discourse-hero-img-matched {
+    height: 120%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .discourse-hero-banner {
+    overflow: hidden !important;
+    margin-top: 0 !important;
+  }
+  .discourse-hero-subtitle {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 100% !important;
+    text-align: center;
+  }
+  .discourse-hero-btn {
+    display: flex !important;
+    margin: 0 auto !important;
+  }
+}
