@@ -177,7 +177,8 @@ $META_DESC  = "Edit your existing post.";
                             </div>
 
                             <div id="edit_body_editor" class="dc-editor-area" contenteditable="true"
-                              data-placeholder="Body text (optional)">Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.<br><br>Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.</div>
+                              data-placeholder="Body text (optional)"
+                              style="height:300px !important;overflow-y:auto !important;">Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.<br><br>Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.</div>
 
                             <div class="dc-image-wrapper" id="imageWrapper" style="display:block;">
                               <img src="https://www.feu.edu.ph/wp-content/uploads/2023/06/thumbnail__a3-1.jpg"

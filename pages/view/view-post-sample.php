@@ -107,15 +107,20 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
 
                                                 <!-- Post Body -->
                                                 <div class="card-body pt-0 px-5">
-                                                    <p class="fs-6 text-gray-700 mb-3">
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                                    </p>
-                                                    <p class="fs-6 text-gray-700 mb-3">
-                                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                                    </p>
-                                                    <p class="fs-6 text-gray-700 mb-4">
-                                                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                                                    </p>
+                                                  <div class="dc-post-body-wrap">
+                                                    <div class="dc-body-text">
+                                                      <p class="fs-6 text-gray-700 mb-3">
+                                                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                                      </p>
+                                                      <p class="fs-6 text-gray-700 mb-3">
+                                                          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                      </p>
+                                                      <p class="fs-6 text-gray-700 mb-4">
+                                                          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                                                      </p>
+                                                    </div>
+                                                    <a href="#" class="dc-see-more-link d-none" onclick="dcTogglePostBody(event, this)">See More</a>
+                                                  </div>
                                                 </div>
 
                                                 <!-- Actions Row -->
@@ -443,6 +448,57 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
             });
         });
     </script>
+
+<style>
+  .dc-post-body-wrap .dc-body-text {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  .dc-post-body-wrap .dc-body-text.dc-expanded {
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
+  }
+  .dc-see-more-link {
+    color: #3a5c45 !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 0.85rem;
+    text-decoration: none !important;
+    display: inline-block;
+    margin-top: 4px;
+  }
+  .dc-see-more-link:hover { text-decoration: underline !important; }
+</style>
+<script>
+(function() {
+  function initPostBody() {
+    document.querySelectorAll('.dc-post-body-wrap').forEach(function(wrap) {
+      var textDiv = wrap.querySelector('.dc-body-text');
+      var link = wrap.querySelector('.dc-see-more-link');
+      if (!textDiv || !link) return;
+      if (textDiv.scrollHeight > textDiv.clientHeight + 2) {
+        link.classList.remove('d-none');
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPostBody);
+  } else {
+    initPostBody();
+  }
+})();
+function dcTogglePostBody(e, link) {
+  e.preventDefault();
+  var wrap = link.closest('.dc-post-body-wrap');
+  var textDiv = wrap ? wrap.querySelector('.dc-body-text') : null;
+  if (!textDiv) return;
+  var expanded = textDiv.classList.toggle('dc-expanded');
+  link.textContent = expanded ? 'See Less' : 'See More';
+}
+</script>
 </body>
 
 </html>

@@ -255,7 +255,8 @@ $META_DESC = "Share something with the Paraverse community.";
 
                             <!-- Editor -->
                             <div id="dc-editor" class="dc-editor-area" contenteditable="true"
-                              data-placeholder="Body text (optional)"></div>
+                              data-placeholder="Body text (optional)"
+                              style="height:300px !important;overflow-y:auto !important;"></div>
 
                             <!-- Media bar -->
                             <div class="dc-media-bar">

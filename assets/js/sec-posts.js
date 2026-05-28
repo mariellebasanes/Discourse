@@ -1,18 +1,9 @@
-/**
- * Refactored: selectors updated to match Bootstrap/Metronic utility markup.
- * DISCOURSE — Posts Feed JS
- * File: assets/js/sec-posts.js
- */
 
 (function () {
   'use strict';
 
   document.addEventListener('DOMContentLoaded', function () {
 
-    // ── Vote Engine ───────────────────────────────────────────
-    // Selector updated: data-dc="post-card" replaces .discourse-post-card
-    // Button selectors updated: .dc-vote-up/down replaces .discourse-vote-up/down
-    // Count selector updated: .dc-vote-count replaces .discourse-vote-count
     document.querySelectorAll('[data-dc="post-card"]').forEach(function (card) {
       const upBtn   = card.querySelector('.dc-vote-up');
       const downBtn = card.querySelector('.dc-vote-down');
@@ -78,3 +69,30 @@
 
   });
 })();
+
+
+  (function() {
+    function initSeeMore() {
+      document.querySelectorAll('.dc-body-clamp').forEach(function(span) {
+        var link = span.nextElementSibling;
+        if (!link || !link.classList.contains('dc-see-more-link')) return;
+        // Only show link if content overflows 3 lines
+        if (span.scrollHeight > span.clientHeight + 2) {
+          link.classList.remove('d-none');
+        }
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSeeMore);
+    } else {
+      initSeeMore();
+    }
+  })();
+
+  function dcToggleBody(e, link) {
+    e.preventDefault();
+    var span = link.previousElementSibling;
+    if (!span) return;
+    var expanded = span.classList.toggle('dc-expanded');
+    link.textContent = expanded ? 'See Less' : 'See More';
+  }

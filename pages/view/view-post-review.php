@@ -107,21 +107,24 @@ $META_DESC  = "A review post from FEU Tech Discourse community.";
 
                         <!-- Post Body -->
                         <div class="card-body pt-0 px-5">
-                          <p class="fs-6 text-gray-700 mb-4">
-                            Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.
-                          </p>
-
-                          <!-- Post Image -->
-                          <div class="rounded-3 overflow-hidden mb-4">
-                            <img src="https://www.feu.edu.ph/wp-content/uploads/2023/06/thumbnail__a3-1.jpg"
-                              alt="Library Study Room"
-                              class="w-100"
-                              style="height:200px;object-fit:cover;filter:brightness(0.85) saturate(0.9);" />
+                          <div class="dc-post-body-wrap">
+                            <div class="dc-body-text">
+                              <p class="fs-6 text-gray-700 mb-4">
+                                Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.
+                              </p>
+                              <!-- Post Image -->
+                              <div class="rounded-3 overflow-hidden mb-4">
+                                <img src="https://www.feu.edu.ph/wp-content/uploads/2023/06/thumbnail__a3-1.jpg"
+                                  alt="Library Study Room"
+                                  class="w-100"
+                                  style="height:200px;object-fit:cover;filter:brightness(0.85) saturate(0.9);" />
+                              </div>
+                              <p class="fs-6 text-gray-700 mb-4">
+                                Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.
+                              </p>
+                            </div>
+                            <a href="#" class="dc-see-more-link d-none" onclick="dcTogglePostBody(event, this)">See More</a>
                           </div>
-
-                          <p class="fs-6 text-gray-700 mb-4">
-                            Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.
-                          </p>
                         </div>
 
                         <!-- Actions Row -->
@@ -380,6 +383,57 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+</script>
+
+<style>
+  .dc-post-body-wrap .dc-body-text {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  .dc-post-body-wrap .dc-body-text.dc-expanded {
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
+  }
+  .dc-see-more-link {
+    color: #3a5c45 !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-size: 0.85rem;
+    text-decoration: none !important;
+    display: inline-block;
+    margin-top: 4px;
+  }
+  .dc-see-more-link:hover { text-decoration: underline !important; }
+</style>
+<script>
+(function() {
+  function initPostBody() {
+    document.querySelectorAll('.dc-post-body-wrap').forEach(function(wrap) {
+      var textDiv = wrap.querySelector('.dc-body-text');
+      var link = wrap.querySelector('.dc-see-more-link');
+      if (!textDiv || !link) return;
+      if (textDiv.scrollHeight > textDiv.clientHeight + 2) {
+        link.classList.remove('d-none');
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPostBody);
+  } else {
+    initPostBody();
+  }
+})();
+function dcTogglePostBody(e, link) {
+  e.preventDefault();
+  var wrap = link.closest('.dc-post-body-wrap');
+  var textDiv = wrap ? wrap.querySelector('.dc-body-text') : null;
+  if (!textDiv) return;
+  var expanded = textDiv.classList.toggle('dc-expanded');
+  link.textContent = expanded ? 'See Less' : 'See More';
+}
 </script>
 </body>
 

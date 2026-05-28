@@ -1,23 +1,3 @@
-<!-- Refactored: custom CSS → Bootstrap/Metronic utilities -->
-<!-- ============================================================
-     DISCOURSE — Modals & Dropdowns Partial
-     File: partials/_discourse-modals.php
-     CSS:  assets/css/sec-modals.css
-     JS:   assets/js/sec-modals.js
-
-     Includes:
-       1. Notifications Dropdown  (bell icon in navbar)
-       2. Profile Dropdown        (avatar in navbar)
-       3. Report Post Modal       (Report button on post card)
-============================================================ -->
-
-
-<!-- ══════════════════════════════════════════════════════════
-     1. NOTIFICATIONS DROPDOWN
-     Trigger: bell icon in navbar — add these attrs to bell btn:
-       data-bs-toggle="dropdown"
-       data-bs-target="#discourseNotifDropdown"
-══════════════════════════════════════════════════════════ -->
 <div class="dropdown-menu p-0 discourse-notif-dropdown" id="discourseNotifDropdown" aria-labelledby="discourseNotifBell">
 
   <!-- Header -->

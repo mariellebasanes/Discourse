@@ -27,7 +27,6 @@
           if (file_exists($noti_partial)) {
             include($noti_partial);
           } else {
-            // KUNG HINDI MAHANAP ANG FILE, LILITAW ITONG TEXT NA 'TO:
             echo '<b style="color:red; font-size:10px;">FILE NOT FOUND!</b>';
           }
           ?>

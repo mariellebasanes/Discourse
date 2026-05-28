@@ -174,7 +174,8 @@ $META_DESC  = "Edit your existing poll.";
                             </div>
 
                             <div id="poll_context_editor" class="dc-editor-area" contenteditable="true"
-                              data-placeholder="Add some context for your poll (optional)">Been talking to a lot of classmates lately and everyone seems to struggle with different things. Curious what the community thinks — drop your vote below!</div>
+                              data-placeholder="Add some context for your poll (optional)"
+                              style="height:300px !important;overflow-y:auto !important;">Been talking to a lot of classmates lately and everyone seems to struggle with different things. Curious what the community thinks — drop your vote below!</div>
 
                             <div class="dc-image-wrapper" id="pollImageWrapper">
                               <div class="dc-image-overlay">
