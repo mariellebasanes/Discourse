@@ -22,14 +22,9 @@ body {
   padding-top: 1rem;
   padding-bottom: 2.5rem;
 }
-.discourse-sidebar-col {
-  min-width: 0; /* Hayaan lang siyang maging normal na column */
-}
-.discourse-feed-col {
-  min-width: 0;
-}
 
-.discourse-sidebar-col {
+.discourse-sidebar-col,
+.discourse-feed-col {
   min-width: 0;
 }
 

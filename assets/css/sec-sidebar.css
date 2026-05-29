@@ -1,9 +1,9 @@
+/* ── Dark sidebar card ───────────────────────────────────── */
 .discourse-info-card {
   background-color: #0b3220 !important;
   position: relative;
-  z-index: 2;  /* add this */
+  z-index: 2;
 }
-
 
 .discourse-widget-center-glow {
   background: radial-gradient(circle 150px at 50% 40%,
@@ -12,12 +12,10 @@
       transparent 100%);
 }
 
-
 .discourse-sidebar-logo {
   height: 80px;
   width: auto;
 }
-
 
 .discourse-info-post-item {
   transition: background-color 0.12s ease-in-out;
@@ -27,11 +25,9 @@
   background: rgba(255, 255, 255, 0.06) !important;
 }
 
-
 .border-white-10 {
   border-color: rgba(255, 255, 255, 0.10) !important;
 }
-
 
 .text-line-clamp-2 {
   display: -webkit-box;
@@ -43,7 +39,6 @@
   border-bottom: 1px solid #eef2f5;
 }
 
-
 .discourse-community-item:hover {
   background: #f5f6fa;
 }
@@ -54,8 +49,8 @@
   color: #fff !important;
   border-color: #0d5c3a !important;
 }
-/* ── Sidebar green overrides ─────────────────────────── */
 
+/* ── Sidebar green overrides ─────────────────────────────── */
 .discourse-stat-item .bg-light-success,
 .discourse-community-item .bg-light-success {
   background-color: #e8ede9 !important;

@@ -1,3 +1,4 @@
+/* ── Post card hover ─────────────────────────────────────── */
 [data-dc="post-card"] {
   transition: box-shadow 0.18s, transform 0.15s;
 }
@@ -12,9 +13,11 @@
   cursor: pointer;
 }
 
+/* ── Vote button colors ──────────────────────────────────── */
 .dc-vote-up:hover  { color: #2D6A4F !important; }
 .dc-vote-down:hover { color: #c62828 !important; }
 
+/* ── Poll option buttons ─────────────────────────────────── */
 .discourse-poll-option {
   display: flex;
   align-items: center;
@@ -58,51 +61,42 @@
   visibility: visible;
 }
 
-  /* Title: clamp to 1 line with ellipsis */
-  [data-dc="post-card"] .flex-grow-1 {
-    min-width: 0 !important;
-  }
+/* ── Post card text truncation ───────────────────────────── */
+[data-dc="post-card"] .flex-grow-1,
+[data-dc="post-card"] .d-flex.flex-column.gap-2,
+[data-dc="post-card"] .col-12 {
+  min-width: 0 !important;
+}
 
-  [data-dc="post-card"] .d-flex.flex-column.gap-2 {
-    min-width: 0 !important;
-  }
+[data-dc="post-card"] .fs-5.fw-bold {
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
 
-  [data-dc="post-card"] .col-12 {
-    min-width: 0 !important;
-  }
+.dc-body-clamp {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
 
-  [data-dc="post-card"] .fs-5.fw-bold {
-    display: block !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    max-width: 100% !important;
-  }
+.dc-body-clamp.dc-expanded {
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  overflow: visible !important;
+}
 
-  /* Body: clamp to 3 lines */
-  .dc-body-clamp {
-    display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-  }
+.dc-see-more-link {
+  font-size: 0.8rem;
+  color: #3a5c45 !important;
+  text-decoration: none !important;
+  display: inline-block;
+  margin-top: 2px;
+}
 
-  .dc-body-clamp.dc-expanded {
-    display: block !important;
-    -webkit-line-clamp: unset !important;
-    overflow: visible !important;
-  }
-
-  .dc-see-more-link {
-    color: #3a5c45 !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    font-size: 0.8rem;
-    text-decoration: none !important;
-    display: inline-block;
-    margin-top: 2px;
-  }
-
-  .dc-see-more-link:hover {
-    text-decoration: underline !important;
-  }
+.dc-see-more-link:hover {
+  text-decoration: underline !important;
+}

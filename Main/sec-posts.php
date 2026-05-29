@@ -52,7 +52,7 @@
                 </a>
                 <div class="dc-body-wrap">
                   <span class="fs-7 text-gray-700 dc-body-clamp"> A decade optimizing for server-side compute, but the thermal envelope of modern SoCs has quietly crossed a threshold nobody was paying attention to. Here's why 2025 is the last year data centers dominate...</span>
-                  <a href="#" class="dc-see-more-link d-none" onclick="dcToggleBody(event, this)">See More</a>
+                  <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                 </div>
               </div>
             </div>
@@ -62,9 +62,9 @@
           <!-- Actions Row -->
           <div class="row">
             <div class="d-flex justify-content-start align-items-center w-100 px-5">
-              <button class="btn btn-sm"><i class="bi bi-chat me-1"></i> 1 Comment</button>
-              <button class="btn btn-sm"><i class="bi bi-share me-1"></i> Share</button>
-              <button class="btn btn-sm"><i class="bi bi-bookmark me-1"></i> Save</button>
+              <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> 1 Comment</button>
+              <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+              <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
             </div>
           </div>
         </div>
@@ -123,7 +123,7 @@
                   <span class="fs-7 text-gray-700 dc-body-clamp">
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestib
                   </span>
-                  <a href="#" class="dc-see-more-link d-none" onclick="dcToggleBody(event, this)">See More</a>
+                  <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                 </div>
               </div>
             </div>
@@ -133,9 +133,9 @@
           <!-- Actions Row -->
           <div class="row">
             <div class="d-flex justify-content-start align-items-center w-100 px-5">
-              <button class="btn btn-sm"><i class="bi bi-chat me-1"></i> 1 Comment</button>
-              <button class="btn btn-sm"><i class="bi bi-share me-1"></i> Share</button>
-              <button class="btn btn-sm"><i class="bi bi-bookmark me-1"></i> Save</button>
+              <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> 1 Comment</button>
+              <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+              <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
             </div>
           </div>
         </div>
@@ -192,7 +192,7 @@
                 </a>
                 <div class="dc-body-wrap">
                   <span class="fs-7 text-gray-700 dc-body-clamp"> Just thinking — a lot of students I know failed a whole semester because they were dealing with severe anxiety during midterms. The university had no mechanism to help them — just a...</span>
-                  <a href="#" class="dc-see-more-link d-none" onclick="dcToggleBody(event, this)">See More</a>
+                  <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                 </div>
               </div>
             </div>
@@ -202,9 +202,9 @@
           <!-- Actions Row -->
           <div class="row">
             <div class="d-flex justify-content-start align-items-center w-100 px-5">
-              <button class="btn btn-sm"><i class="bi bi-chat me-1"></i> 1 Comment</button>
-              <button class="btn btn-sm"><i class="bi bi-share me-1"></i> Share</button>
-              <button class="btn btn-sm"><i class="bi bi-bookmark me-1"></i> Save</button>
+              <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> 1 Comment</button>
+              <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+              <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
             </div>
           </div>
         </div>
@@ -261,7 +261,7 @@
                 </a>
                 <div class="dc-body-wrap">
                   <span class="fs-7 text-gray-700 dc-body-clamp"> Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam uma tempor.</span>
-                  <a href="#" class="dc-see-more-link d-none" onclick="dcToggleBody(event, this)">See More</a>
+                  <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                 </div>
               </div>
             </div>
@@ -271,9 +271,9 @@
           <!-- Actions Row -->
           <div class="row">
             <div class="d-flex justify-content-start align-items-center w-100 px-5">
-              <button class="btn btn-sm"><i class="bi bi-chat me-1"></i> 1 Comment</button>
-              <button class="btn btn-sm"><i class="bi bi-share me-1"></i> Share</button>
-              <button class="btn btn-sm"><i class="bi bi-bookmark me-1"></i> Save</button>
+              <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> 1 Comment</button>
+              <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+              <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
             </div>
           </div>
         </div>
@@ -331,7 +331,7 @@
                 <span class="fs-7 text-gray-700 mb-2 dc-body-clamp">
                   Curious how my fellow FEU Tech students survive finals season. Drop your honest answer below 👇
                 </span>
-                <a href="#" class="dc-see-more-link d-none" onclick="dcToggleBody(event, this)">See More</a>
+                <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
               </div>
             </div>
 
@@ -368,9 +368,9 @@
           <!-- Actions Row -->
           <div class="row mt-2">
             <div class="d-flex justify-content-start align-items-center w-100 px-5">
-              <button class="btn btn-sm"><i class="bi bi-chat me-1"></i> 1 Comment</button>
-              <button class="btn btn-sm"><i class="bi bi-share me-1"></i> Share</button>
-              <button class="btn btn-sm"><i class="bi bi-bookmark me-1"></i> Save</button>
+              <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> 1 Comment</button>
+              <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+              <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
             </div>
           </div>
         </div>
@@ -427,7 +427,7 @@
                 </a>
                 <div class="dc-body-wrap">
                   <span class="fs-7 text-gray-700 dc-body-clamp"> Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the...</span>
-                  <a href="#" class="dc-see-more-link d-none" onclick="dcToggleBody(event, this)">See More</a>
+                  <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                 </div>
               </div>
             </div>
@@ -437,9 +437,9 @@
           <!-- Actions Row -->
           <div class="row">
             <div class="d-flex justify-content-start align-items-center w-100 px-5">
-              <button class="btn btn-sm"><i class="bi bi-chat me-1"></i> 1 Comment</button>
-              <button class="btn btn-sm"><i class="bi bi-share me-1"></i> Share</button>
-              <button class="btn btn-sm"><i class="bi bi-bookmark me-1"></i> Save</button>
+              <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> 1 Comment</button>
+              <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+              <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
             </div>
           </div>
         </div>
@@ -463,6 +463,11 @@
       <i class="bi bi-trophy fs-1 d-block mb-2"></i>
       Top posts will appear here.
     </div>
+  </div>
+
+  <!-- ── Feed Toast (Share / Save feedback) ─────────────────── -->
+  <div id="dc-feed-toast" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:1090;" class="d-flex align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
+    <i class="bi bi-check-circle-fill text-success"></i><span></span>
   </div>
 
   <!-- ── RISING Tab ─────────────────────────────────────────── -->

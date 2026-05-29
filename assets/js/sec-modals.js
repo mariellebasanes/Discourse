@@ -1,12 +1,3 @@
-/**
- * DISCOURSE — Modals & Dropdowns JS
- * File: assets/js/sec-modals.js
- *
- * Handles:
- *  - Notifications "Mark all read"
- *  - Profile dropdown (positioned below navbar avatar)
- *  - Report Post modal option selection
- */
 
 (function () {
   'use strict';
@@ -43,7 +34,7 @@
     if (reportSubmit) {
       reportSubmit.addEventListener('click', function () {
         const selected = document.querySelector('.discourse-report-option-active');
-        const reason   = selected ? selected.dataset.option : 'unknown';
+        const reason = selected ? selected.dataset.option : 'unknown';
 
         console.log('[Discourse] Report submitted. Reason:', reason);
 
@@ -65,14 +56,38 @@
     }
 
     // ── Reset report modal state on close ──────────────────
-    const reportModal = document.getElementById('modalReportPost');
     if (reportModal) {
       reportModal.addEventListener('hidden.bs.modal', function () {
         reportOptions.forEach(function (o, i) {
           o.classList.toggle('discourse-report-option-active', i === 0);
         });
+        if (reportOtherText) {
+          reportOtherText.style.display = 'none';
+          reportOtherText.value = '';
+        }
       });
     }
 
   });
 })();
+
+const reportOptions = document.querySelectorAll('.discourse-report-option');
+const reportOtherText = document.getElementById('discourseReportOtherText');
+
+reportOptions.forEach(function (option) {
+  option.addEventListener('click', function () {
+    reportOptions.forEach(function (o) {
+      o.classList.remove('discourse-report-option-active');
+    });
+    this.classList.add('discourse-report-option-active');
+    if (reportOtherText) {
+      if (this.dataset.option === 'other') {
+        reportOtherText.style.display = 'block';
+        reportOtherText.focus();
+      } else {
+        reportOtherText.style.display = 'none';
+        reportOtherText.value = '';
+      }
+    }
+  });
+});

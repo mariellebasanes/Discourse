@@ -5,27 +5,14 @@ include($_SERVER['DOCUMENT_ROOT'] . '/functions-new.php');
 $META_TITLE = "Poll: How do you actually study for finals? Be honest.";
 $META_DESC  = "A poll from FEU Tech Discourse community.";
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
   <?php HEAD_ESSENTIALS(); ?>
   <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet" type="text/css" />
+  <link href="/Discourse/assets/css/view-post.css" rel="stylesheet" type="text/css" />
   <link href="/Discourse/assets/css/sec-posts.css" rel="stylesheet" type="text/css" />
   <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet" type="text/css" />
 
-  <style>
-    .bg-light-success                          { background-color: #e8ede9 !important; }
-    .btn-light-success                         { background-color: #e8ede9 !important; color: #3a5c45 !important; }
-    .btn-light-success:hover,
-    .btn-light-success:focus                   { background-color: #dce8df !important; color: #3a5c45 !important; }
-    .badge-light-success                       { background-color: #dce8df; color: #3a5c45; }
-    .border-success                            { border-color: #c2d4c8 !important; }
-    .btn-success                               { background-color: #3a5c45 !important; border-color: #3a5c45 !important; }
-    .btn-success:hover,
-    .btn-success:focus,
-    .btn-success:active                        { background-color: #2e4a38 !important; border-color: #2e4a38 !important; }
-  </style>
+  
 </head>
 
 <body id="kt_app_body"
@@ -155,60 +142,24 @@ $META_DESC  = "A poll from FEU Tech Discourse community.";
                         <div class="card-body pt-0 px-5 pb-0">
                           <div class="d-flex justify-content-between align-items-center border-top border-bottom py-3">
                             <div class="d-flex flex-wrap gap-1">
-                                            <button class="btn btn-sm fw-semibold" id="postLikeBtn"
-  onclick="(function(b){{
-    var liked=b.dataset.on==='1';
-    liked=!liked;
-    var dis=document.getElementById('postDislikeBtn');
-    if(liked){{dis.dataset.on='0';dis.style.cssText='';dis.innerHTML='<i class=\'bi bi-hand-thumbs-down\'></i> Dislike';}}
-    b.dataset.on=liked?'1':'0';
-    b.style.cssText=liked?'background:rgba(23,198,112,.15);color:#17c671;border-color:#17c671;':'';
-    b.innerHTML=liked?'<i class=\'bi bi-hand-thumbs-up-fill\'></i> Like <span>441</span>':'<i class=\'bi bi-hand-thumbs-up\'></i> Like <span>441</span>';
-  }})(this)">
+                                            <button class="btn btn-sm fw-semibold" id="postLikeBtn">
   <i class="bi bi-hand-thumbs-up"></i> Like <span>441</span>
 </button>
-<button class="btn btn-sm" id="postDislikeBtn"
-  onclick="(function(b){{
-    var on=b.dataset.on==='1';
-    on=!on;
-    var like=document.getElementById('postLikeBtn');
-    if(on){{like.dataset.on='0';like.style.cssText='';like.innerHTML='<i class=\'bi bi-hand-thumbs-up\'></i> Like <span>441</span>';}}
-    b.dataset.on=on?'1':'0';
-    b.style.cssText=on?'background:rgba(220,53,69,.12);color:#dc3545;border-color:#dc3545;':'';
-    b.innerHTML=on?'<i class=\'bi bi-hand-thumbs-down-fill\'></i> Dislike':'<i class=\'bi bi-hand-thumbs-down\'></i> Dislike';
-  }})(this)">
+<button class="btn btn-sm" id="postDislikeBtn">
   <i class="bi bi-hand-thumbs-down"></i> Dislike
 </button>
 <button class="btn btn-sm">
   <i class="bi bi-chat"></i> 2 Comments
 </button>
-<button class="btn btn-sm" id="postShareBtn"
-  onclick="(function(b){{
-    try{{navigator.clipboard.writeText(window.location.href);}}catch(e){{}}
-    var t=document.getElementById('dc-toast');
-    t.querySelector('span').textContent='Link copied!';
-    t.style.display='flex';
-    clearTimeout(window._t);
-    window._t=setTimeout(function(){{t.style.display='none';}},2200);
-    b.style.color='#0d6efd';
-    setTimeout(function(){{b.style.color='';}},2000);
-  }})(this)">
+<button class="btn btn-sm" id="postShareBtn">
   <i class="bi bi-share"></i> Share
 </button>
-<button class="btn btn-sm" id="postSaveBtn"
-  onclick="(function(b){{
-    var on=b.dataset.on==='1';
-    on=!on;
-    b.dataset.on=on?'1':'0';
-    b.style.cssText=on?'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;':'';
-    b.innerHTML=on?'<i class=\'bi bi-bookmark-fill\'></i> Saved':'<i class=\'bi bi-bookmark\'></i> Save';
-    if(on){{var t=document.getElementById('dc-toast');t.querySelector('span').textContent='Saved!';t.style.display='flex';clearTimeout(window._t2);window._t2=setTimeout(function(){{t.style.display='none';}},2200);}}
-  }})(this)">
+<button class="btn btn-sm" id="postSaveBtn">
   <i class="bi bi-bookmark"></i> Save
 </button>
 </div>
 <!-- Toast -->
-<div id="dc-toast" class="d-none d-flex align-items-center gap-2 mt-3 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700">
+<div id="dc-toast" style="display:none;" class="align-items-center gap-2 mt-3 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700">
   <i class="bi bi-check-circle-fill text-success"></i><span></span>
 </div>
                           </div>
@@ -414,106 +365,7 @@ $META_DESC  = "A poll from FEU Tech Discourse community.";
   </div>
 
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_scrolltop.php'); ?>
-  <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_discourse-modals.php'); ?>
-  <script src="/Discourse/assets/plugins/global/plugins.bundle.js"></script>
-  <script src="/Discourse/assets/js/scripts.bundle.js"></script>
+  <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_discourse-modals.php'); ?>  
+
   <script src="/Discourse/assets/js/dashboard.js"></script>
-  <script src="/Discourse/assets/js/sec-posts.js"></script>
-  
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.dc-comment-like').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var bubble = this.closest('.bg-light');
-      var dislike = bubble.querySelector('.dc-comment-dislike');
-      var on = this.classList.toggle('text-success');
-      this.querySelector('i').className = on ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
-      if (on) { dislike.classList.remove('text-danger'); dislike.querySelector('i').className = 'bi bi-hand-thumbs-down'; }
-    });
-  });
-  document.querySelectorAll('.dc-comment-dislike').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var bubble = this.closest('.bg-light');
-      var like = bubble.querySelector('.dc-comment-like');
-      var on = this.classList.toggle('text-danger');
-      this.querySelector('i').className = on ? 'bi bi-hand-thumbs-down-fill' : 'bi bi-hand-thumbs-down';
-      if (on) { like.classList.remove('text-success'); like.querySelector('i').className = 'bi bi-hand-thumbs-up'; }
-    });
-  });
-  document.querySelectorAll('.dc-reply-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var box = this.closest('.bg-light').querySelector('.dc-reply-box');
-      box.classList.toggle('d-none');
-      if (!box.classList.contains('d-none')) box.querySelector('textarea').focus();
-    });
-  });
-  document.querySelectorAll('.dc-reply-cancel').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      this.closest('.dc-reply-box').classList.add('d-none');
-    });
-  });
-  var anonAvatar = '/Discourse/assets/images/anonymous.png';
-  document.querySelectorAll('.dc-anon-toggle').forEach(function (cb) {
-    var row = cb.closest('.d-flex.gap-3');
-    var avatarImg = row ? row.querySelector('img') : null;
-    var originalSrc = avatarImg ? avatarImg.src : null;
-    cb.addEventListener('change', function () {
-      if (avatarImg) avatarImg.src = this.checked ? anonAvatar : originalSrc;
-    });
-  });
-});
-</script>
-
-<style>
-  .dc-post-body-wrap .dc-body-text {
-    display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-  }
-  .dc-post-body-wrap .dc-body-text.dc-expanded {
-    display: block !important;
-    -webkit-line-clamp: unset !important;
-    overflow: visible !important;
-  }
-  .dc-see-more-link {
-    color: #3a5c45 !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    font-size: 0.85rem;
-    text-decoration: none !important;
-    display: inline-block;
-    margin-top: 4px;
-  }
-  .dc-see-more-link:hover { text-decoration: underline !important; }
-</style>
-<script>
-(function() {
-  function initPostBody() {
-    document.querySelectorAll('.dc-post-body-wrap').forEach(function(wrap) {
-      var textDiv = wrap.querySelector('.dc-body-text');
-      var link = wrap.querySelector('.dc-see-more-link');
-      if (!textDiv || !link) return;
-      if (textDiv.scrollHeight > textDiv.clientHeight + 2) {
-        link.classList.remove('d-none');
-      }
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initPostBody);
-  } else {
-    initPostBody();
-  }
-})();
-function dcTogglePostBody(e, link) {
-  e.preventDefault();
-  var wrap = link.closest('.dc-post-body-wrap');
-  var textDiv = wrap ? wrap.querySelector('.dc-body-text') : null;
-  if (!textDiv) return;
-  var expanded = textDiv.classList.toggle('dc-expanded');
-  link.textContent = expanded ? 'See Less' : 'See More';
-}
-</script>
 </body>
-
-</html>
