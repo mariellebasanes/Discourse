@@ -1,8 +1,4 @@
-/**
- * Refactored: no JS changes required — targets #discourse-hero by ID (preserved).
- * DISCOURSE — Hero Section JS
- * File: assets/js/sec-hero.js
- */
+
 
 (function () {
   'use strict';

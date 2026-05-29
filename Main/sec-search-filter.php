@@ -11,7 +11,7 @@
         id="discourse-search-input"
       />
     </div>
-    <a href="/Discourse/pages/version/create-post.php" 
+    <a href="/Discourse/pages/view/create-post.php" 
    class="btn btn-sm rounded-pill fw-bold fs-7 px-4 py-3 d-inline-flex align-items-center justify-content-center gap-1"
    style="background:#0b301f; color:#fff;">
   <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
@@ -50,18 +50,18 @@
         All Topics
       </button>
       <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 fs-7 min-w-150px" aria-labelledby="topicsDropdown">
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Technology</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Culture</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Gaming</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">FEU</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Ideas</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Creative</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Science</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">News</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">AI</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Academics</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Lifestyle</a></li>
-        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="/Discourse/pages/version/community.php">Sports</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Technology</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Culture</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Gaming</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">FEU</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Ideas</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Creative</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Science</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">News</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">AI</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Academics</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Lifestyle</a></li>
+        <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#community-page">Sports</a></li>
       </ul>
     </div>
   </div>

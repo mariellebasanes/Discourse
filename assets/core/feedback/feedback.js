@@ -75,7 +75,7 @@ if ($("#edith-btn-login").length == 0) {
 
     $.ajax({
       type: "POST",
-      url: "/assets/core/feedback/feedback-add.php",
+      url: "/Discourse/assets/core/feedback/feedback-add.php",
       data: formData,
       contentType: false,
       cache: false,

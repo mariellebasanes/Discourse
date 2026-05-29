@@ -21,8 +21,10 @@
   background: #f0faf5;
   color: var(--dc-primary, #2D6A4F);
 }
-  #discoursePostTabs .nav-link.active,
-  #discoursePostTabs .nav-link:active {
-    color: #3a5c45 !important;
-    border-bottom-color: #3a5c45 !important;
-  }
+
+/* ── Post tab active state ───────────────────────────────── */
+#discoursePostTabs .nav-link.active,
+#discoursePostTabs .nav-link:active {
+  color: #3a5c45 !important;
+  border-bottom-color: #3a5c45 !important;
+}

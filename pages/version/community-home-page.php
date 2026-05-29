@@ -57,7 +57,7 @@ $META_TITLE = "Discourse - FEU Communities";
                                 <span class="svg-icon svg-icon-2 svg-icon-gray-500 position-absolute top-50 translate-middle-y ms-5 start-0 z-index-1">
                                     <i class="fas fa-search fs-5 text-muted"></i>
                                 </span>
-                                <input type="text" class="form-control form-control-solid ps-13 rounded-pill bg-white border-0" placeholder="Search a community..." style="height: 50px;">
+                                <input type="text" id="communitySearch" class="form-control form-control-solid ps-13 rounded-pill bg-white border-0" placeholder="Search a community..." style="height: 50px;">
                             </div>
                         </div>
                     </div>
@@ -101,11 +101,18 @@ $META_TITLE = "Discourse - FEU Communities";
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body p-6 text-center d-flex flex-column">
                                 <div class="mb-4 d-flex justify-content-center">
-                                    <div class="w-60px h-60px rounded d-flex align-items-center justify-content-center" style="background-color: #8C9933;">
-                                        <img src="/Discourse/assets/img/logo/feu-tech.webp" class="h-40px" alt="FEU" onerror="this.style.display='none'">
+                                    <?php 
+                                    $iconDetails = getCommunityIconDetails($community['title'], $community['cat']);
+                                    ?>
+                                    <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                                         style="background-color: <?php echo $iconDetails['bg_hex']; ?>;">
+                                        <i class="bi <?php echo $iconDetails['icon']; ?> fs-2hx"
+                                           style="color: <?php echo $iconDetails['color_hex']; ?>;"></i>
                                     </div>
                                 </div>
-                                <h3 class="fs-6 fw-bolder mb-2 text-dark"><?php echo $community['title']; ?></h3>
+                                <h3 class="fs-6 fw-bolder mb-2 text-dark">
+                                    <a href="/Discourse/pages/version/community.php" class="text-dark text-hover-success"><?php echo $community['title']; ?></a>
+                                </h3>
                                 <p class="text-muted fs-8 mb-4 flex-grow-1"><?php echo $community['desc']; ?></p>
                                 <div class="d-flex justify-content-center gap-4 mb-4">
                                     <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
@@ -227,19 +234,33 @@ $META_TITLE = "Discourse - FEU Communities";
             $('.modal-theme-header').css('background-color', selectedColor);
         });
 
-        // 2. Filter functionality for cards
+        // 2. Filter and search functionality for cards
+        function filterAndSearch() {
+            const query = $('#communitySearch').val().toLowerCase();
+            const activeFilter = $('.filter-btn.active').data('filter');
+            
+            $('.community-item').each(function() {
+                const title = $(this).find('h3').text().toLowerCase();
+                const desc = $(this).find('p').text().toLowerCase();
+                
+                const matchesQuery = title.includes(query) || desc.includes(query);
+                const matchesFilter = (activeFilter === 'all') || ($(this).data('category') === activeFilter);
+                
+                if (matchesQuery && matchesFilter) {
+                    $(this).fadeIn(200);
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        $('#communitySearch').on('keyup', filterAndSearch);
+
         $('.filter-btn').on('click', function(e) {
             e.preventDefault();
             $('.filter-btn').removeClass('active btn-success').css({'background-color': '', 'color': ''}).addClass('bg-white text-muted btn-outline btn-outline-dashed btn-outline-default');
             $(this).addClass('active btn-success').removeClass('bg-white text-muted btn-outline btn-outline-dashed btn-outline-default').css({'background-color': '#1A8B44', 'color': 'white'});
-            
-            const filter = $(this).data('filter');
-            if(filter === 'all') {
-                $('.community-item').fadeIn(300);
-            } else {
-                $('.community-item').hide();
-                $('.community-item[data-category="' + filter + '"]').fadeIn(300);
-            }
+            filterAndSearch();
         });
 
         // 3. Add create community dynamic creation
@@ -252,16 +273,59 @@ $META_TITLE = "Discourse - FEU Communities";
             if (!cat) cat = 'my-communities';
             const activeColor = $('.theme-color-btn.active').attr('data-color') || '#1A8B44';
             
+            let icon = 'bi-cpu';
+            let bgClass = 'bg-light-success';
+            let textClass = 'text-success';
+            
+            const nameLower = name.toLowerCase();
+            const catLower = cat.toLowerCase();
+            
+            if (nameLower.includes('life')) {
+                icon = 'bi-heart-fill';
+                bgClass = 'bg-light-danger';
+                textClass = 'text-danger';
+            } else if (nameLower.includes('fresh') || nameLower.includes('study') || nameLower.includes('group')) {
+                icon = 'bi-people-fill';
+                bgClass = 'bg-light-primary';
+                textClass = 'text-primary';
+            } else if (nameLower.includes('food') || nameLower.includes('trip')) {
+                icon = 'bi-cup-hot-fill';
+                bgClass = 'bg-light-warning';
+                textClass = 'text-warning';
+            } else if (nameLower.includes('cosplay') || nameLower.includes('artist') || nameLower.includes('culture') || nameLower.includes('hub')) {
+                icon = 'bi-palette-fill';
+                bgClass = 'bg-light-info';
+                textClass = 'text-info';
+            } else if (nameLower.includes('enroll') || nameLower.includes('thesis') || nameLower.includes('advice')) {
+                icon = 'bi-journal-bookmark-fill';
+                bgClass = 'bg-light-info';
+                textClass = 'text-info';
+            } else if (nameLower.includes('innovat')) {
+                icon = 'bi-lightbulb-fill';
+                bgClass = 'bg-light-warning';
+                textClass = 'text-warning';
+            } else if (catLower === 'feu alabang') {
+                icon = 'bi-building-fill';
+                bgClass = 'bg-light-warning';
+                textClass = 'text-warning';
+            } else if (catLower === 'feu diliman') {
+                icon = 'bi-mortarboard-fill';
+                bgClass = 'bg-light-primary';
+                textClass = 'text-primary';
+            }
+
             const newCard = `
             <div class="col-md-4 col-lg-3 community-item" data-category="${cat}" style="display: none;">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="card-body p-6 text-center d-flex flex-column">
                         <div class="mb-4 d-flex justify-content-center">
-                            <div class="w-60px h-60px rounded d-flex align-items-center justify-content-center" style="background-color: ${activeColor};">
-                                <img src="/Discourse/assets/img/logo/feu-tech.webp" class="h-40px" alt="FEU" onerror="this.style.display='none'">
+                            <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center ${bgClass} ${textClass} fs-1 shadow-sm">
+                                <i class="bi ${icon} fs-2hx"></i>
                             </div>
                         </div>
-                        <h3 class="fs-6 fw-bolder mb-2 text-dark">${name}</h3>
+                        <h3 class="fs-6 fw-bolder mb-2 text-dark">
+                            <a href="/Discourse/pages/version/community.php" class="text-dark text-hover-success">${name}</a>
+                        </h3>
                         <p class="text-muted fs-8 mb-4 flex-grow-1">${desc}</p>
                         <div class="d-flex justify-content-center gap-4 mb-4">
                             <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">

@@ -109,7 +109,7 @@
   <div class="card-body p-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
       <h6 class="fs-6 fw-bold text-gray-800 mb-0">Communities</h6>
-      <a href="/Discourse/pages/version/index.php"
+      <a href="/Discourse/pages/version/community-home-page.php"
         class="badge badge-light-success rounded-pill px-4 py-2 fs-8 fw-bold text-decoration-none dc-see-all-btn">
         See All
       </a>
@@ -159,22 +159,22 @@
   <div class="card-body p-4">
     <h6 class="fs-6 fw-bold text-gray-800 mb-3">Browse Topics</h6>
     <div class="d-flex flex-wrap gap-2">
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-cpu me-1"></i>TECHNOLOGY</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-palette me-1"></i>CULTURE</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-controller me-1"></i>GAMING</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-building me-1"></i>FEU</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-lightbulb me-1"></i>IDEAS</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-stars me-1"></i>CREATIVE</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-droplet-half me-1"></i>SCIENCE</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-newspaper me-1"></i>NEWS</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-robot me-1"></i>AI</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-book me-1"></i>ACADEMICS</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-emoji-smile me-1"></i>LIFESTYLE</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-film me-1"></i>ENTERTAINMENT</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-music-note me-1"></i>MUSIC</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-megaphone me-1"></i>POLITICS</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-exclamation-circle me-1"></i>ISSUES</a>
-      <a href="/Discourse/pages/version/index.php" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-trophy me-1"></i>SPORTS</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-primary rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-cpu me-1"></i>TECHNOLOGY</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-danger rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-palette me-1"></i>CULTURE</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-warning rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-controller me-1"></i>GAMING</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-warning rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-building me-1"></i>FEU</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-info rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-lightbulb me-1"></i>IDEAS</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-primary rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-stars me-1"></i>CREATIVE</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-info rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-droplet-half me-1"></i>SCIENCE</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-danger rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-newspaper me-1"></i>NEWS</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-success rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-robot me-1"></i>AI</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-warning rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-book me-1"></i>ACADEMICS</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-info rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-emoji-smile me-1"></i>LIFESTYLE</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-primary rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-film me-1"></i>ENTERTAINMENT</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-danger rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-music-note me-1"></i>MUSIC</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-dark rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-megaphone me-1"></i>POLITICS</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-danger rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-exclamation-circle me-1"></i>ISSUES</a>
+      <a href="/Discourse/pages/version/community.php" class="badge badge-light-warning rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold"><i class="bi bi-trophy me-1"></i>SPORTS</a>
     </div>
   </div>
 </div>

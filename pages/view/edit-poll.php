@@ -1,5 +1,4 @@
 <?php
-/* Refactored: custom CSS → Bootstrap/Metronic utilities */
 define('MBG', TRUE);
 include(dirname(dirname(__DIR__)) . '/functions-new.php');
 
@@ -9,8 +8,6 @@ include(dirname(dirname(__DIR__)) . '/functions-new.php');
 $META_TITLE = "Edit Poll";
 $META_DESC  = "Edit your existing poll.";
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
   <?php HEAD_ESSENTIALS(); ?>
@@ -26,12 +23,12 @@ $META_DESC  = "Edit your existing poll.";
   data-kt-app-header-fixed-mobile="true"
   class="app-default">
 
-  <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_page-loader.php'); ?>
+  <?php include(dirname(dirname(__DIR__)) . '/partials/_page-loader.php'); ?>
 
   <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_header.php'); ?>
+      <?php include(dirname(dirname(__DIR__)) . '/partials/_header.php'); ?>
 
       <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -175,7 +172,8 @@ $META_DESC  = "Edit your existing poll.";
                             </div>
 
                             <div id="poll_context_editor" class="dc-editor-area" contenteditable="true"
-                              data-placeholder="Add some context for your poll (optional)">Been talking to a lot of classmates lately and everyone seems to struggle with different things. Curious what the community thinks — drop your vote below!</div>
+                              data-placeholder="Add some context for your poll (optional)"
+                              style="height:300px !important;overflow-y:auto !important;">Been talking to a lot of classmates lately and everyone seems to struggle with different things. Curious what the community thinks — drop your vote below!</div>
 
                             <div class="dc-image-wrapper" id="pollImageWrapper">
                               <div class="dc-image-overlay">
@@ -469,13 +467,13 @@ $META_DESC  = "Edit your existing poll.";
 
             </main>
           </div>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_footer.php'); ?>
+          <?php include(dirname(dirname(__DIR__)) . '/partials/_footer.php'); ?>
         </div>
       </div>
     </div>
   </div>
 
-  <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_scrolltop.php'); ?>
+  <?php include(dirname(dirname(__DIR__)) . '/partials/_scrolltop.php'); ?>
 
   <!-- Link Modal -->
   <div class="modal fade" id="modal-link" tabindex="-1" aria-hidden="true">
@@ -526,191 +524,7 @@ $META_DESC  = "Edit your existing poll.";
     </div>
   </div>
 
-  <script>
-    // ── Context editor (copied from edit-post) ──
-    const editor = document.getElementById('poll_context_editor');
-
-    function fmt(cmd, val = null) {
-      editor.focus();
-      document.execCommand(cmd, false, val);
-    }
-
-    function insertAtCursor(html) {
-      editor.focus();
-      const sel = window.getSelection();
-      if (!sel.rangeCount) return;
-      const range = sel.getRangeAt(0);
-      range.deleteContents();
-      const div = document.createElement('div');
-      div.innerHTML = html;
-      const frag = document.createDocumentFragment();
-      let lastNode;
-      while (div.firstChild) { lastNode = div.firstChild; frag.appendChild(div.firstChild); }
-      range.insertNode(frag);
-      if (lastNode) {
-        const r2 = range.cloneRange();
-        r2.setStartAfter(lastNode);
-        r2.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(r2);
-      }
-    }
-
-    function insertList(type) {
-      editor.focus();
-      document.execCommand(type === 'ol' ? 'insertOrderedList' : 'insertUnorderedList', false, null);
-    }
-
-    function insertCodeBlock() {
-      insertAtCursor('<div class="dc-code-block" contenteditable="true" spellcheck="false">// Your code here...</div><p><br></p>');
-    }
-
-    function insertSpoiler() {
-      insertAtCursor('<div class="dc-spoiler"><div class="dc-spoiler-label">⚠ Spoiler — click to reveal</div><div class="dc-spoiler-content" contenteditable="true">Hidden content here...</div></div><p><br></p>');
-    }
-
-    function insertTable() {
-      const html = `<table style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr>
-        <th contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;background:#f0faf5;font-size:13px;">Header 1</th>
-        <th contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;background:#f0faf5;font-size:13px;">Header 2</th>
-        <th contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;background:#f0faf5;font-size:13px;">Header 3</th>
-      </tr></thead><tbody><tr>
-        <td contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;font-size:13px;">Cell</td>
-        <td contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;font-size:13px;">Cell</td>
-        <td contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;font-size:13px;">Cell</td>
-      </tr></tbody></table><p><br></p>`;
-      insertAtCursor(html);
-    }
-
-    let mdMode = false;
-
-    function toggleMarkdown(e) {
-      e.preventDefault();
-      mdMode = !mdMode;
-      if (mdMode) {
-        const md = editor.innerHTML
-          .replace(/<b>(.*?)<\/b>/gi, '**$1**').replace(/<i>(.*?)<\/i>/gi, '_$1_')
-          .replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '')
-          .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-        editor.contentEditable = 'false';
-        editor.style.display = 'none';
-        let ta = document.getElementById('poll-md-textarea');
-        if (!ta) {
-          ta = document.createElement('textarea');
-          ta.id = 'poll-md-textarea';
-          ta.className = 'dc-editor-area';
-          ta.style.borderTop = '1.5px solid #e4e6ef';
-          editor.parentNode.insertBefore(ta, editor.nextSibling);
-        }
-        ta.value = md;
-        ta.style.display = 'block';
-        e.target.textContent = 'Switch to Visual';
-      } else {
-        const ta = document.getElementById('poll-md-textarea');
-        if (ta) { editor.innerHTML = ta.value.replace(/\n/g, '<br>'); ta.style.display = 'none'; }
-        editor.contentEditable = 'true';
-        editor.style.display = 'block';
-        e.target.textContent = 'Switch to Markdown';
-      }
-    }
-
-    function pollRemoveImage() {
-      document.getElementById('pollImageWrapper').style.display = 'none';
-      document.getElementById('pollNoImagePlaceholder').style.display = 'block';
-    }
-
-    function pollReplaceImage(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        let img = document.getElementById('pollAttachedImage');
-        if (!img) {
-          img = document.createElement('img');
-          img.id = 'pollAttachedImage';
-          img.className = 'dc-img-inserted';
-          img.style.cssText = 'max-height:220px;width:100%;object-fit:cover;margin:0;';
-          document.getElementById('pollImageWrapper').prepend(img);
-        }
-        img.src = e.target.result;
-        document.getElementById('pollImageWrapper').style.display = 'block';
-        document.getElementById('pollNoImagePlaceholder').style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-      event.target.value = '';
-    }
-
-    function openModal(id) {
-      new bootstrap.Modal(document.getElementById(id)).show();
-    }
-
-    function closeModal(id) {
-      bootstrap.Modal.getInstance(document.getElementById(id))?.hide();
-    }
-
-    function insertLink() {
-      const txt = document.getElementById('link-text').value || document.getElementById('link-url').value;
-      const url = document.getElementById('link-url').value;
-      if (!url) return;
-      insertAtCursor(`<a href="${url}" target="_blank" style="color:#3a5c45;font-weight:600;">${txt}</a>`);
-      closeModal('modal-link');
-      document.getElementById('link-text').value = '';
-      document.getElementById('link-url').value = '';
-    }
-
-    function insertVideo() {
-      let url = document.getElementById('video-url').value.trim();
-      if (!url) return;
-      const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-      if (ytMatch) url = `https://www.youtube.com/embed/${ytMatch[1]}`;
-      insertAtCursor(`<iframe style="width:100%;aspect-ratio:16/9;border-radius:8px;margin:8px 0;border:none;" src="${url}" allowfullscreen></iframe><p><br></p>`);
-      closeModal('modal-video');
-      document.getElementById('video-url').value = '';
-    }
-
-    // ── Poll options ──
-    let newOptionCount = 0;
-
-    function addPollOption() {
-      newOptionCount++;
-      const wrap = document.getElementById('new-options-wrap');
-      const row = document.createElement('div');
-      row.className = 'd-flex align-items-center gap-2 p-3 bg-light border rounded-3 mb-2';
-      row.id = 'new-opt-' + newOptionCount;
-      row.innerHTML = `
-        <span class="text-muted fs-6" style="cursor:grab;">⠿</span>
-        <input type="text" class="form-control form-control-solid flex-grow-1" placeholder="New option ${newOptionCount}...">
-        <span class="text-muted fs-8 fw-semibold text-nowrap">0 votes</span>
-        <button class="btn btn-sm btn-icon btn-light-danger" title="Remove option" onclick="removeOption('new-opt-${newOptionCount}')" type="button">
-          <i class="ki-duotone ki-cross fs-6"><span class="path1"></span><span class="path2"></span></i>
-        </button>
-      `;
-      wrap.appendChild(row);
-      row.querySelector('input').focus();
-    }
-
-    function removeOption(id) {
-      const el = document.getElementById(id);
-      if (el) el.remove();
-    }
-
-    function savePoll() {
-      const title = document.getElementById('poll_title').value.trim();
-      if (!title) {
-        document.getElementById('poll_title').focus();
-        return;
-      }
-      KTApp && KTApp.showPageLoading();
-      // TODO: AJAX save
-    }
-
-    function confirmDelete() {
-      if (confirm('Are you sure you want to permanently delete this poll? This cannot be undone.')) {
-        KTApp && KTApp.showPageLoading();
-        // TODO: AJAX delete
-      }
-    }
-  </script>
+  
+  <script>window.DC_EDITOR_ID = 'poll_context_editor';</script>
+  <script src="/Discourse/assets/js/dc-editor.js"></script>
 </body>
-
-</html>

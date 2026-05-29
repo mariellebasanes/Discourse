@@ -93,13 +93,13 @@
                                 </button>
                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-auto min-w-200 mw-300px py-3" data-kt-menu="true">
                                     <div class="menu-item px-3">
-                                        <a href="/sample/${row[3]}" class="menu-link px-3" target="_blank">
+                                        <a href="/Discourse/${row[3]}" class="menu-link px-3" target="_blank">
                                             <i class="bi bi-pencil-square me-2"></i>
                                             View
                                         </a>
                                     </div>
                                     <div class="menu-item px-3">
-                                        <a href="/sample/manage/${row[3]}" class="menu-link px-3" onclick="KTApp.showPageLoading()">
+                                        <a href="/Discourse/manage/${row[3]}" class="menu-link px-3" onclick="KTApp.showPageLoading()">
                                             <i class="bi bi-pencil-square me-2"></i>
                                             Edit
                                         </a>

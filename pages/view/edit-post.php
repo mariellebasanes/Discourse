@@ -1,5 +1,4 @@
 <?php
-/* Refactored: custom CSS → Bootstrap/Metronic utilities */
 define('MBG', TRUE);
 include(dirname(dirname(__DIR__)) . '/functions-new.php');
 
@@ -9,9 +8,6 @@ include(dirname(dirname(__DIR__)) . '/functions-new.php');
 $META_TITLE = "Edit Post";
 $META_DESC  = "Edit your existing post.";
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
   <?php HEAD_ESSENTIALS(); ?>
   <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet">
@@ -26,12 +22,12 @@ $META_DESC  = "Edit your existing post.";
   data-kt-app-header-fixed-mobile="true"
   class="app-default">
 
-  <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_page-loader.php'); ?>
+  <?php include(dirname(dirname(__DIR__)) . '/partials/_page-loader.php'); ?>
 
   <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_header.php'); ?>
+      <?php include(dirname(dirname(__DIR__)) . '/partials/_header.php'); ?>
 
       <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -178,7 +174,8 @@ $META_DESC  = "Edit your existing post.";
                             </div>
 
                             <div id="edit_body_editor" class="dc-editor-area" contenteditable="true"
-                              data-placeholder="Body text (optional)">Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.<br><br>Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.</div>
+                              data-placeholder="Body text (optional)"
+                              style="height:300px !important;overflow-y:auto !important;">Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.<br><br>Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.</div>
 
                             <div class="dc-image-wrapper" id="imageWrapper" style="display:block;">
                               <img src="https://www.feu.edu.ph/wp-content/uploads/2023/06/thumbnail__a3-1.jpg"
@@ -379,13 +376,13 @@ $META_DESC  = "Edit your existing post.";
 
             </main>
           </div>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_footer.php'); ?>
+          <?php include(dirname(dirname(__DIR__)) . '/partials/_footer.php'); ?>
         </div>
       </div>
     </div>
   </div>
 
-  <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_scrolltop.php'); ?>
+  <?php include(dirname(dirname(__DIR__)) . '/partials/_scrolltop.php'); ?>
 
   <!-- Link Modal -->
   <div class="modal fade" id="modal-link" tabindex="-1" aria-hidden="true">
@@ -436,161 +433,7 @@ $META_DESC  = "Edit your existing post.";
     </div>
   </div>
 
-  <script>
-    const editor = document.getElementById('edit_body_editor');
-
-    function fmt(cmd, val = null) {
-      editor.focus();
-      document.execCommand(cmd, false, val);
-    }
-
-    function insertAtCursor(html) {
-      editor.focus();
-      const sel = window.getSelection();
-      if (!sel.rangeCount) return;
-      const range = sel.getRangeAt(0);
-      range.deleteContents();
-      const div = document.createElement('div');
-      div.innerHTML = html;
-      const frag = document.createDocumentFragment();
-      let lastNode;
-      while (div.firstChild) {
-        lastNode = div.firstChild;
-        frag.appendChild(div.firstChild);
-      }
-      range.insertNode(frag);
-      if (lastNode) {
-        const r2 = range.cloneRange();
-        r2.setStartAfter(lastNode);
-        r2.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(r2);
-      }
-    }
-
-    function insertList(type) {
-      editor.focus();
-      document.execCommand(type === 'ol' ? 'insertOrderedList' : 'insertUnorderedList', false, null);
-    }
-
-    function insertCodeBlock() {
-      insertAtCursor('<div class="dc-code-block" contenteditable="true" spellcheck="false">// Your code here...</div><p><br></p>');
-    }
-
-    function insertSpoiler() {
-      insertAtCursor('<div class="dc-spoiler"><div class="dc-spoiler-label">⚠ Spoiler — click to reveal</div><div class="dc-spoiler-content" contenteditable="true">Hidden content here...</div></div><p><br></p>');
-    }
-
-    function insertTable() {
-      const html = `<table style="border-collapse:collapse;width:100%;margin:8px 0;"><thead><tr>
-        <th contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;background:#f0faf5;font-size:13px;">Header 1</th>
-        <th contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;background:#f0faf5;font-size:13px;">Header 2</th>
-        <th contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;background:#f0faf5;font-size:13px;">Header 3</th>
-      </tr></thead><tbody><tr>
-        <td contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;font-size:13px;">Cell</td>
-        <td contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;font-size:13px;">Cell</td>
-        <td contenteditable="true" style="border:1px solid #e4e6ef;padding:6px 10px;font-size:13px;">Cell</td>
-      </tr></tbody></table><p><br></p>`;
-      insertAtCursor(html);
-    }
-
-    let mdMode = false;
-
-    function toggleMarkdown(e) {
-      e.preventDefault();
-      mdMode = !mdMode;
-      if (mdMode) {
-        const md = editor.innerHTML
-          .replace(/<b>(.*?)<\/b>/gi, '**$1**').replace(/<i>(.*?)<\/i>/gi, '_$1_')
-          .replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '')
-          .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-        editor.contentEditable = 'false';
-        editor.style.display = 'none';
-        let ta = document.getElementById('md-textarea');
-        if (!ta) {
-          ta = document.createElement('textarea');
-          ta.id = 'md-textarea';
-          ta.className = 'dc-editor-area';
-          ta.style.borderTop = '1.5px solid #e4e6ef';
-          ta.style.display = 'block';
-          editor.parentNode.insertBefore(ta, editor.nextSibling);
-        }
-        ta.value = md;
-        ta.style.display = 'block';
-        e.target.textContent = 'Switch to Visual';
-      } else {
-        const ta = document.getElementById('md-textarea');
-        if (ta) {
-          editor.innerHTML = ta.value.replace(/\n/g, '<br>');
-          ta.style.display = 'none';
-        }
-        editor.contentEditable = 'true';
-        editor.style.display = 'block';
-        e.target.textContent = 'Switch to Markdown';
-      }
-    }
-
-    function removeImage() {
-      document.getElementById('imageWrapper').style.display = 'none';
-      document.getElementById('noImagePlaceholder').style.display = 'block';
-    }
-
-    function replaceImage(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('attachedImage').src = e.target.result;
-        document.getElementById('imageWrapper').style.display = 'block';
-        document.getElementById('noImagePlaceholder').style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-      event.target.value = '';
-    }
-
-    function openModal(id) {
-      new bootstrap.Modal(document.getElementById(id)).show();
-    }
-
-    function closeModal(id) {
-      bootstrap.Modal.getInstance(document.getElementById(id))?.hide();
-    }
-
-    function insertLink() {
-      const txt = document.getElementById('link-text').value || document.getElementById('link-url').value;
-      const url = document.getElementById('link-url').value;
-      if (!url) return;
-      insertAtCursor(`<a href="${url}" target="_blank" style="color:#3a5c45;font-weight:600;">${txt}</a>`);
-      closeModal('modal-link');
-      document.getElementById('link-text').value = '';
-      document.getElementById('link-url').value = '';
-    }
-
-    function insertVideo() {
-      let url = document.getElementById('video-url').value.trim();
-      if (!url) return;
-      const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-      if (ytMatch) url = `https://www.youtube.com/embed/${ytMatch[1]}`;
-      insertAtCursor(`<iframe style="width:100%;aspect-ratio:16/9;border-radius:8px;margin:8px 0;border:none;" src="${url}" allowfullscreen></iframe><p><br></p>`);
-      closeModal('modal-video');
-      document.getElementById('video-url').value = '';
-    }
-
-    function savePost() {
-      const title = document.getElementById('edit_title').value.trim();
-      if (!title) {
-        document.getElementById('edit_title').focus();
-        return;
-      }
-      typeof KTApp !== 'undefined' && KTApp.showPageLoading();
-    }
-
-    function confirmDelete() {
-      if (confirm('Are you sure you want to permanently delete this post? This cannot be undone.')) {
-        typeof KTApp !== 'undefined' && KTApp.showPageLoading();
-      }
-    }
-  </script>
+  
+  <script>window.DC_EDITOR_ID = 'edit_body_editor';</script>
+  <script src="/Discourse/assets/js/dc-editor.js"></script>
 </body>
-
-</html>

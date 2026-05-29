@@ -23,7 +23,7 @@ function fetchNotifications() {
     generateSkeletonNotifications(2);
 
     $.ajax({
-        url: '/assets/core/notifications/notifications-fetch.php',
+        url: '/Discourse/assets/core/notifications/notifications-fetch.php',
         method: 'POST',
         data: { userId: userId, offset: offset },
         success: function (html) {

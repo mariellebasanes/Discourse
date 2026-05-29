@@ -184,16 +184,16 @@ $user_name = "SOFIA KARIM";
                           <!-- Actions -->
                           <div class="d-flex align-items-center gap-1">
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="ki-duotone ki-up fs-8"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-8"><?php echo $act['upvotes']; ?></span>
+                              <i class="bi bi-hand-thumbs-up fs-8"></i> <span class="fw-bold fs-8"><?php echo $act['upvotes']; ?></span>
                             </button>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="ki-duotone ki-down fs-8"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-8"><?php echo $act['downvotes']; ?></span>
+                              <i class="bi bi-hand-thumbs-down fs-8"></i> <span class="fw-bold fs-8"><?php echo $act['downvotes']; ?></span>
                             </button>
                             <a href="/Discourse/pages/version/view-post.php" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill text-decoration-none">
-                              <i class="ki-duotone ki-message-text-2 fs-8"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-8"><?php echo $act['comments']; ?></span>
+                              <i class="bi bi-chat fs-8"></i> <span class="fw-bold fs-8"><?php echo $act['comments']; ?></span>
                             </a>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="ki-duotone ki-share fs-8"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i> <span class="fw-bold fs-8">Share</span>
+                              <i class="bi bi-share fs-8"></i> <span class="fw-bold fs-8">Share</span>
                             </button>
                           </div>
                         </div>
@@ -251,16 +251,16 @@ $user_name = "SOFIA KARIM";
                           <?php } ?>
                           <div class="d-flex align-items-center gap-1 pt-2 border-top border-gray-200">
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="ki-duotone ki-up fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9"><?php echo $post['upvotes']; ?></span>
+                              <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['upvotes']; ?></span>
                             </button>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="ki-duotone ki-down fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9"><?php echo $post['downvotes']; ?></span>
+                              <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['downvotes']; ?></span>
                             </button>
                             <a href="/Discourse/pages/version/view-post.php" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill text-decoration-none">
-                              <i class="ki-duotone ki-message-text-2 fs-9"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-9"><?php echo $post['comments']; ?></span>
+                              <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['comments']; ?></span>
                             </a>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="ki-duotone ki-share fs-9"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i> <span class="fw-bold fs-9">Share</span>
+                              <i class="bi bi-share fs-9"></i> <span class="fw-bold fs-9">Share</span>
                             </button>
                           </div>
                         </div>
@@ -312,18 +312,18 @@ $user_name = "SOFIA KARIM";
                           <p class="text-gray-700 fs-6 lh-lg mb-4"><?php echo $c['body']; ?></p>
                           
                           <!-- Actions -->
-                          <div class="d-flex align-items-center gap-1">
+                          <div class="d-flex align-items-center gap-1 mt-2">
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="ki-duotone ki-up fs-8"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-8">3</span>
+                              <i class="bi bi-hand-thumbs-up fs-8"></i> <span class="fw-bold fs-8">3</span>
                             </button>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="ki-duotone ki-down fs-8"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-8">1</span>
+                              <i class="bi bi-hand-thumbs-down fs-8"></i> <span class="fw-bold fs-8">1</span>
                             </button>
                             <a href="/Discourse/pages/version/view-post.php" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill text-decoration-none">
-                              <i class="ki-duotone ki-message-text-2 fs-8"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-8">12</span>
+                              <i class="bi bi-chat fs-8"></i> <span class="fw-bold fs-8">12</span>
                             </a>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="ki-duotone ki-share fs-8"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i> <span class="fw-bold fs-8">Share</span>
+                              <i class="bi bi-share fs-8"></i> <span class="fw-bold fs-8">Share</span>
                             </button>
                           </div>
                         </div>
@@ -347,7 +347,7 @@ $user_name = "SOFIA KARIM";
                           <div class="d-flex align-items-center mb-4">
                             <div class="symbol symbol-40px me-3">
                               <div class="symbol-label fs-7 fw-bold bg-light-success">
-                                <i class="ki-duotone ki-up fs-4 text-success"><span class="path1"></span><span class="path2"></span></i>
+                                <i class="bi bi-hand-thumbs-up-fill fs-4 text-success"></i>
                               </div>
                             </div>
                             <div class="flex-grow-1">
@@ -375,13 +375,13 @@ $user_name = "SOFIA KARIM";
 
                           <div class="d-flex align-items-center gap-1">
                             <button class="btn btn-sm btn-success vote-btn active d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="ki-duotone ki-up fs-8 text-white"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-8 text-white"><?php echo $u['upvotes']; ?></span>
+                              <i class="bi bi-hand-thumbs-up-fill fs-8 text-white"></i> <span class="fw-bold fs-8 text-white"><?php echo $u['upvotes']; ?></span>
                             </button>
                             <a href="/Discourse/pages/version/view-post.php" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill text-decoration-none">
-                              <i class="ki-duotone ki-message-text-2 fs-8"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-8"><?php echo $u['comments']; ?></span>
+                              <i class="bi bi-chat fs-8"></i> <span class="fw-bold fs-8"><?php echo $u['comments']; ?></span>
                             </a>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="ki-duotone ki-share fs-8"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i> <span class="fw-bold fs-8">Share</span>
+                              <i class="bi bi-share fs-8"></i> <span class="fw-bold fs-8">Share</span>
                             </button>
                           </div>
                         </div>

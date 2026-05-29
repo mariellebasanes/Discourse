@@ -1,75 +1,156 @@
+<?php
+if (!function_exists('getCommunityIconDetails')) {
+    function getCommunityIconDetails($name, $category = null) {
+        $name_lower = strtolower($name);
+        $cat_lower = $category ? strtolower($category) : '';
+
+        // Each entry: icon, bg hex (light tint), icon color hex (dark saturated shade)
+        // Default fallback — FEU Tech / CPU / general
+        $icon       = "bi-cpu";
+        $bg_hex     = "#d1fae5"; // light emerald
+        $color_hex  = "#065f46"; // deep emerald
+
+        if (strpos($name_lower, 'life') !== false) {
+            $icon      = "bi-heart-fill";
+            $bg_hex    = "#fce7f3"; // light rose/pink
+            $color_hex = "#9d174d"; // deep rose
+
+        } elseif (strpos($name_lower, 'fresh') !== false || strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false) {
+            $icon      = "bi-people-fill";
+            $bg_hex    = "#dbeafe"; // light blue
+            $color_hex = "#1e3a8a"; // deep blue
+
+        } elseif (strpos($name_lower, 'food') !== false || strpos($name_lower, 'trip') !== false) {
+            $icon      = "bi-cup-hot-fill";
+            $bg_hex    = "#fef3c7"; // light amber
+            $color_hex = "#92400e"; // deep amber/brown
+
+        } elseif (strpos($name_lower, 'cosplay') !== false || strpos($name_lower, 'artist') !== false || strpos($name_lower, 'culture') !== false || strpos($name_lower, 'hub') !== false) {
+            $icon      = "bi-palette-fill";
+            $bg_hex    = "#e0f2fe"; // light cyan
+            $color_hex = "#0c4a6e"; // deep cyan/navy
+
+        } elseif (strpos($name_lower, 'enroll') !== false || strpos($name_lower, 'thesis') !== false || strpos($name_lower, 'advice') !== false) {
+            $icon      = "bi-journal-bookmark-fill";
+            $bg_hex    = "#ede9fe"; // light violet
+            $color_hex = "#4c1d95"; // deep violet
+
+        } elseif (strpos($name_lower, 'innovat') !== false) {
+            $icon      = "bi-lightbulb-fill";
+            $bg_hex    = "#fff7ed"; // light orange
+            $color_hex = "#7c2d12"; // deep burnt orange
+
+        } elseif ($cat_lower === "feu alabang") {
+            $icon      = "bi-building-fill";
+            $bg_hex    = "#fef9c3"; // light yellow
+            $color_hex = "#713f12"; // deep yellow-brown
+
+        } elseif ($cat_lower === "feu diliman") {
+            $icon      = "bi-mortarboard-fill";
+            $bg_hex    = "#dbeafe"; // light blue
+            $color_hex = "#1e3a8a"; // deep blue
+        }
+
+        return [
+            'icon'       => $icon,
+            'bg_hex'     => $bg_hex,
+            'color_hex'  => $color_hex,
+            // Keep legacy keys for backward compatibility
+            'bg_class'   => '',
+            'text_class' => ''
+        ];
+    }
+}
+
+if (!function_exists('getCategoryBadgeStyle')) {
+    function getCategoryBadgeStyle($category) {
+        $cat = strtoupper(trim($category));
+        switch ($cat) {
+            case 'NEWS':
+                return 'background-color: #8b5cf6; color: #ffffff;'; // Purple
+            case 'TECHNOLOGY':
+            case 'AI':
+                return 'background-color: #10b981; color: #ffffff;'; // Emerald/Teal
+            case 'CULTURE':
+            case 'CREATIVE':
+            case 'MUSIC':
+                return 'background-color: #ec4899; color: #ffffff;'; // Pink
+            case 'GAMING':
+            case 'SPORTS':
+                return 'background-color: #f97316; color: #ffffff;'; // Orange
+            case 'FEU':
+            case 'ACADEMICS':
+                return 'background-color: #eab308; color: #ffffff;'; // Gold/Yellow
+            case 'IDEAS':
+            case 'LIFESTYLE':
+                return 'background-color: #06b6d4; color: #ffffff;'; // Cyan
+            default:
+                return 'background-color: #6b7280; color: #ffffff;'; // Gray
+        }
+    }
+}
+?>
 <div id="kt_app_header" class="app-header bg-white" data-kt-sticky="true"
   data-kt-sticky-activate="{default: true, lg: true}" data-kt-sticky-name="app-header-minimize"
   data-kt-sticky-offset="{default: '200px', lg: '0'}" data-kt-sticky-animation="false">
 
-  <div
-    class="app-container container-xxl d-none justify-content-start align-items-center position-absolute h-100 bg-white"
+  <div class="app-container container-xxl d-none justify-content-start align-items-center position-absolute h-100 bg-white"
     style="z-index: 999;">
     <div id="search-box"></div>
   </div>
 
-  <div class="app-container container-xxl d-flex align-items-stretch justify-content-between "
-    id="kt_app_header_container">
+  <div class="app-container container-xxl d-flex align-items-stretch justify-content-between" id="kt_app_header_container">
 
     <div class="app-navbar flex-shrink-0">
-      <!-- App Browser Icon -->
-      <div class="app-navbar-item me-3">
-        <a href="#" class="btn btn-icon btn-custom btn-icon-muted btn-active-light w-35px h-35px">
-          <span class="svg-icon svg-icon-1">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor"/><rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2" fill="currentColor"/><rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2" fill="currentColor"/><rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor"/></svg>
-          </span>
-        </a>
-      </div>
-      <a href="/Discourse/index.php" onclick="KTApp.showPageLoading()" class="d-flex align-items-center text-decoration-none">
-        <div class="d-flex align-items-center">
-          <span class="svg-icon svg-icon-2hx svg-icon-success me-2">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor"></path>
-                  <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor"></path>
-              </svg>
-          </span>
-          <span class="fs-1 fw-bolder" style="color: #FFB800;">Discourse</span>
-        </div>
+      <?php include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-applications-browser.php'); ?>
+      <a href="/Discourse/index.php" onclick="KTApp.showPageLoading()" class="d-flex align-items-center ms-4">
+        <img src="/Discourse/assets/images/Discourse-logo.png" class="h-70px me-2">
       </a>
     </div>
 
-    <div class="d-flex align-items-stretch justify-content-end flex-lg-grow-1" id="kt_app_header_wrapper">
+    <div class="d-flex align-items-stretch justify-content-end" id="kt_app_header_wrapper">
+      <div class="app-navbar flex-shrink-0 align-items-center">
 
-      <div class="app-header-menu app-header-mobile-drawer align-items-stretch " data-kt-drawer="true"
-        data-kt-drawer-name="app-header-menu" data-kt-drawer-activate="{default: true, lg: false}"
-        data-kt-drawer-overlay="true" data-kt-drawer-width="250px" data-kt-drawer-direction="end"
-        data-kt-drawer-toggle="#kt_app_header_menu_toggle" data-kt-swapper="true"
-        data-kt-swapper-mode="{default: 'append', lg: 'prepend'}"
-        data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}">
-        <div
-          class=" menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0"
-          id="kt_app_header_menu" data-kt-menu="true">
-
-          <div class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
-            <a href="/badges" onclick="KTApp.showPageLoading()" class="menu-link text-hover-primary">
-              <span class="menu-title">Badges</span>
-            </a>
-          </div>
-
+        <!-- Communities Link -->
+        <div class="app-navbar-item ms-1 ms-md-3">
+          <a href="/Discourse/pages/version/community-home-page.php" class="btn btn-icon btn-custom btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" title="Communities" onclick="KTApp.showPageLoading()">
+            <i class="bi bi-people fs-2 text-gray-700"></i>
+          </a>
         </div>
+
+        <!-- 1. Notification Bell  -->
+        <div class="app-navbar-item ms-1 ms-md-3" style="position: relative;">
+          <?php
+          $noti_partial = __DIR__ . '/_notification.php';
+
+          if (file_exists($noti_partial)) {
+            include($noti_partial);
+          } else {
+            echo '<b style="color:red; font-size:10px;">FILE NOT FOUND!</b>';
+          }
+          ?>
+        </div>
+      <!-- 2. Profile Pic — Clickable Dropdown -->
+      <div class="app-navbar-item ms-1 ms-md-3" style="position:relative;">
+        <?php
+        $dropdown_partial = __DIR__ . '/_profile-dropdown.php';
+        if (file_exists($dropdown_partial)) {
+          include($dropdown_partial);
+        } else {
+          echo '<img src="/LAF/assets/images/catalina.webp" class="rounded-circle" style="width:40px;height:40px;" alt="user">';
+        }
+        ?>
       </div>
 
-      <div class="app-navbar flex-shrink-0">
-        <!-- Notification Bell -->
-        <div class="app-navbar-item me-3">
-          <a href="#" class="btn btn-icon btn-custom btn-icon-muted btn-active-light w-35px h-35px position-relative">
-            <i class="fas fa-bell fs-4"></i>
-          </a>
-        </div>
-        <!-- User Avatar -->
-        <div class="app-navbar-item">
-          <a href="/Discourse/pages/version/profile.php" class="cursor-pointer symbol symbol-35px">
-            <div class="symbol-label fs-7 fw-bold bg-success text-inverse-success">U</div>
-          </a>
-        </div>
+      <!-- Optional/Hidden Widgets -->
+      <div class="d-none">
+        <?php
+        include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-login.php');
+        include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-hamburger.php');
+        ?>
       </div>
 
     </div>
-
   </div>
+</div>
 </div>

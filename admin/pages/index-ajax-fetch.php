@@ -24,7 +24,7 @@ $columns = array(
 
 $extraWhere = "1=1";
 
-require($_SERVER['DOCUMENT_ROOT'] . '/assets/_datatables-ssp.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/Discourse/assets/_datatables-ssp.php');
 echo json_encode(
   SSP::simple($_GET, $sql_details, $table, $primaryKey, $columns, null, $extraWhere)
 );

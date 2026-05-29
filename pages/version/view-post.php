@@ -93,8 +93,8 @@ if ($showImage) {
               <div class="page-banner w-100 py-4 mb-5">
                 <div class="container-xxl d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-4">
-                        <div class="w-40px h-40px d-flex align-items-center justify-content-center bg-white rounded-1 shadow-sm">
-                            <img src="/Discourse/assets/img/logo/feu-tech.webp" class="h-25px" alt="FEU LIFE" onerror="this.style.display='none'">
+                        <div class="w-40px h-40px d-flex align-items-center justify-content-center bg-light-danger rounded-1 shadow-sm text-danger">
+                            <i class="bi bi-heart-fill fs-5"></i>
                         </div>
                         <div>
                             <h2 class="text-white fw-bolder fs-4 mb-0">FEU LIFE Community</h2>
@@ -122,9 +122,18 @@ if ($showImage) {
                                         </div>
                                         <div class="d-flex align-items-center gap-2">
                                             <a href="/Discourse/pages/version/profile-other.php" class="fw-bolder text-dark text-hover-primary fs-6"><?php echo $authorName; ?></a>
-                                            <span class="tag-badge rounded-pill d-inline-flex align-items-center gap-1" style="font-size: 9px; padding: 2px 8px;">
-                                                <i class="ki-duotone ki-flash fs-10 text-success"><span class="path1"></span><span class="path2"></span></i> <?php echo strtoupper($tag); ?>
-                                            </span>
+                                            <span class="text-muted fs-8">in</span>
+                                            <?php 
+                                            $commDetails = getCommunityIconDetails('FEU LIFE'); 
+                                            ?>
+                                            <a href="/Discourse/pages/version/community.php" class="d-inline-flex align-items-center gap-1.5 text-decoration-none">
+                                                <div class="d-flex align-items-center justify-content-center rounded-2"
+                                                     style="width: 20px; height: 20px; background-color: <?php echo $commDetails['bg_hex']; ?>;">
+                                                    <i class="bi <?php echo $commDetails['icon']; ?>"
+                                                       style="font-size: 8px; color: <?php echo $commDetails['color_hex']; ?>;"></i>
+                                                </div>
+                                                <span class="fw-bold text-gray-800 text-hover-primary" style="font-size: 11px;">c/FEU LIFE</span>
+                                            </a>
                                             <?php if($showImage) { ?>
                                             <span class="tag-badge rounded-pill d-inline-flex align-items-center gap-1" style="font-size: 9px; padding: 2px 8px; background-color: #dcfce7; color: #166534;">
                                                 <i class="ki-duotone ki-check fs-10 text-success"><span class="path1"></span><span class="path2"></span></i> MINE
@@ -138,6 +147,9 @@ if ($showImage) {
                                 </div>
                                 
                                 <!-- Post Title & Body -->
+                                                                <div class="mb-2 text-start">
+                                                                    <span class="badge rounded px-3 py-1 fs-8 fw-bold text-white" style="<?php echo getCategoryBadgeStyle($tag); ?>"><?php echo strtoupper($tag); ?></span>
+                                                                </div>
                                 <h1 class="fw-bolder text-dark fs-2x mb-4"><?php echo $postTitle; ?></h1>
                                 <div class="text-gray-800 fs-6 lh-lg mb-6">
                                     <?php 
@@ -187,20 +199,20 @@ if ($showImage) {
                                 <div class="d-flex align-items-center justify-content-between mb-8 mt-2">
                                     <div class="d-flex align-items-center gap-1">
                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                                            <i class="ki-duotone ki-up fs-8"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-8"><?php echo $showImage ? '49' : '12'; ?></span>
+                                            <i class="bi bi-hand-thumbs-up fs-7"></i> <span class="fw-bold fs-8"><?php echo $showImage ? '49' : '12'; ?></span>
                                         </button>
                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                                            <i class="ki-duotone ki-down fs-8"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-8">1</span>
+                                            <i class="bi bi-hand-thumbs-down fs-7"></i> <span class="fw-bold fs-8">1</span>
                                         </button>
                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                                            <i class="ki-duotone ki-message-text-2 fs-8"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-8"><?php echo $showImage ? '1' : '3'; ?></span>
+                                            <i class="bi bi-chat fs-7"></i> <span class="fw-bold fs-8"><?php echo $showImage ? '1' : '3'; ?></span>
                                         </button>
                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                                            <i class="ki-duotone ki-share fs-8"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i> <span class="fw-bold fs-8">Share</span>
+                                            <i class="bi bi-share fs-7"></i> <span class="fw-bold fs-8">Share</span>
                                         </button>
                                     </div>
                                     <button class="btn btn-sm btn-light-muted vote-btn text-danger d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                                        <i class="ki-duotone ki-flag fs-8 text-danger"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-8">Report</span>
+                                        <i class="bi bi-flag fs-7 text-danger"></i> <span class="fw-bold fs-8">Report</span>
                                     </button>
                                 </div>
                                 
@@ -244,13 +256,13 @@ if ($showImage) {
                                                 </p>
                                                 <div class="d-flex align-items-center gap-1 mt-2">
                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                        <i class="ki-duotone ki-up fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9"><?php echo $showImage ? '6' : '12'; ?></span>
+                                                        <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9"><?php echo $showImage ? '6' : '12'; ?></span>
                                                     </button>
                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                        <i class="ki-duotone ki-down fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9">0</span>
+                                                        <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span>
                                                     </button>
                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                        <i class="ki-duotone ki-message-text-2 fs-9"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-9">Reply</span>
+                                                        <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -274,13 +286,13 @@ if ($showImage) {
                                                     <p class="text-gray-800 fs-7 mb-2">What about power consumption on mobile devices though? Battery drain is still a real concern for everyday users.</p>
                                                     <div class="d-flex align-items-center gap-1 mt-2">
                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                            <i class="ki-duotone ki-up fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9">5</span>
+                                                            <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">5</span>
                                                         </button>
                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                            <i class="ki-duotone ki-down fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9">0</span>
+                                                            <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span>
                                                         </button>
                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                            <i class="ki-duotone ki-message-text-2 fs-9"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-9">Reply</span>
+                                                            <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
                                                         </button>
                                                     </div>
                                                 </div>
@@ -306,13 +318,13 @@ if ($showImage) {
                                                 <p class="text-gray-800 fs-7 mb-2">The TPU integration in Apple Silicon is basically proof of concept already.</p>
                                                 <div class="d-flex align-items-center gap-1 mt-2">
                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                        <i class="ki-duotone ki-up fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9">8</span>
+                                                        <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">8</span>
                                                     </button>
                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                        <i class="ki-duotone ki-down fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9">0</span>
+                                                        <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span>
                                                     </button>
                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                                        <i class="ki-duotone ki-message-text-2 fs-9"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-9">Reply</span>
+                                                        <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -524,12 +536,12 @@ if ($showImage) {
         let replyingToThread = null; // Stores the thread container we're replying to
         
         // 1. Voting Logic (Post & Comments)
-        $(document).on('click', '.vote-btn:has(.ki-up), .vote-btn:has(.ki-down)', function(e) {
+        $(document).on('click', '.vote-btn:has(.bi-hand-thumbs-up), .vote-btn:has(.bi-hand-thumbs-down)', function(e) {
             e.preventDefault();
             const btn = $(this);
-            const isUpvote = btn.find('.ki-up').length > 0;
+            const isUpvote = btn.find('.bi-hand-thumbs-up, .bi-hand-thumbs-up-fill').length > 0;
             const container = btn.parent();
-            const otherBtn = isUpvote ? container.find('.vote-btn:has(.ki-down)') : container.find('.vote-btn:has(.ki-up)');
+            const otherBtn = isUpvote ? container.find('.vote-btn:has(.bi-hand-thumbs-down), .vote-btn:has(.bi-hand-thumbs-down-fill)') : container.find('.vote-btn:has(.bi-hand-thumbs-up), .vote-btn:has(.bi-hand-thumbs-up-fill)');
             
             let countSpan = btn.find('.fw-bold');
             let currentCount = parseInt(countSpan.text()) || 0;
@@ -539,24 +551,27 @@ if ($showImage) {
                 btn.removeClass(isUpvote ? 'btn-light-success text-success' : 'btn-light-danger text-danger');
                 btn.addClass('btn-light-muted');
                 countSpan.text(currentCount - 1);
+                btn.find('i').removeClass('bi-hand-thumbs-up-fill bi-hand-thumbs-down-fill').addClass(isUpvote ? 'bi-hand-thumbs-up' : 'bi-hand-thumbs-down');
             } 
             // Toggle on
             else {
                 btn.removeClass('btn-light-muted');
                 btn.addClass(isUpvote ? 'btn-light-success text-success' : 'btn-light-danger text-danger');
                 countSpan.text(currentCount + 1);
+                btn.find('i').removeClass('bi-hand-thumbs-up bi-hand-thumbs-down').addClass(isUpvote ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-down-fill');
                 
                 // Remove from other if active
                 if (otherBtn.hasClass('btn-light-success') || otherBtn.hasClass('btn-light-danger')) {
                     let otherSpan = otherBtn.find('.fw-bold');
                     otherSpan.text(parseInt(otherSpan.text()) - 1);
                     otherBtn.removeClass('btn-light-success text-success btn-light-danger text-danger').addClass('btn-light-muted');
+                    otherBtn.find('i').removeClass('bi-hand-thumbs-up-fill bi-hand-thumbs-down-fill').addClass(isUpvote ? 'bi-hand-thumbs-down' : 'bi-hand-thumbs-up');
                 }
             }
         });
 
         // 2. Click Reply
-        $(document).on('click', '.vote-btn:has(.ki-message-text-2)', function(e) {
+        $(document).on('click', '.vote-btn:has(.bi-chat)', function(e) {
             e.preventDefault();
             const threadContainer = $(this).closest('.mb-2'); // Get the parent thread container
             replyingToThread = threadContainer.length ? threadContainer : null;
@@ -600,13 +615,13 @@ if ($showImage) {
                         <p class="text-gray-800 fs-7 mb-2">${text}</p>
                         <div class="d-flex align-items-center gap-1 mt-2">
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                <i class="ki-duotone ki-up fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9">0</span>
+                                <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">0</span>
                             </button>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                <i class="ki-duotone ki-down fs-9"><span class="path1"></span><span class="path2"></span></i> <span class="fw-bold fs-9">0</span>
+                                <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span>
                             </button>
                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                <i class="ki-duotone ki-message-text-2 fs-9"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> <span class="fw-bold fs-9">Reply</span>
+                                <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
                             </button>
                         </div>
                     </div>

@@ -1,20 +1,17 @@
 <?php
-/* Refactored: custom CSS → Bootstrap/Metronic utilities */
 define('MBG', TRUE);
 include(dirname(dirname(__DIR__)) . '/functions-new.php');
 
 $META_TITLE = "The silent revolution in edge AI — why on-device inference is changing everything";
 $META_DESC  = "A post from FEU Tech Discourse community.";
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
   <?php HEAD_ESSENTIALS(); ?>
   <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet" type="text/css" />
+  <link href="/Discourse/assets/css/view-post.css" rel="stylesheet" type="text/css" />
     <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet" type="text/css" />
 
-  <link href="/Discourse/assets/css/discourse-css/view-post-legacy.css" rel="stylesheet" type="text/css" />
+  
 </head>
 
 <body id="kt_app_body"
@@ -98,15 +95,20 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
 
                         <!-- Post Body -->
                         <div class="card-body pt-0 px-5">
-                          <p class="fs-6 text-gray-700 mb-3">
-                            A decade optimizing for server-side compute, but the thermal envelope of modern SoCs has quietly crossed a threshold nobody was paying attention to. Here's why 2025 is the last year data centers dominate AI inference at scale.
-                          </p>
-                          <p class="fs-6 text-gray-700 mb-3">
-                            The numbers are staggering — a modern mobile chip can now run 7B parameter models at 30+ tokens/sec. That's not impressive, that's transformative.
-                          </p>
-                          <p class="fs-6 text-gray-700 mb-4">
-                            Think about what this means: zero latency, full privacy, no internet dependency. The paradigm shift is already underway in every device you own.
-                          </p>
+                          <div class="dc-post-body-wrap">
+                            <div class="dc-body-text">
+                              <p class="fs-6 text-gray-700 mb-3">
+                                A decade optimizing for server-side compute, but the thermal envelope of modern SoCs has quietly crossed a threshold nobody was paying attention to. Here's why 2025 is the last year data centers dominate AI inference at scale.
+                              </p>
+                              <p class="fs-6 text-gray-700 mb-3">
+                                The numbers are staggering — a modern mobile chip can now run 7B parameter models at 30+ tokens/sec. That's not impressive, that's transformative.
+                              </p>
+                              <p class="fs-6 text-gray-700 mb-4">
+                                Think about what this means: zero latency, full privacy, no internet dependency. The paradigm shift is already underway in every device you own.
+                              </p>
+                            </div>
+                            <a href="#" class="dc-see-more-link d-none" onclick="dcTogglePostBody(event, this)">See More</a>
+                          </div>
                         </div>
 
                         <!-- Actions Row -->
@@ -114,23 +116,11 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                           <div class="d-flex justify-content-between align-items-center border-top border-bottom py-3">
                             <div class="d-flex flex-wrap gap-1">
 
-              <button id="postLikeBtn" onclick="
-                var b=this,liked=b.dataset.on==='1';liked=!liked;b.dataset.on=liked?'1':'0';
-                var d=document.getElementById('postDislikeBtn');
-                if(liked){d.dataset.on='0';d.style.cssText='';d.innerHTML='<i class=\'bi bi-hand-thumbs-down\'></i> Dislike';}
-                b.style.cssText=liked?'background:rgba(23,198,112,.15);color:#17c671;border-color:#17c671;':'';
-                b.innerHTML=liked?'<i class=\'bi bi-hand-thumbs-up-fill\'></i> Like <span>215</span>':'<i class=\'bi bi-hand-thumbs-up\'></i> Like <span>214</span>';
-              " class="btn btn-sm">
+              <button id="postLikeBtn" class="btn btn-sm">
                 <i class="bi bi-hand-thumbs-up"></i> Like <span>214</span>
               </button>
 
-              <button id="postDislikeBtn" onclick="
-                var b=this,on=b.dataset.on==='1';on=!on;b.dataset.on=on?'1':'0';
-                var l=document.getElementById('postLikeBtn');
-                if(on){l.dataset.on='0';l.style.cssText='';l.innerHTML='<i class=\'bi bi-hand-thumbs-up\'></i> Like <span>214</span>';}
-                b.style.cssText=on?'background:rgba(220,53,69,.12);color:#dc3545;border-color:#dc3545;':'';
-                b.innerHTML=on?'<i class=\'bi bi-hand-thumbs-down-fill\'></i> Dislike':'<i class=\'bi bi-hand-thumbs-down\'></i> Dislike';
-              " class="btn btn-sm">
+              <button id="postDislikeBtn" class="btn btn-sm">
                 <i class="bi bi-hand-thumbs-down"></i> Dislike
               </button>
 
@@ -138,28 +128,17 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                 <i class="bi bi-chat"></i> 2 Comments
               </button>
 
-              <button onclick="
-                try{navigator.clipboard.writeText(window.location.href);}catch(e){}
-                this.style.color='#0d6efd';setTimeout(()=>{this.style.color='';},2000);
-                var t=document.getElementById('dc-toast');
-                t.querySelector('span').textContent='Link copied!';t.style.display='flex';
-                clearTimeout(window._t);window._t=setTimeout(()=>{t.style.display='none';},2200);
-              " class="btn btn-sm">
+              <button id="postShareBtn" class="btn btn-sm">
                 <i class="bi bi-share"></i> Share
               </button>
 
-              <button id="postSaveBtn" onclick="
-                var b=this,on=b.dataset.on==='1';on=!on;b.dataset.on=on?'1':'0';
-                b.style.cssText=on?'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;':'';
-                b.innerHTML=on?'<i class=\'bi bi-bookmark-fill\'></i> Saved':'<i class=\'bi bi-bookmark\'></i> Save';
-                if(on){var t=document.getElementById('dc-toast');t.querySelector('span').textContent='Saved!';t.style.display='flex';clearTimeout(window._t2);window._t2=setTimeout(()=>{t.style.display='none';},2200);}
-              " class="btn btn-sm">
+              <button id="postSaveBtn" class="btn btn-sm">
                 <i class="bi bi-bookmark"></i> Save
               </button>
 
             </div>
 
-            <div id="dc-toast" class="d-none d-flex align-items-center gap-2 mt-3 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700">
+            <div id="dc-toast" style="display:none;" class="align-items-center gap-2 mt-3 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700">
               <i class="bi bi-check-circle-fill text-success"></i><span></span>
             </div>
 
@@ -325,21 +304,21 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                           <h6 class="card-title mb-0 fw-bold fs-6">Related Posts</h6>
                         </div>
                         <div class="card-body p-0">
-                          <a href="/Discourse/pages/view/view-post-tech.php" class="d-flex align-items-start gap-3 p-4 border-bottom text-decoration-none text-hover-primary">
+                          <a href="#" class="d-flex align-items-start gap-3 p-4 border-bottom text-decoration-none text-hover-primary">
                             <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0" style="color:#3a5c45;">#98</span>
                             <div>
                               <div class="fs-7 fw-semibold text-gray-800 mb-1">Is Qualcomm finally catching up to Apple Silicon on benchmarks?</div>
                               <div class="text-muted fs-8">Technology · 4d ago</div>
                             </div>
                           </a>
-                          <a href="/Discourse/pages/view/view-post-tech.php" class="d-flex align-items-start gap-3 p-4 border-bottom text-decoration-none text-hover-primary">
+                          <a href="#" class="d-flex align-items-start gap-3 p-4 border-bottom text-decoration-none text-hover-primary">
                             <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0" style="color:#3a5c45;">#72</span>
                             <div>
                               <div class="fs-7 fw-semibold text-gray-800 mb-1">How local LLMs will reshape app development in the next 5 years</div>
                               <div class="text-muted fs-8">Technology · 1w ago</div>
                             </div>
                           </a>
-                          <a href="/Discourse/pages/view/view-post-tech.php" class="d-flex align-items-start gap-3 p-4 text-decoration-none text-hover-primary">
+                          <a href="#" class="d-flex align-items-start gap-3 p-4 text-decoration-none text-hover-primary">
                             <span class="badge badge-light-success rounded-pill px-3 py-2 fs-8 flex-shrink-0" style="color:#3a5c45;">#64</span>
                             <div>
                               <div class="fs-7 fw-semibold text-gray-800 mb-1">Anyone also discussed with the new Pis 3 Mini benchmarks?</div>
@@ -380,54 +359,7 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
   </div>
 
   <?php include(dirname(dirname(__DIR__)) . '/partials/_scrolltop.php'); ?>
-  <?php include(dirname(dirname(__DIR__)) . '/partials/_discourse-modals.php'); ?>
-  <script src="/Discourse/assets/plugins/global/plugins.bundle.js"></script>
-  <script src="/Discourse/assets/js/scripts.bundle.js"></script>
-  <script src="/Discourse/assets/js/dashboard.js"></script>
-  
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.dc-comment-like').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var bubble = this.closest('.bg-light');
-      var dislike = bubble.querySelector('.dc-comment-dislike');
-      var on = this.classList.toggle('text-success');
-      this.querySelector('i').className = on ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up';
-      if (on) { dislike.classList.remove('text-danger'); dislike.querySelector('i').className = 'bi bi-hand-thumbs-down'; }
-    });
-  });
-  document.querySelectorAll('.dc-comment-dislike').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var bubble = this.closest('.bg-light');
-      var like = bubble.querySelector('.dc-comment-like');
-      var on = this.classList.toggle('text-danger');
-      this.querySelector('i').className = on ? 'bi bi-hand-thumbs-down-fill' : 'bi bi-hand-thumbs-down';
-      if (on) { like.classList.remove('text-success'); like.querySelector('i').className = 'bi bi-hand-thumbs-up'; }
-    });
-  });
-  document.querySelectorAll('.dc-reply-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var box = this.closest('.bg-light').querySelector('.dc-reply-box');
-      box.classList.toggle('d-none');
-      if (!box.classList.contains('d-none')) box.querySelector('textarea').focus();
-    });
-  });
-  document.querySelectorAll('.dc-reply-cancel').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      this.closest('.dc-reply-box').classList.add('d-none');
-    });
-  });
-  var anonAvatar = '/Discourse/assets/images/anonymous.png';
-  document.querySelectorAll('.dc-anon-toggle').forEach(function (cb) {
-    var row = cb.closest('.d-flex.gap-3');
-    var avatarImg = row ? row.querySelector('img') : null;
-    var originalSrc = avatarImg ? avatarImg.src : null;
-    cb.addEventListener('change', function () {
-      if (avatarImg) avatarImg.src = this.checked ? anonAvatar : originalSrc;
-    });
-  });
-});
-</script>
-</body>
+  <?php include(dirname(dirname(__DIR__)) . '/partials/_discourse-modals.php'); ?>  
 
-</html>
+  <script src="/Discourse/assets/js/dashboard.js"></script>
+</body>
