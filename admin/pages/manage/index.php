@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include($_SERVER['DOCUMENT_ROOT'] . '/functions-new.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/functions-new.php');
 
 //IS_LOGGED_IN($_SERVER['REQUEST_URI']);
 

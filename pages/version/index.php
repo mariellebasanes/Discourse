@@ -1,4 +1,6 @@
 <?php
+define('MBG', TRUE);
+include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
 
 $META_TITLE = "Discourse - FEU Communities";
 ?>
@@ -80,29 +82,56 @@ $META_TITLE = "Discourse - FEU Communities";
                 <!-- Cards Grid -->
                 <div class="row g-6 mb-10" id="communities-grid">
                     <?php
-                    $communities = [
-                        ["title" => "FEU LIFE", "desc" => "Campus life, events, enrollment tips, and all things FEU Institute of Technology.", "cat" => "FEU TECH", "members" => 4894, "posts" => 12450],
-                        ["title" => "FEU ALABANG LIFE", "desc" => "Campus life, events, enrollment tips, and all things FEU Alabang.", "cat" => "FEU ALABANG", "members" => 3201, "posts" => 8400],
-                        ["title" => "Freshies", "desc" => "A community for all the newcomers to share their thoughts and get advice.", "cat" => "my-communities", "members" => 1500, "posts" => 320],
-                        ["title" => "Enrollment", "desc" => "Everything you need to know about enrollment in FEU Diliman.", "cat" => "FEU DILIMAN", "members" => 890, "posts" => 120],
-                        ["title" => "Cosplaying", "desc" => "A place for cosplayers to meet and share their passion.", "cat" => "FEU TECH", "members" => 450, "posts" => 201],
-                        ["title" => "FEU TECH DEV", "desc" => "For aspiring developers and software engineers in FEU Tech.", "cat" => "FEU TECH", "members" => 2100, "posts" => 5400],
-                        ["title" => "Food Trip Around TECH", "desc" => "Best spots to eat around the campus.", "cat" => "FEU TECH", "members" => 3400, "posts" => 670],
-                        ["title" => "Thesis Advice", "desc" => "Help and resources for your final year project.", "cat" => "FEU DILIMAN", "members" => 600, "posts" => 450],
-                        ["title" => "Alabang Innovators", "desc" => "Tech startup and innovation community in Alabang.", "cat" => "FEU ALABANG", "members" => 210, "posts" => 80],
-                        ["title" => "Diliman Artists", "desc" => "Art and creative works from FEU Diliman.", "cat" => "FEU DILIMAN", "members" => 750, "posts" => 340],
-                        ["title" => "Study Group", "desc" => "Find study partners across all campuses.", "cat" => "my-communities", "members" => 1200, "posts" => 890],
-                        ["title" => "Tech Support", "desc" => "IT support and discussions for students.", "cat" => "FEU TECH", "members" => 850, "posts" => 230]
-                    ];
+                    $communities_list = [];
+                    if ($EDITH) {
+                        $res = $EDITH->query("SELECT * FROM communities ORDER BY id DESC");
+                        if ($res) {
+                            while ($row = $res->fetch_assoc()) {
+                                $communities_list[] = $row;
+                            }
+                        }
+                    }
                     
-                    foreach($communities as $community) {
+                    // Add session mock communities if any exist
+                    if (isset($_SESSION['mock_communities']) && is_array($_SESSION['mock_communities'])) {
+                        $existing_titles = array_column($communities_list, 'title');
+                        foreach ($_SESSION['mock_communities'] as $mc) {
+                            if (!in_array($mc['title'], $existing_titles)) {
+                                array_unshift($communities_list, $mc);
+                            }
+                        }
+                    }
+
+                    if (empty($communities_list)) {
+                        $communities_list = [
+                            ["title" => "FEU LIFE", "desc" => "Campus life, events, enrollment tips, and all things FEU Institute of Technology.", "category" => "FEU TECH", "members" => 4894, "posts" => 12450],
+                            ["title" => "FEU ALABANG LIFE", "desc" => "Campus life, events, enrollment tips, and all things FEU Alabang.", "category" => "FEU ALABANG", "members" => 3201, "posts" => 8400],
+                            ["title" => "Freshies", "desc" => "A community for all the newcomers to share their thoughts and get advice.", "category" => "my-communities", "members" => 1500, "posts" => 320],
+                            ["title" => "Enrollment", "desc" => "Everything you need to know about enrollment in FEU Diliman.", "category" => "FEU DILIMAN", "members" => 890, "posts" => 120],
+                            ["title" => "Cosplaying", "desc" => "A place for cosplayers to meet and share their passion.", "category" => "FEU TECH", "members" => 450, "posts" => 201],
+                            ["title" => "FEU TECH DEV", "desc" => "For aspiring developers and software engineers in FEU Tech.", "category" => "FEU TECH", "members" => 2100, "posts" => 5400],
+                            ["title" => "Food Trip Around TECH", "desc" => "Best spots to eat around the campus.", "category" => "FEU TECH", "members" => 3400, "posts" => 670],
+                            ["title" => "Thesis Advice", "desc" => "Help and resources for your final year project.", "category" => "FEU DILIMAN", "members" => 600, "posts" => 450],
+                            ["title" => "Alabang Innovators", "desc" => "Tech startup and innovation community in Alabang.", "category" => "FEU ALABANG", "members" => 210, "posts" => 80],
+                            ["title" => "Diliman Artists", "desc" => "Art and creative works from FEU Diliman.", "category" => "FEU DILIMAN", "members" => 750, "posts" => 340],
+                            ["title" => "Study Group", "desc" => "Find study partners across all campuses.", "category" => "my-communities", "members" => 1200, "posts" => 890],
+                            ["title" => "Tech Support", "desc" => "IT support and discussions for students.", "category" => "FEU TECH", "members" => 850, "posts" => 230]
+                        ];
+                    }
+                    
+                    foreach($communities_list as $community) {
+                        $comm_cat = $community['category'] ?? ($community['cat'] ?? 'FEU TECH');
+                        $comm_desc = $community['desc'];
+                        $comm_title = $community['title'];
+                        $comm_members = $community['members'];
+                        $comm_posts = $community['posts'];
                     ?>
-                    <div class="col-md-4 col-lg-3 community-item" data-category="<?php echo $community['cat']; ?>">
+                    <div class="col-md-4 col-lg-3 community-item" data-category="<?php echo htmlspecialchars($comm_cat); ?>">
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body p-6 text-center d-flex flex-column">
                                 <div class="mb-4 d-flex justify-content-center">
                                     <?php 
-                                    $iconDetails = getCommunityIconDetails($community['title'], $community['cat']);
+                                    $iconDetails = getCommunityIconDetails($comm_title, $comm_cat);
                                     ?>
                                     <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm"
                                          style="background-color: <?php echo $iconDetails['bg_hex']; ?>;">
@@ -111,26 +140,32 @@ $META_TITLE = "Discourse - FEU Communities";
                                     </div>
                                 </div>
                                 <h3 class="fs-6 fw-bolder mb-2 text-dark">
-                                    <a href="/Discourse/pages/version/community.php" class="text-dark text-hover-success"><?php echo $community['title']; ?></a>
+                                    <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($comm_title); ?>" class="text-dark text-hover-success"><?php echo htmlspecialchars($comm_title); ?></a>
                                 </h3>
-                                <p class="text-muted fs-8 mb-4 flex-grow-1"><?php echo $community['desc']; ?></p>
+                                <p class="text-muted fs-8 mb-4 flex-grow-1"><?php echo htmlspecialchars($comm_desc); ?></p>
                                 <div class="d-flex justify-content-center gap-4 mb-4">
                                     <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
                                         <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
-                                            <i class="fas fa-user fs-8 me-1"></i> <?php echo number_format($community['members']); ?>
+                                            <i class="fas fa-user fs-8 me-1"></i> <span class="comm-members-val"><?php echo number_format($comm_members); ?></span>
                                         </div>
                                         <div class="fs-9 text-muted">Members</div>
                                     </div>
                                     <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
                                         <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
-                                            <i class="fas fa-edit fs-8 me-1"></i> <?php echo number_format($community['posts']); ?>
+                                            <i class="fas fa-edit fs-8 me-1"></i> <?php echo number_format($comm_posts); ?>
                                         </div>
                                         <div class="fs-9 text-muted">Posts</div>
                                     </div>
                                 </div>
-                                <a href="/Discourse/pages/version/community.php" class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2" style="background-color: #1A8B44; color: white;">
-                                    <i class="fas fa-plus text-white fs-8"></i> JOIN COMMUNITY
-                                </a>
+                                <?php 
+                                $is_joined = IS_COMMUNITY_MEMBER($comm_title, $identification);
+                                ?>
+                                <button class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 dc-list-join-btn" 
+                                        data-comm-title="<?php echo htmlspecialchars($comm_title); ?>" 
+                                        style="background-color: <?php echo $is_joined ? '#6c757d' : '#1A8B44'; ?>; color: white; border: none;">
+                                    <i class="fas <?php echo $is_joined ? 'fa-check' : 'fa-plus'; ?> text-white fs-8"></i> 
+                                    <span class="join-btn-text"><?php echo $is_joined ? 'JOINED' : 'JOIN COMMUNITY'; ?></span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -273,89 +308,145 @@ $META_TITLE = "Discourse - FEU Communities";
             if (!cat) cat = 'my-communities';
             const activeColor = $('.theme-color-btn.active').attr('data-color') || '#1A8B44';
             
-            let icon = 'bi-cpu';
-            let bgClass = 'bg-light-success';
-            let textClass = 'text-success';
-            
-            const nameLower = name.toLowerCase();
-            const catLower = cat.toLowerCase();
-            
-            if (nameLower.includes('life')) {
-                icon = 'bi-heart-fill';
-                bgClass = 'bg-light-danger';
-                textClass = 'text-danger';
-            } else if (nameLower.includes('fresh') || nameLower.includes('study') || nameLower.includes('group')) {
-                icon = 'bi-people-fill';
-                bgClass = 'bg-light-primary';
-                textClass = 'text-primary';
-            } else if (nameLower.includes('food') || nameLower.includes('trip')) {
-                icon = 'bi-cup-hot-fill';
-                bgClass = 'bg-light-warning';
-                textClass = 'text-warning';
-            } else if (nameLower.includes('cosplay') || nameLower.includes('artist') || nameLower.includes('culture') || nameLower.includes('hub')) {
-                icon = 'bi-palette-fill';
-                bgClass = 'bg-light-info';
-                textClass = 'text-info';
-            } else if (nameLower.includes('enroll') || nameLower.includes('thesis') || nameLower.includes('advice')) {
-                icon = 'bi-journal-bookmark-fill';
-                bgClass = 'bg-light-info';
-                textClass = 'text-info';
-            } else if (nameLower.includes('innovat')) {
-                icon = 'bi-lightbulb-fill';
-                bgClass = 'bg-light-warning';
-                textClass = 'text-warning';
-            } else if (catLower === 'feu alabang') {
-                icon = 'bi-building-fill';
-                bgClass = 'bg-light-warning';
-                textClass = 'text-warning';
-            } else if (catLower === 'feu diliman') {
-                icon = 'bi-mortarboard-fill';
-                bgClass = 'bg-light-primary';
-                textClass = 'text-primary';
-            }
+            $.ajax({
+                url: '/Discourse/pages/version/create-community-action.php',
+                type: 'POST',
+                data: {
+                    name: name,
+                    desc: desc,
+                    category: cat,
+                    theme_color: activeColor
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        const comm = response.community;
+                        
+                        // Icon configuration based on category or name
+                        let icon = comm.icon || 'bi-cpu';
+                        let bgClass = comm.bg_class || 'bg-light-success';
+                        let textClass = comm.text_class || 'text-success';
+                        
+                        // We need to resolve standard colors for the logo container
+                        // mapping to the colors returned by getCommunityIconDetails in PHP
+                        let iconStyles = '';
+                        if (icon === 'bi-heart-fill') {
+                            iconStyles = 'background-color: #fce7f3; color: #9d174d;';
+                        } else if (icon === 'bi-people-fill') {
+                            iconStyles = 'background-color: #dbeafe; color: #1e3a8a;';
+                        } else if (icon === 'bi-cup-hot-fill') {
+                            iconStyles = 'background-color: #fef3c7; color: #92400e;';
+                        } else if (icon === 'bi-palette-fill') {
+                            iconStyles = 'background-color: #e0f2fe; color: #0c4a6e;';
+                        } else if (icon === 'bi-journal-bookmark-fill') {
+                            iconStyles = 'background-color: #ede9fe; color: #4c1d95;';
+                        } else if (icon === 'bi-lightbulb-fill') {
+                            iconStyles = 'background-color: #fff7ed; color: #7c2d12;';
+                        } else if (icon === 'bi-building-fill') {
+                            iconStyles = 'background-color: #fef9c3; color: #713f12;';
+                        } else if (icon === 'bi-mortarboard-fill') {
+                            iconStyles = 'background-color: #dbeafe; color: #1e3a8a;';
+                        } else {
+                            iconStyles = 'background-color: #d1fae5; color: #065f46;';
+                        }
 
-            const newCard = `
-            <div class="col-md-4 col-lg-3 community-item" data-category="${cat}" style="display: none;">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body p-6 text-center d-flex flex-column">
-                        <div class="mb-4 d-flex justify-content-center">
-                            <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center ${bgClass} ${textClass} fs-1 shadow-sm">
-                                <i class="bi ${icon} fs-2hx"></i>
-                            </div>
-                        </div>
-                        <h3 class="fs-6 fw-bolder mb-2 text-dark">
-                            <a href="/Discourse/pages/version/community.php" class="text-dark text-hover-success">${name}</a>
-                        </h3>
-                        <p class="text-muted fs-8 mb-4 flex-grow-1">${desc}</p>
-                        <div class="d-flex justify-content-center gap-4 mb-4">
-                            <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
-                                <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-users fs-8 me-1"></i> 1
-                                </div>
-                                <div class="fs-9 text-muted">Members</div>
-                            </div>
-                            <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
-                                <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-edit fs-8 me-1"></i> 0
-                                </div>
-                                <div class="fs-9 text-muted">Posts</div>
-                            </div>
-                        </div>
-                        <a href="/Discourse/pages/version/community.php" class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2" style="background-color: ${activeColor}; color: white;">
-                            <i class="fas fa-plus text-white fs-8"></i> JOIN COMMUNITY
-                        </a>
-                    </div>
-                </div>
-            </div>`;
-            
-            $('#communities-grid').prepend(newCard);
-            $('#communities-grid .community-item:first').fadeIn(400);
-            
-            $('#create_community_modal').modal('hide');
-            this.reset();
-            
-            // Switch to the 'All' or 'My Communities' tab to see it if filtered
-            $('.filter-btn[data-filter="all"]').click();
+                        const newCard = `
+                        <div class="col-md-4 col-lg-3 community-item" data-category="${comm.category}" style="display: none;">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body p-6 text-center d-flex flex-column">
+                                    <div class="mb-4 d-flex justify-content-center">
+                                        <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="${iconStyles}">
+                                            <i class="bi ${icon} fs-2hx"></i>
+                                        </div>
+                                    </div>
+                                    <h3 class="fs-6 fw-bolder mb-2 text-dark">
+                                        <a href="/Discourse/pages/version/community.php?c=${encodeURIComponent(comm.title)}" class="text-dark text-hover-success">${comm.title}</a>
+                                    </h3>
+                                    <p class="text-muted fs-8 mb-4 flex-grow-1">${comm.desc}</p>
+                                    <div class="d-flex justify-content-center gap-4 mb-4">
+                                         <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
+                                             <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
+                                                 <i class="fas fa-user fs-8 me-1"></i> <span class="comm-members-val">${comm.members}</span>
+                                             </div>
+                                             <div class="fs-9 text-muted">Members</div>
+                                         </div>
+                                         <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
+                                             <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
+                                                 <i class="fas fa-edit fs-8 me-1"></i> ${comm.posts}
+                                             </div>
+                                             <div class="fs-9 text-muted">Posts</div>
+                                         </div>
+                                     </div>
+                                     <button class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 dc-list-join-btn" 
+                                             data-comm-title="${comm.title}" 
+                                             style="background-color: #6c757d; color: white; border: none;">
+                                         <i class="fas fa-check text-white fs-8"></i> 
+                                         <span class="join-btn-text">JOINED</span>
+                                     </button>
+                                 </div>
+                             </div>
+                         </div>`;
+                        
+                        $('#communities-grid').prepend(newCard);
+                        $('#communities-grid .community-item:first').fadeIn(400);
+                        
+                        $('#create_community_modal').modal('hide');
+                        $('#create-community-form')[0].reset();
+                        
+                        // Reset modal theme header color to default
+                        $('.modal-theme-header').css('background-color', '#1A8B44');
+                        $('.theme-color-btn').removeClass('active');
+                        $('.theme-color-btn[data-color="#1A8B44"]').addClass('active');
+
+                        // Switch to the 'All' or 'My Communities' tab to see it if filtered
+                        $('.filter-btn[data-filter="all"]').click();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function() {
+                    alert('Error creating community. Please try again.');
+                }
+            });
+        });
+
+        // Handle Join Community button in the grid list
+        $(document).on('click', '.dc-list-join-btn', function(e) {
+            e.preventDefault();
+            const btn = $(this);
+            const commTitle = btn.attr('data-comm-title');
+            const card = btn.closest('.community-item');
+            const memberCountSpan = card.find('.comm-members-val');
+
+            $.ajax({
+                url: '/Discourse/pages/version/join-community-action.php',
+                method: 'POST',
+                data: { community_title: commTitle },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.success) {
+                        const textSpan = btn.find('.join-btn-text');
+                        const icon = btn.find('i');
+                        if (res.joined) {
+                            btn.css('background-color', '#6c757d');
+                            textSpan.text('JOINED');
+                            icon.removeClass('fa-plus').addClass('fa-check');
+                        } else {
+                            btn.css('background-color', '#1A8B44');
+                            textSpan.text('JOIN COMMUNITY');
+                            icon.removeClass('fa-check').addClass('fa-plus');
+                        }
+                        if (res.members_count !== null && memberCountSpan.length) {
+                            memberCountSpan.text(res.members_count.toLocaleString());
+                        }
+                    } else {
+                        alert(res.message || 'Error processing request.');
+                    }
+                },
+                error: function() {
+                    alert('Error communicating with database.');
+                }
+            });
         });
     });
   </script>

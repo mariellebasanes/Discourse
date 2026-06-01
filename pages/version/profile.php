@@ -1,5 +1,8 @@
 <?php
-$META_TITLE = "Marielle Basanes - Discourse Profile";
+define('MBG', TRUE);
+include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+
+$META_TITLE = htmlspecialchars($ACCOUNT['display_name']) . " - Discourse Profile";
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 ?>
 
@@ -60,14 +63,14 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         <div class="d-flex flex-sm-row flex-column align-items-sm-end mb-6" style="margin-top: -50px;">
                           <div class="me-5 mb-3 mb-sm-0 flex-shrink-0">
                             <div class="w-120px h-120px w-lg-150px h-lg-150px rounded-3 border border-4 border-white shadow-sm d-flex align-items-center justify-content-center avatar-circle bg-white">
-                              <img src="/Discourse/assets/img/logo/feu-tech.webp" alt="Profile" style="object-fit: cover;">
+                              <img src="<?php echo htmlspecialchars(getUserAvatar($identification)); ?>" alt="Profile" style="object-fit: cover;">
                             </div>
                           </div>
                           <!-- Info -->
                           <div class="flex-grow-1 d-flex justify-content-between align-items-sm-center flex-column flex-sm-row pb-2 gap-4">
                             <div>
                               <h2 class="fw-bolder text-dark fs-1 mb-1 d-flex align-items-center">
-                                MARIELLE BASANES 
+                                <?php echo htmlspecialchars(strtoupper($ACCOUNT['display_name'])); ?> 
                                 <i class="ki-duotone ki-verify text-success fs-4 ms-2" title="Verified Student"><span class="path1"></span><span class="path2"></span></i>
                               </h2>
                               <div class="d-flex align-items-center flex-wrap gap-2 text-muted fw-semibold fs-6">
@@ -156,7 +159,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                             <div class="flex-grow-1">
                               <div class="d-flex align-items-center">
-                                <span class="fw-bolder text-dark fs-6 me-1">Marielle</span>
+                                <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars(explode(' ', $ACCOUNT['display_name'])[0]); ?></span>
                                 <span class="text-muted fs-7"><?php echo $act['action']; ?></span>
                                 <?php if (!empty($act['action_target'])) { ?>
                                 <span class="fw-bolder text-primary fs-7 ms-1"><?php echo $act['action_target']; ?></span>
@@ -289,7 +292,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                             <div class="flex-grow-1">
                               <div class="d-flex align-items-center">
-                                <span class="fw-bolder text-dark fs-6 me-1">Marielle</span>
+                                <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars(explode(' ', $ACCOUNT['display_name'])[0]); ?></span>
                                 <span class="text-muted fs-7">Commented on a post</span>
                               </div>
                               <span class="text-muted fs-8"><?php echo $c['time']; ?></span>
@@ -351,7 +354,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                             <div class="flex-grow-1">
                               <div class="d-flex align-items-center">
-                                <span class="fw-bolder text-dark fs-6 me-1">Marielle</span>
+                                <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars(explode(' ', $ACCOUNT['display_name'])[0]); ?></span>
                                 <span class="text-muted fs-7">Upvoted a post</span>
                               </div>
                               <span class="text-muted fs-8"><?php echo $u['time']; ?></span>
@@ -407,7 +410,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                             <div class="flex-grow-1">
                               <div class="d-flex align-items-center">
-                                <span class="fw-bolder text-dark fs-6 me-1">Marielle</span>
+                                <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars(explode(' ', $ACCOUNT['display_name'])[0]); ?></span>
                                 <span class="text-muted fs-7">Downvoted a post</span>
                               </div>
                               <span class="text-muted fs-8"><?php echo $d['time']; ?></span>
@@ -468,7 +471,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                     <div class="h-100px w-100 rounded-3 mb-4" style="background: linear-gradient(135deg, #1e7145 0%, #155d38 100%);"></div>
                                     <div class="position-absolute" style="top: 30px; left: 50%; transform: translateX(-50%);">
                                       <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true">
-                                          <div class="image-input-wrapper w-100px h-100px rounded-circle shadow-sm border border-4 border-white" style="background-image: url(/Discourse/assets/img/logo/feu-tech.webp); background-position: center; background-size: cover;"></div>
+                                          <div class="image-input-wrapper w-100px h-100px rounded-circle shadow-sm border border-4 border-white" style="background-image: url(<?php echo htmlspecialchars(getUserAvatar($identification)); ?>); background-position: center; background-size: cover;"></div>
                                           <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar" style="position: absolute; bottom: 0; right: 0;">
                                               <i class="ki-duotone ki-pencil fs-7"><span class="path1"></span><span class="path2"></span></i>
                                               <input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
@@ -478,7 +481,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                   </div>
                                   <div class="mt-12 fv-row mb-6 pt-5">
                                       <label class="fs-6 fw-bold mb-2 text-dark">Name</label>
-                                      <input type="text" class="form-control form-control-solid border bg-light" value="MARIELLE BASANES" />
+                                      <input type="text" class="form-control form-control-solid border bg-light" value="<?php echo htmlspecialchars(strtoupper($ACCOUNT['display_name'])); ?>" />
                                   </div>
                                   <div class="fv-row mb-6">
                                       <label class="fs-6 fw-bold mb-2 text-dark">Program & Campus</label>

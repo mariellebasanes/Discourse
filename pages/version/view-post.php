@@ -1,55 +1,164 @@
 <?php
-$META_TITLE = "View Post - Discourse";
-$showImage = isset($_GET['img']) && $_GET['img'] == '1';
-$showPoll = isset($_GET['poll']) && $_GET['poll'] == '1';
-$showAnon = isset($_GET['anon']) && $_GET['anon'] == '1';
-$showSample = isset($_GET['sample']) && $_GET['sample'] == '1';
+define('MBG', TRUE);
+include(dirname(dirname(__DIR__)) . '/functions-new.php');
 
-if ($showImage) {
-    $postTitle = "Review: FEU Tech library study rooms — worth booking or just use the hallway?";
-    $postDesc = "Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.<br><br>Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.";
-    $authorName = "Catalina Smith";
-    $authorInitials = "CS";
-    $authorAvatar = ""; // using initials
-    $bannerTitle = "FEU Tech library study rooms — honest review";
-    $bannerMeta = "FEU • Posted by Catalina Smith • 5d ago";
-    $tag = "FEU • Campus Life";
-} elseif ($showPoll) {
-    $postTitle = "📊 Poll: How do you actually study for finals? Be honest.";
-    $postDesc = "Curious how my fellow FEU Tech students survive finals season. Drop your honest answer below 👇";
-    $authorName = "Marco Torres";
-    $authorInitials = "MT";
-    $authorAvatar = "";
-    $bannerTitle = "Poll: How do you actually study for finals?";
-    $bannerMeta = "FEU • Posted by Marco Torres • 4h ago";
-    $tag = "FEU • Academics";
-} elseif ($showAnon) {
-    $postTitle = "What if FEU had a no-grade-penalty mental health leave policy?";
-    $postDesc = "Just thinking — a lot of students I know failed a whole semester because they were dealing with severe anxiety during midterms. The university had no mechanism to help them — just a strict drop policy or failure. Other universities have mental health leaves where students can pause without academic penalty. Should FEU implement something similar?";
-    $authorName = "Anonymous";
-    $authorInitials = "A";
-    $authorAvatar = "";
-    $bannerTitle = "What if FEU had a no-grade-penalty mental health leave?";
-    $bannerMeta = "Ideas • Posted anonymously • 1d ago";
-    $tag = "Ideas";
-} elseif ($showSample) {
-    $postTitle = "Lorem ipsum dolor sit amet consectetur adipiscing elit.";
-    $postDesc = "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam uma tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas.";
-    $authorName = "John Doe";
-    $authorInitials = "JD";
-    $authorAvatar = "";
-    $bannerTitle = "Lorem ipsum dolor sit amet";
-    $bannerMeta = "Technology • Posted by John Doe • 1d ago";
-    $tag = "Technology";
+if (!function_exists('get_relative_time')) {
+    function get_relative_time($datetime) {
+        $time = strtotime($datetime);
+        if (!$time) return '1d ago';
+        $now = time();
+        $diff = $now - $time;
+        if ($diff < 60) {
+            return 'Just now';
+        }
+        $diff = round($diff / 60);
+        if ($diff < 60) {
+            return $diff . 'm ago';
+        }
+        $diff = round($diff / 60);
+        if ($diff < 24) {
+            return $diff . 'h ago';
+        }
+        $diff = round($diff / 24);
+        if ($diff < 30) {
+            return $diff . 'd ago';
+        }
+        return date('F j, Y', $time);
+    }
+}
+
+$post = null;
+$post_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$comments = [];
+
+if ($EDITH && $post_id > 0) {
+    $stmt = $EDITH->prepare("SELECT p.*, a.display_name, a.avatar_md, a.role as author_role
+                             FROM posts p
+                             JOIN accounts a ON p.author_id = a.identification
+                             WHERE p.id = ?");
+    if ($stmt) {
+        $stmt->bind_param("i", $post_id);
+        $stmt->execute();
+        $post = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+    }
+    
+    if ($post) {
+        // Load comments
+        $stmt_c = $EDITH->prepare("SELECT c.*, a.avatar_md 
+                                   FROM comments c 
+                                   LEFT JOIN accounts a ON c.author_id = a.identification 
+                                   WHERE c.post_id = ? 
+                                   ORDER BY c.created_at ASC");
+        if ($stmt_c) {
+            $stmt_c->bind_param("i", $post['id']);
+            $stmt_c->execute();
+            $res_c = $stmt_c->get_result();
+            while ($row_c = $res_c->fetch_assoc()) {
+                $comments[] = $row_c;
+            }
+            $stmt_c->close();
+        }
+        
+        // Load poll options if is_poll
+        if ($post['is_poll']) {
+            $options_query = "SELECT * FROM poll_options WHERE post_id = ?";
+            $stmt_opt = $EDITH->prepare($options_query);
+            $stmt_opt->bind_param("i", $post['id']);
+            $stmt_opt->execute();
+            $opt_res = $stmt_opt->get_result();
+            $post['poll_options'] = [];
+            $total_votes = 0;
+            while ($opt = $opt_res->fetch_assoc()) {
+                $post['poll_options'][] = $opt;
+                $total_votes += $opt['votes'];
+            }
+            $post['total_poll_votes'] = $total_votes;
+            $stmt_opt->close();
+        }
+    }
+}
+
+if (!$post && isset($_SESSION['mock_posts']) && is_array($_SESSION['mock_posts'])) {
+    $slug_param = isset($_GET['slug']) ? $_GET['slug'] : '';
+    foreach ($_SESSION['mock_posts'] as $mp) {
+        if (($post_id > 0 && $mp['id'] === $post_id) || (!empty($slug_param) && $mp['slug'] === $slug_param)) {
+            $post = $mp;
+            $comments = $mp['comments'] ?? [];
+            break;
+        }
+    }
+}
+
+if ($post) {
+    $postTitle = $post['title'];
+    $postDesc = $post['body'];
+    $isAnon = ($post['is_anonymous'] == 1);
+    $authorName = $isAnon ? "Anonymous" : $post['display_name'];
+    $authorInitials = $isAnon ? "A" : implode("", array_map(function($v) { return !empty($v) ? $v[0] : ''; }, explode(" ", $authorName)));
+    $authorAvatar = $isAnon ? "/Discourse/assets/images/anonymous.png" : (!empty($post['avatar_md']) ? $post['avatar_md'] : '');
+    $bannerTitle = $post['title'];
+    $bannerMeta = $post['community'] . " • Posted by " . $authorName . " • " . get_relative_time($post['created_at']);
+    $tag = $post['tags'] ? $post['tags'] : $post['topic'];
+    $showImage = !empty($post['image_url']);
+    $showPoll = ($post['is_poll'] == 1);
+    $showAnon = $isAnon;
+    $showSample = false;
+    $META_TITLE = $postTitle . " - Discourse";
 } else {
-    $postTitle = "The silent revolution in edge AI — why on-device inference is changing everything";
-    $postDesc = "We spent a decade optimizing for server-side compute, but the thermal envelope of modern SoCs has quietly crossed a threshold nobody was paying attention to. Here's why 2025 is the last year data centers dominate AI inference at scale.<br><br>The numbers are staggering — a modern mobile chip can...";
-    $authorName = "Ravi Joshi";
-    $authorInitials = "RJ";
-    $authorAvatar = ""; // using initials
-    $bannerTitle = "The silent revolution in edge AI";
-    $bannerMeta = "Technology • Posted by Ravi Joshi • 3h ago";
-    $tag = "Technology";
+    // Fallback to static mockups
+    $META_TITLE = "View Post - Discourse";
+    $showImage = isset($_GET['img']) && $_GET['img'] == '1';
+    $showPoll = isset($_GET['poll']) && $_GET['poll'] == '1';
+    $showAnon = isset($_GET['anon']) && $_GET['anon'] == '1';
+    $showSample = isset($_GET['sample']) && $_GET['sample'] == '1';
+
+    if ($showImage) {
+        $postTitle = "Review: FEU Tech library study rooms — worth booking or just use the hallway?";
+        $postDesc = "Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.<br><br>Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.";
+        $authorName = "Catalina Smith";
+        $authorInitials = "CS";
+        $authorAvatar = ""; // using initials
+        $bannerTitle = "FEU Tech library study rooms — honest review";
+        $bannerMeta = "FEU • Posted by Catalina Smith • 5d ago";
+        $tag = "FEU • Campus Life";
+    } elseif ($showPoll) {
+        $postTitle = "📊 Poll: How do you actually study for finals? Be honest.";
+        $postDesc = "Curious how my fellow FEU Tech students survive finals season. Drop your honest answer below 👇";
+        $authorName = "Marco Torres";
+        $authorInitials = "MT";
+        $authorAvatar = "";
+        $bannerTitle = "Poll: How do you actually study for finals?";
+        $bannerMeta = "FEU • Posted by Marco Torres • 4h ago";
+        $tag = "FEU • Academics";
+    } elseif ($showAnon) {
+        $postTitle = "What if FEU had a no-grade-penalty mental health leave policy?";
+        $postDesc = "Just thinking — a lot of students I know failed a whole semester because they were dealing with severe anxiety during midterms. The university had no mechanism to help them — just a strict drop policy or failure. Other universities have mental health leaves where students can pause without academic penalty. Should FEU implement something similar?";
+        $authorName = "Anonymous";
+        $authorInitials = "A";
+        $authorAvatar = "";
+        $bannerTitle = "What if FEU had a no-grade-penalty mental health leave?";
+        $bannerMeta = "Ideas • Posted anonymously • 1d ago";
+        $tag = "Ideas";
+    } elseif ($showSample) {
+        $postTitle = "Lorem ipsum dolor sit amet consectetur adipiscing elit.";
+        $postDesc = "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam uma tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas.";
+        $authorName = "John Doe";
+        $authorInitials = "JD";
+        $authorAvatar = "";
+        $bannerTitle = "Lorem ipsum dolor sit amet";
+        $bannerMeta = "Technology • Posted by John Doe • 1d ago";
+        $tag = "Technology";
+    } else {
+        $postTitle = "The silent revolution in edge AI — why on-device inference is changing everything";
+        $postDesc = "We spent a decade optimizing for server-side compute, but the thermal envelope of modern SoCs has quietly crossed a threshold nobody was paying attention to. Here's why 2025 is the last year data centers dominate AI inference at scale.<br><br>The numbers are staggering — a modern mobile chip can...";
+        $authorName = "Ravi Joshi";
+        $authorInitials = "RJ";
+        $authorAvatar = ""; // using initials
+        $bannerTitle = "The silent revolution in edge AI";
+        $bannerMeta = "Technology • Posted by Ravi Joshi • 3h ago";
+        $tag = "Technology";
+    }
 }
 ?>
 
@@ -148,8 +257,8 @@ if ($showImage) {
                                 
                                 <!-- Post Title & Body -->
                                                                 <div class="mb-2 text-start">
-                                                                    <span class="badge rounded px-3 py-1 fs-8 fw-bold text-white" style="<?php echo getCategoryBadgeStyle($tag); ?>"><?php echo strtoupper($tag); ?></span>
-                                                                </div>
+                                                                     <?php echo renderCategoryBadge($tag); ?>
+                                                                 </div>
                                 <h1 class="fw-bolder text-dark fs-2x mb-4"><?php echo $postTitle; ?></h1>
                                 <div class="text-gray-800 fs-6 lh-lg mb-6">
                                     <?php 
@@ -223,7 +332,8 @@ if ($showImage) {
                                     <div class="d-flex align-items-center gap-2 mb-6">
                                         <h4 class="fw-bolder text-dark m-0 fs-5">Comments</h4>
                                         <span class="badge bg-light-success text-success fw-bold rounded-circle w-20px h-20px d-flex align-items-center justify-content-center p-0" id="comment-count-badge" style="font-size: 10px;"><?php 
-                                            if ($showImage) echo '1';
+                                            if ($post) echo count($comments);
+                                            elseif ($showImage) echo '1';
                                             elseif ($showPoll) echo '1';
                                             elseif ($showAnon) echo '1';
                                             elseif ($showSample) echo '1';
@@ -231,6 +341,47 @@ if ($showImage) {
                                         ?></span>
                                     </div>
                                     
+                                    <?php if ($post) { ?>
+                                        <?php if (!empty($comments)) { 
+                                            foreach ($comments as $comment) {
+                                                $c_initials = implode("", array_map(function($v) { return !empty($v) ? $v[0] : ''; }, explode(" ", $comment['author_name'])));
+                                                $c_avatar = !empty($comment['avatar_md']) ? $comment['avatar_md'] : '';
+                                        ?>
+                                        <div class="mb-4">
+                                            <div class="d-flex">
+                                                <div class="symbol symbol-30px symbol-circle me-3 flex-shrink-0">
+                                                    <?php if ($c_avatar) { ?>
+                                                        <img src="<?php echo $c_avatar; ?>" alt="<?php echo htmlspecialchars($comment['author_name']); ?>" class="h-30px w-30px rounded-circle" />
+                                                    <?php } else { ?>
+                                                        <div class="symbol-label bg-success text-white fw-bold fs-7"><?php echo htmlspecialchars($c_initials ?: 'U'); ?></div>
+                                                    <?php } ?>
+                                                </div>
+                                                <div class="flex-grow-1 text-start">
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="fw-bolder text-dark fs-7"><?php echo htmlspecialchars($comment['author_name']); ?></span>
+                                                            <span class="text-muted fs-9"><?php echo get_relative_time($comment['created_at']); ?></span>
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-gray-800 fs-7 mb-2"><?php echo htmlspecialchars($comment['body']); ?></p>
+                                                    <div class="d-flex align-items-center gap-1 mt-2">
+                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
+                                                             <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9"><?php echo $comment['upvotes']; ?></span>
+                                                         </button>
+                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
+                                                             <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9"><?php echo $comment['downvotes']; ?></span>
+                                                         </button>
+                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
+                                                             <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
+                                                         </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php } } else { ?>
+                                            <p class="text-muted fs-7 text-start">No comments yet. Be the first to share your thoughts!</p>
+                                        <?php } ?>
+                                    <?php } else { ?>
                                     <!-- Comment Thread 1 -->
                                     <div class="mb-2">
                                         <!-- Parent Comment -->
@@ -331,12 +482,13 @@ if ($showImage) {
                                         </div>
                                     </div>
                                     <?php } ?>
+                                    <?php } ?>
                                 </div>
                                 
                                 <!-- Write Comment -->
                                 <div class="d-flex align-items-start mt-8">
                                     <div class="symbol symbol-35px symbol-circle me-3 flex-shrink-0 mt-1">
-                                        <div class="symbol-label bg-success text-white fw-bold fs-6">CS</div>
+                                        <img src="<?php echo !empty($ACCOUNT['avatar_md']) ? $ACCOUNT['avatar_md'] : '/Discourse/assets/images/anonymous.png'; ?>" class="h-35px w-35px rounded-circle" alt="User avatar" />
                                     </div>
                                     <div class="flex-grow-1">
                                         <div class="comment-input-wrapper">
@@ -573,7 +725,7 @@ if ($showImage) {
         // 2. Click Reply
         $(document).on('click', '.vote-btn:has(.bi-chat)', function(e) {
             e.preventDefault();
-            const threadContainer = $(this).closest('.mb-2'); // Get the parent thread container
+            const threadContainer = $(this).closest('.mb-2, .mb-4'); // Get the parent thread container
             replyingToThread = threadContainer.length ? threadContainer : null;
             
             const authorName = $(this).closest('.d-flex').find('.fw-bolder.text-dark.fs-7').first().text();
@@ -593,12 +745,35 @@ if ($showImage) {
                 submitComment();
             }
         });
-
         function submitComment() {
             const input = $('#main-comment-input');
             const text = input.val().trim();
             if (!text) return;
             
+            const postId = "<?= isset($post['id']) ? $post['id'] : 0 ?>";
+            if (postId > 0) {
+                $.ajax({
+                    url: '/Discourse/pages/version/add-comment-action.php',
+                    method: 'POST',
+                    data: {
+                        post_id: postId,
+                        body: text
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.reload();
+                        } else {
+                            alert(response.message || 'Failed to post comment.');
+                        }
+                    },
+                    error: function() {
+                        alert('Error communicating with database.');
+                    }
+                });
+                return;
+            }
+
             const timeNow = "Just now";
             const newCommentHtml = `
                 <div class="d-flex mb-3">
