@@ -48,7 +48,7 @@
       formData.append("id", $("#id").val());
 
       $.ajax({
-        url: "/sample/admin/pages/manage/index-ajax-save.php",
+        url: "/Discourse/admin/pages/manage/index-ajax-save.php",
         method: "POST",
         data: formData,
         dataType: "json",

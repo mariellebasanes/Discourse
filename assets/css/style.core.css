@@ -1,0 +1,46 @@
+:root {
+  --primary: #1b4d32;
+  --primary-lighter: #1a8008;
+  --secondary: #fbbd14;
+  --light-green: #f3f6f5;
+}
+
+.text-primary-feu { color: var(--primary) }
+.text-secondary-feu { color: var(--secondary) }
+.text-light-feu, .text-active-light-feu:hover, .menu-link:hover { color: var(--primary-lighter)!important }
+
+.btn.btn-primary-feu { background-color: var(--primary); color: white }
+.btn.btn-secondary-feu { background-color: var(--secondary); color: #252f4a }
+.btn.btn-light-feu { background-color: var(--light-green); color: var(--primary) }
+
+.bg-primary-feu { background-color: var(--primary); }
+.bg-secondary-feu { background-color: var(--secondary); }
+.bg-light-feu { background-color: var(--primary-lighter); }
+
+.btn.btn-active-secondary-feu:active:not(.btn-active),
+.btn.btn-active-secondary-feu:hover:not(.btn-active) 
+	{ background-color: var(--secondary); }
+
+.btn.btn-active-feu:active:not(.btn-active),
+.btn.btn-active-feu:hover:not(.btn-active) 
+	{ background-color: var(--primary); color: white; }
+
+.bg-hero-feu { background: radial-gradient(#0d371ed1, #0d371e); opacity: .85 }
+
+.separator-feu { position: relative; }
+.separator-feu:before { display: inline-block; content: ""; height: 0.375rem; width: 0.5rem; background-color: #1a8008; position: absolute; bottom: 0; left: 0; }
+.separator-feu:after { display: inline-block; content: ""; height: 0.375rem; width: 4rem; background-color: #fbbd14; position: absolute; bottom: 0; left: 15px; }
+
+.card-newsroom img { margin: 1em 0; border-radius:1em; width: 100%}
+.card-newsroom a{ color: var(--primary-lighter); font-weight: bolder}
+.card-newsroom h2{ font-size: 1.3em; font-weight: bolder; margin: 1em 0; }
+
+.nav-light-feu.nav-line-tabs .nav-item .nav-link.active, 
+.nav-light-feu.nav-line-tabs .nav-item .nav-link:hover:not(.disabled), 
+.nav-light-feu.nav-line-tabs .nav-item.show .nav-link{ border-color: var(--primary-lighter); color: var(--primary-lighter); }
+
+.border-light-feu { border-color: var(--primary-lighter); }
+
+.menu-light-feu.menu .menu-item.hover:not(.here)>.menu-link:not(.disabled):not(.active):not(.here) .menu-title, 
+.menu-light-feu.menu .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title,
+.menu-light-feu.menu .menu-item.show>.menu-link { color: var(--primary-lighter); }

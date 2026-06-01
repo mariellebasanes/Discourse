@@ -1,0 +1,46 @@
+.page-banner {
+    background-color: #0c3823;
+    border-radius: 0;
+}
+.text-yellow { color: #f59e0b; }
+
+.form-control-solid {
+    background-color: #f9fafb;
+    border-color: #e5e7eb;
+}
+
+.btn-green {
+    background-color: #1e7145;
+    color: white;
+}
+.btn-green:hover { background-color: #155d38; color: white; }
+
+.btn-light-green {
+    background-color: #e8f5e9;
+    color: #1e7145;
+}
+
+.card-publish { border: 1px solid #e5e7eb; border-radius: 8px; }
+
+.rules-card {
+    background-color: #dcfce7;
+    border: none;
+    border-radius: 8px;
+}
+
+.rules-card .text-dark { color: #166534 !important; }
+.rules-card i { color: #166534; }
+
+.editor-toolbar {
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 8px 8px 0 0;
+}
+.editor-bottom-toolbar {
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    border-radius: 0 0 8px 8px;
+}
+.editor-content { min-height: 200px; }
+
+.tips-bullet { color: #f59e0b; font-size: 10px; margin-top: 4px; }

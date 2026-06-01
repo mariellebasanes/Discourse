@@ -43,7 +43,10 @@
   background: #f5f6fa;
 }
 
-.dc-topic-tag:hover,
+.dc-topic-tag:hover {
+  opacity: 0.82;
+  filter: brightness(0.93);
+}
 .dc-see-all-btn:hover {
   background-color: #0d5c3a !important;
   color: #fff !important;
@@ -61,12 +64,10 @@
   color: #3a5c45 !important;
 }
 
-.dc-see-all-btn,
-.dc-topic-tag {
+/* dc-topic-tag base: no override — let each badge-light-* class set the color */
+.dc-see-all-btn {
   background-color: #dce8df !important;
   color: #3a5c45 !important;
 }
 
-.dc-topic-tag i {
-  color: #3a5c45 !important;
-}
+/* No forced color on icons — badge-light-* handles it */

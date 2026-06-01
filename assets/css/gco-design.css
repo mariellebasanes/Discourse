@@ -1,0 +1,704 @@
+/**
+ * GCO Connect – brand token overrides + structural layout only.
+ * Visual design uses Bootstrap / Metronic classes from
+ * style.bundle.v2.full.css and style.keenicons.css.
+ */
+
+/* ── GCO Brand colour tokens (override Metronic/Bootstrap defaults) ──────── */
+/*
+ * Declared under BOTH :root AND [data-bs-theme="light"] because Metronic's JS
+ * adds data-bs-theme="light" to <body> at runtime, giving the theme-scoped
+ * variables higher specificity than :root alone.
+ * Since gco-design.css loads after style.bundle.v2.full.css, these later
+ * same-specificity declarations win the cascade.
+ */
+:root,
+[data-bs-theme="light"],
+[data-bs-theme] {
+  /* Primary: deep rose-pink #DB3F6B */
+  --bs-primary: #DB3F6B;
+  --bs-primary-rgb: 219, 63, 107;
+  --bs-primary-active: #b8335a;
+  --bs-primary-light: #fce8ef;
+  --bs-primary-inverse: #ffffff;
+
+  /* Danger: coral #E76659 (accent badges, "event ended", etc.) */
+  --bs-danger: #E76659;
+  --bs-danger-rgb: 231, 102, 89;
+  --bs-danger-active: #c75244;
+  --bs-danger-light: #fdf1ef;
+  --bs-danger-inverse: #ffffff;
+}
+
+/* Gradient helper: blends both brand colours for hero / CTA sections */
+.bg-gco {
+  background: linear-gradient(135deg, #DB3F6B 0%, #E76659 100%) !important;
+}
+
+/* ── Direct colour overrides (hardcoded hex – bypasses CSS-variable resolution) ─
+ * CSS variables can be overridden at runtime by Metronic's JS-injected
+ * data-bs-theme="light" attribute. Hardcoded !important rules always win.
+ */
+
+/* Hardcode .text-white so it never depends on --bs-white-rgb variable resolution */
+.text-white {
+  color: #ffffff !important;
+}
+
+/* Primary colour utilities */
+.text-primary {
+  color: #DB3F6B !important;
+}
+
+/*
+ * Compound overrides — needed because .bg-gco div / .bg-gco a (specificity 0,1,1)
+ * beats plain .text-primary (0,1,0) when both have !important.
+ * These compound selectors (0,2,0) restore the intended colour on any element
+ * carrying .text-primary or .text-danger inside a dark/gradient section.
+ */
+.bg-gco .text-primary,
+.bg-gco .text-primary *,
+.bg-dark .text-primary,
+.bg-dark .text-primary * {
+  color: #DB3F6B !important;
+}
+
+.bg-gco .text-danger,
+.bg-gco .text-danger *,
+.bg-dark .text-danger,
+.bg-dark .text-danger *,
+.bg-gco .card.card-bordered .text-danger,
+.bg-gco .card.card-bordered .text-danger * {
+  color: #E76659 !important;
+}
+
+.bg-primary {
+  background-color: #DB3F6B !important;
+}
+
+.bg-light-primary {
+  background-color: #fce8ef !important;
+}
+
+.border-primary {
+  border-color: #DB3F6B !important;
+}
+
+/* Badges */
+.badge-light-primary {
+  background-color: #fce8ef !important;
+  color: #DB3F6B !important;
+}
+
+/* Buttons */
+.btn.btn-primary,
+.btn-primary {
+  background-color: #DB3F6B !important;
+  border-color: #DB3F6B !important;
+  color: #ffffff !important;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-primary:active {
+  background-color: #b8335a !important;
+  border-color: #b8335a !important;
+}
+
+/* ── btn-light-primary (used on team cards + hero) ──────────────────────── */
+.btn.btn-light-primary,
+.btn-light-primary {
+  background-color: #fce8ef !important;
+  color: #DB3F6B !important;
+}
+
+/* On hover → solid dark pink with white text/icons (clearly readable) */
+.btn.btn-light-primary:hover,
+.btn.btn-light-primary:focus {
+  background-color: #DB3F6B !important;
+  border-color: #DB3F6B !important;
+  color: #ffffff !important;
+}
+
+/* Force ALL child elements (icons, path spans, text) white on hover */
+.btn.btn-light-primary:hover *,
+.btn.btn-light-primary:focus * {
+  color: #ffffff !important;
+}
+
+/* ── btn-light (plain white button, e.g. CTA "Book an Appointment") ──────── */
+/* Only apply coral hover to genuine plain-white btn-light
+   (NOT outline-light which has no background, NOT light-primary) */
+.btn.btn-light:not([class*="outline"]):not([class*="light-"]):hover {
+  background-color: #DB3F6B !important;
+  border-color: #DB3F6B !important;
+  color: #ffffff !important;
+}
+
+.btn.btn-light:not([class*="outline"]):not([class*="light-"]):hover * {
+  color: #ffffff !important;
+}
+
+/* ── btn-outline-light (CTA "Learn About GCO") ───────────────────────────── */
+.btn.btn-outline-light:hover,
+.btn.btn-outline-light:focus {
+  background-color: rgba(255, 255, 255, 0.22) !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+.btn.btn-outline-light:hover *,
+.btn.btn-outline-light:focus * {
+  color: #ffffff !important;
+}
+
+/* ── btn-outline-primary (Purpose-of-Appointment tabs) ───────────────────── */
+.btn.btn-outline-primary:hover,
+.btn.btn-outline-primary:focus {
+  background-color: #DB3F6B !important;
+  border-color: #DB3F6B !important;
+  color: #ffffff !important;
+}
+
+.btn.btn-outline-primary:hover *,
+.btn.btn-outline-primary:focus * {
+  color: #ffffff !important;
+}
+
+/* Danger / coral colour utilities */
+.text-danger {
+  color: #E76659 !important;
+}
+
+.bg-danger {
+  background-color: #E76659 !important;
+}
+
+.bg-light-danger {
+  background-color: #fdf1ef !important;
+}
+
+.badge-light-danger {
+  background-color: #fdf1ef !important;
+  color: #E76659 !important;
+}
+
+.btn.btn-danger,
+.btn-danger {
+  background-color: #E76659 !important;
+  border-color: #E76659 !important;
+  color: #ffffff !important;
+}
+
+/* Metronic's .symbol .symbol-label sets color: var(--bs-body-color) which can
+   override .text-white inside dark/gradient sections. Force white explicitly
+   UNLESS the icon has a text-danger/primary class. */
+.bg-gco .symbol-label.text-white,
+.bg-gco .symbol-label:not([class*="text-"])>i,
+.bg-gco .symbol-label:not([class*="text-"])>i .path1,
+.bg-gco .symbol-label:not([class*="text-"])>i .path2 {
+  color: #ffffff !important;
+}
+
+/* ── White text for dark / gradient background sections ──────────────────── */
+/*
+ * Metronic sets h1-h6 { color: var(--bs-heading-color) } and the body colour
+ * on paragraphs via inheritance. Both must be overridden with !important for
+ * coloured sections so all text is legible on dark / gradient backgrounds.
+ */
+.bg-gco h1,
+.bg-gco h2,
+.bg-gco h3,
+.bg-gco h4,
+.bg-gco h5,
+.bg-gco h6,
+.bg-gco p,
+.bg-gco li,
+.bg-gco label,
+.bg-gco span,
+.bg-gco div,
+.bg-gco a,
+.bg-dark h1,
+.bg-dark h2,
+.bg-dark h3,
+.bg-dark h4,
+.bg-dark h5,
+.bg-dark h6,
+.bg-dark p,
+.bg-dark li,
+.bg-dark label,
+.bg-dark div,
+.bg-dark a,
+.bg-primary h1,
+.bg-primary h2,
+.bg-primary h3,
+.bg-primary h4,
+.bg-primary h5,
+.bg-primary h6,
+.bg-primary p,
+.bg-primary li,
+.bg-primary label {
+  color: #ffffff !important;
+}
+
+/*
+ * Exception: white-background cards (.card-bordered) sit on the dark canvas
+ * and contain normal dark text (e.g. events cards). Restore default colour
+ * so their headings / paragraphs remain readable on white.
+ */
+.bg-dark .card.card-bordered h1,
+.bg-dark .card.card-bordered h2,
+.bg-dark .card.card-bordered h3,
+.bg-dark .card.card-bordered h4,
+.bg-dark .card.card-bordered h5,
+.bg-dark .card.card-bordered h6,
+.bg-dark .card.card-bordered p,
+.bg-dark .card.card-bordered span,
+.bg-dark .card.card-bordered div,
+.bg-dark .card.card-bordered a,
+.bg-gco .card.card-bordered h1,
+.bg-gco .card.card-bordered h2,
+.bg-gco .card.card-bordered h3,
+.bg-gco .card.card-bordered h4,
+.bg-gco .card.card-bordered h5,
+.bg-gco .card.card-bordered h6,
+.bg-gco .card.card-bordered p,
+.bg-gco .card.card-bordered span,
+.bg-gco .card.card-bordered div,
+.bg-gco .card.card-bordered a {
+  color: var(--bs-body-color) !important;
+}
+
+/* ── Button colour exceptions inside .bg-gco ────────────────────────────────
+ * The rule ".bg-gco span { color:#fff }" above forces ALL spans white,
+ * which makes duotone icon path spans invisible on light-coloured buttons
+ * that live inside the CTA section. The rules below restore the correct
+ * colours for every button variant that can appear inside .bg-gco.
+ */
+
+/* Plain white button ("Book an Appointment") ─ keep danger-colour icon+text */
+.bg-gco .btn.btn-light:not([class*="outline"]):not([class*="light-"]) {
+  color: #E76659 !important;
+}
+
+.bg-gco .btn.btn-light:not([class*="outline"]):not([class*="light-"]) * {
+  color: #E76659 !important;
+}
+
+/* On hover it turns pink — force white for everything */
+.bg-gco .btn.btn-light:not([class*="outline"]):not([class*="light-"]):hover,
+.bg-gco .btn.btn-light:not([class*="outline"]):not([class*="light-"]):hover * {
+  color: #ffffff !important;
+}
+
+/* Outline-light button ("Learn About GCO") ─ always white text/icons */
+.bg-gco .btn.btn-outline-light,
+.bg-gco .btn.btn-outline-light * {
+  color: #ffffff !important;
+}
+
+.bg-gco .btn.btn-outline-light:hover,
+.bg-gco .btn.btn-outline-light:hover * {
+  color: #ffffff !important;
+}
+
+/*
+ * Hero "Schedule a Session" pill — white bg, coral-pink text & icon.
+ * Uses .bg-gco compound selectors (specificity 0,2,x) to beat the section-wide
+ * .bg-gco span rule (0,1,1) that would otherwise turn the calendar icon
+ * spans white and make them invisible on the white button background.
+ */
+.bg-gco .gco-btn-primary,
+.bg-gco .gco-btn-primary i,
+.bg-gco .gco-btn-primary span,
+.bg-gco .gco-btn-primary .path1,
+.bg-gco .gco-btn-primary .path2,
+.bg-gco .gco-btn-primary .path3,
+.bg-gco .gco-btn-primary .path4,
+.bg-gco .gco-btn-primary .path5 {
+  color: #DB3F6B !important;
+}
+
+.bg-gco .gco-btn-primary:hover {
+  background-color: #fce8ef !important;
+}
+
+/* ── CSS-only Purpose-of-Appointment tabs (radio-button technique) ───────── */
+/*
+ * Bootstrap's carousel / tab components need JS.  Instead, hidden radio
+ * <input>s drive the tab state: checking a radio makes its sibling pane
+ * visible via the :checked ~ general-sibling combinator.
+ * All siblings must share the same parent — see index-section-purpose-gco.php.
+ */
+
+/* Hide all content panes by default */
+.purpose-tab-pane {
+  display: none;
+}
+
+/*
+ * Panes are now inside .purpose-panes-wrapper so the show selector
+ * traverses: radio:checked ~ .purpose-panes-wrapper [data-pane].
+ * The wrapper has a min-height matching the tallest pane (Consultation, ~640px)
+ * so the section never resizes when switching tabs.
+ */
+.purpose-panes-wrapper {
+  min-height: 640px;
+}
+
+#purpose-tab-0:checked~.purpose-panes-wrapper [data-pane="0"],
+#purpose-tab-1:checked~.purpose-panes-wrapper [data-pane="1"],
+#purpose-tab-2:checked~.purpose-panes-wrapper [data-pane="2"],
+#purpose-tab-3:checked~.purpose-panes-wrapper [data-pane="3"] {
+  display: block;
+}
+
+/* Active tab labels — brand pink (0, 2), coral (1, 3) */
+#purpose-tab-0:checked~.purpose-tab-nav label[for="purpose-tab-0"],
+#purpose-tab-2:checked~.purpose-tab-nav label[for="purpose-tab-2"] {
+  background-color: #DB3F6B !important;
+  border-color: #DB3F6B !important;
+  color: #ffffff !important;
+}
+
+#purpose-tab-1:checked~.purpose-tab-nav label[for="purpose-tab-1"],
+#purpose-tab-3:checked~.purpose-tab-nav label[for="purpose-tab-3"] {
+  background-color: #E76659 !important;
+  border-color: #E76659 !important;
+  color: #ffffff !important;
+}
+
+/* Inactive tab labels: light tint */
+#purpose-tab-0:checked~.purpose-tab-nav label:not([for="purpose-tab-0"]),
+#purpose-tab-1:checked~.purpose-tab-nav label:not([for="purpose-tab-1"]),
+#purpose-tab-2:checked~.purpose-tab-nav label:not([for="purpose-tab-2"]),
+#purpose-tab-3:checked~.purpose-tab-nav label:not([for="purpose-tab-3"]) {
+  background-color: #fce8ef !important;
+  border-color: #DB3F6B !important;
+  color: #DB3F6B !important;
+}
+
+/* ── CSS-only FAQ accordion  (<details> / <summary>) ─────────────────────── */
+/*
+ * Bootstrap's .accordion-button open state normally depends on JS removing the
+ * "collapsed" class.  With native <details>/<summary> the browser toggles the
+ * [open] attribute automatically — no JS needed.
+ * These four rules replicate the Bootstrap collapsed → open transition purely
+ * in CSS, using only variables already defined in style.bundle.v2.full.css.
+ */
+
+/* Override the hardcoded blue in the bundle's active-icon SVG with brand pink */
+.accordion {
+  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23DB3F6B'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+/* 1. Hide the browser's native disclosure triangle */
+details.accordion-item>summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+details.accordion-item>summary::-webkit-details-marker {
+  display: none;
+}
+
+details.accordion-item>summary::marker {
+  content: none;
+}
+
+/* 2. Custom Accordion Styles for FAQ (Overrides Bootstrap defaults) */
+.accordion-item {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #000000;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.accordion-button:focus {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+
+/* 3. Rotate chevron when open (mirrors Bootstrap's transform on ::after) */
+.accordion-button::after {
+  transition: transform 0.3s ease-in-out !important;
+  transform: rotate(-180deg) !important;
+  /* Pointing UP by default */
+}
+
+details[open]>summary.accordion-button::after {
+  background-image: var(--bs-accordion-btn-active-icon);
+  transform: rotate(0deg) !important;
+  /* Rotate to point DOWN when open */
+}
+
+/* ── Allow GCO sections to bleed full page width ─────────────────────────── */
+.app-container.container-xxl:has(#kt_app_content) {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#kt_app_content,
+#kt_app_content section {
+  display: block !important;
+  visibility: visible !important;
+}
+
+#kt_app_content {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+.app-main .flex-column-fluid {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+}
+
+/* ── Events carousel — indicator dots on gradient background ──────────────── */
+#eventsCarousel .carousel-indicators [data-bs-target] {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  border-top: none;
+  border-bottom: none;
+}
+
+#eventsCarousel .carousel-indicators .active {
+  background-color: #ffffff;
+}
+
+/* Keep card text dark — override the section-wide .bg-gco white-text rule */
+#eventsCarousel .card,
+#eventsCarousel .card h4,
+#eventsCarousel .card p,
+#eventsCarousel .card div,
+#eventsCarousel .card span {
+  color: var(--bs-body-color) !important;
+}
+
+#eventsCarousel .card .text-primary {
+  color: #DB3F6B !important;
+}
+
+#eventsCarousel .card .text-danger {
+  color: #E76659 !important;
+}
+
+#eventsCarousel .card .badge-light-danger {
+  background-color: #fdf1ef !important;
+}
+
+/* ── Footer and Content container standard width ────────────────────────── */
+#kt_app_main>footer .app-container.container-xxl,
+#kt_app_content .container-xxl {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* ── GCO Section Background Enhancements ───────────────────────────────── */
+.gco-section-services {
+  position: relative;
+  z-index: 1;
+}
+
+.gco-section-services::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -5%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../svg/blobs/blob%201.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.15;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.gco-section-faq {
+  position: relative;
+  z-index: 1;
+}
+
+.gco-section-faq::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  background-image: url('../svg/blobs/blob%202.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.15;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.gco-section-purpose {
+  position: relative;
+  z-index: 1;
+}
+
+.gco-section-purpose::before {
+  content: '';
+  position: absolute;
+  bottom: -15%;
+  left: 0%;
+  width: 700px;
+  height: 700px;
+  background-image: url('../svg/blobs/blob%203.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.15;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ── Typography Overrides ──────────────────────────────────────────────── */
+html,
+body#kt_app_body {
+  font-size: 13px !important;
+}
+
+body#kt_app_body h1,
+body#kt_app_body .h1,
+body#kt_app_body h1[class*="fs-"],
+body#kt_app_body .h1[class*="fs-"] {
+  font-size: 65px !important;
+}
+
+body#kt_app_body h2,
+body#kt_app_body .h2,
+body#kt_app_body h2[class*="fs-"],
+body#kt_app_body .h2[class*="fs-"] {
+  font-size: 32.5px !important;
+}
+
+body#kt_app_body h6,
+body#kt_app_body .h6,
+body#kt_app_body h6[class*="fs-"],
+body#kt_app_body .h6[class*="fs-"],
+body#kt_app_body label,
+body#kt_app_body .form-label,
+body#kt_app_body label[class*="fs-"],
+body#kt_app_body .form-label[class*="fs-"] {
+  font-size: 17.55px !important;
+}
+
+body#kt_app_body p,
+body#kt_app_body .lead,
+body#kt_app_body p[class*="fs-"],
+body#kt_app_body .lead[class*="fs-"] {
+  font-size: 22.75px !important;
+}
+
+/* ── CTA Playful Redesign ────────────────────────────────────────────────── */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.3);
+  }
+
+  28% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.3);
+  }
+
+  70% {
+    transform: scale(1);
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s infinite;
+}
+
+@keyframes float-cta {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+@keyframes float-cta-reverse {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(15px) rotate(-5deg);
+  }
+
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+.floating-cta-1 {
+  position: absolute;
+  top: -30px;
+  left: -40px;
+  animation: float-cta 6s ease-in-out infinite;
+  z-index: 2;
+}
+
+.floating-cta-2 {
+  position: absolute;
+  bottom: -40px;
+  right: -30px;
+  animation: float-cta-reverse 7s ease-in-out infinite;
+  z-index: 2;
+}
+
+.floating-cta-3 {
+  position: absolute;
+  top: 40%;
+  right: -50px;
+  animation: float-cta 5s ease-in-out infinite;
+  z-index: 2;
+  opacity: 0.8;
+}
+
+.btn-hover-scale {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-hover-scale:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cta-card {
+  position: relative;
+  z-index: 3;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(219, 63, 107, 0.2) !important;
+}

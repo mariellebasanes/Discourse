@@ -59,19 +59,19 @@ function HEAD_ESSENTIALS()
 <meta name="twitter:image" content="' . $META_IMAGE . '">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" type="image/x-icon" href="/assets/img/favicon.png">
-<link rel="manifest" href="/assets/site.webmanifest?v=2">
+<link rel="icon" type="image/x-icon" href="/Discourse/assets/img/favicon.png">
+<link rel="manifest" href="/Discourse/assets/site.webmanifest?v=2">
 
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Paraverse">
-<link rel="apple-touch-icon" href="/assets/img/logo/icon-paraverse-192.png">
+<link rel="apple-touch-icon" href="/Discourse/assets/img/logo/icon-paraverse-192.png">
 
-<link rel="stylesheet" href="/assets/plugins/global/plugins.bundle.css">
-<link rel="stylesheet" href="/assets/css/style.keenicons.css">
-<link rel="stylesheet" href="/assets/css/style.bundle.v2.full.css?version=1.1028">
+<link rel="stylesheet" href="/Discourse/assets/plugins/global/plugins.bundle.css">
+<link rel="stylesheet" href="/Discourse/assets/css/style.keenicons.css">
+<link rel="stylesheet" href="/Discourse/assets/css/style.bundle.v2.full.css?version=1.1028">
 
-<script src="/assets/js/jquery.js"></script>
+<script src="/Discourse/assets/js/jquery.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

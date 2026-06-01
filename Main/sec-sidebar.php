@@ -14,7 +14,7 @@
 
     <div class="d-flex flex-column gap-1 border-top border-white-10 pt-2 flex-grow-1">
 
-      <a href="/Discourse/pages/view/view-post-poll.php"
+      <a href="/Discourse/pages/version/view-post.php?poll=1"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">📊</span>
         <div class="d-flex flex-column">
@@ -25,7 +25,7 @@
         </div>
       </a>
 
-      <a href="/Discourse/pages/view/view-post-tech.php"
+      <a href="/Discourse/pages/version/view-post.php"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">🔵</span>
         <div class="d-flex flex-column">
@@ -36,7 +36,7 @@
         </div>
       </a>
 
-      <a href="/Discourse/pages/view/view-post-sample.php"
+      <a href="/Discourse/pages/version/view-post.php?sample=1"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">💡</span>
         <div class="d-flex flex-column">
@@ -62,7 +62,7 @@
         <div class="d-flex align-items-center gap-3">
           <div class="d-flex align-items-center justify-content-center bg-light-success rounded-2 fs-5"
             style="width:36px;height:36px;flex-shrink:0;">
-            <i class="bi bi-people-fill"></i>
+            <i class="bi bi-people-fill text-success"></i>
           </div>
           <span class="fs-7 fw-bold text-gray-800 text-uppercase" style="letter-spacing:0.06em;">Members</span>
         </div>
@@ -76,7 +76,7 @@
         <div class="d-flex align-items-center gap-3">
           <div class="d-flex align-items-center justify-content-center bg-light-success rounded-2 fs-5"
             style="width:36px;height:36px;flex-shrink:0;">
-            <i class="bi bi-file-text-fill"></i>
+            <i class="bi bi-file-text-fill text-success"></i>
           </div>
           <span class="fs-7 fw-bold text-gray-800 text-uppercase" style="letter-spacing:0.06em;">Posts Today</span>
         </div>
@@ -90,7 +90,7 @@
         <div class="d-flex align-items-center gap-3">
           <div class="d-flex align-items-center justify-content-center bg-light-success rounded-2 fs-5"
             style="width:36px;height:36px;flex-shrink:0;">
-            <i class="bi bi-wifi"></i>
+            <i class="bi bi-wifi text-success"></i>
           </div>
           <span class="fs-7 fw-bold text-gray-800 text-uppercase" style="letter-spacing:0.06em;">Online Now</span>
         </div>
@@ -104,12 +104,12 @@
   </div>
 </div>
 
-<!-- Widget 3: Communities List -->
+<!-- Widget 3: Communities List — dynamic via getCommunityIconDetails() -->
 <div class="card border-0 shadow-sm rounded-4 mb-4">
   <div class="card-body p-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
       <h6 class="fs-6 fw-bold text-gray-800 mb-0">Communities</h6>
-      <a href="#all-communities"
+      <a href="/Discourse/pages/version/community-home-page.php"
         class="badge badge-light-success rounded-pill px-4 py-2 fs-8 fw-bold text-decoration-none dc-see-all-btn">
         See All
       </a>
@@ -117,64 +117,62 @@
 
     <div class="d-flex flex-column gap-2">
 
-      <a href="#community-page" class="discourse-community-item d-flex align-items-center gap-3 text-decoration-none p-2 rounded-2">
-        <div class="d-flex align-items-center justify-content-center bg-light-success rounded-2 fs-5"
-          style="width:38px;height:38px;flex-shrink:0;">
-          <i class="bi bi-cpu"></i>
-        </div>
-        <div class="d-flex flex-column">
-          <span class="fs-6 fw-bold text-gray-800">FEUTech</span>
-          <span class="fs-8 text-muted">2,541 members</span>
-        </div>
-      </a>
-
-      <a href="#community-page" class="discourse-community-item d-flex align-items-center gap-3 text-decoration-none p-2 rounded-2">
-        <div class="d-flex align-items-center justify-content-center bg-light-danger text-danger rounded-2 fs-5"
-          style="width:38px;height:38px;flex-shrink:0;">
-          <i class="bi bi-heart-fill"></i>
-        </div>
-        <div class="d-flex flex-column">
-          <span class="fs-6 fw-bold text-gray-800">FEULife</span>
-          <span class="fs-8 text-muted">1,436 members</span>
-        </div>
-      </a>
-
-      <a href="#community-page" class="discourse-community-item d-flex align-items-center gap-3 text-decoration-none p-2 rounded-2">
-        <div class="d-flex align-items-center justify-content-center bg-light-primary text-primary rounded-2 fs-5"
-          style="width:38px;height:38px;flex-shrink:0;">
-          <i class="bi bi-music-note-beamed"></i>
-        </div>
-        <div class="d-flex flex-column">
-          <span class="fs-6 fw-bold text-gray-800">CultureHub</span>
-          <span class="fs-8 text-muted">862 members</span>
-        </div>
-      </a>
+      <?php
+      $sidebarCommunities = [
+        ['name' => 'FEU Tech',    'label' => 'FEUTech',    'members' => '2,541'],
+        ['name' => 'FEU Life',    'label' => 'FEULife',    'members' => '1,436'],
+        ['name' => 'CultureHub',  'label' => 'CultureHub', 'members' => '862'],
+      ];
+      foreach ($sidebarCommunities as $comm):
+        $c = getCommunityIconDetails($comm['name']);
+      ?>
+        <a href="/Discourse/pages/version/community.php" class="discourse-community-item d-flex align-items-center gap-3 text-decoration-none p-2 rounded-2">
+          <div class="d-flex align-items-center justify-content-center <?php echo $c['bg_class']; ?> rounded-2 fs-5"
+            style="width:38px;height:38px;flex-shrink:0;">
+            <i class="bi <?php echo $c['icon']; ?> <?php echo $c['text_class']; ?>"></i>
+          </div>
+          <div class="d-flex flex-column">
+            <span class="fs-6 fw-bold text-gray-800"><?php echo $comm['label']; ?></span>
+            <span class="fs-8 text-muted"><?php echo $comm['members']; ?> members</span>
+          </div>
+        </a>
+      <?php endforeach; ?>
 
     </div>
   </div>
 </div>
 
-<!-- Widget 4: Browse Topics -->
+<!-- Widget 4: Browse Topics — dynamic via getCategoryBadgeStyle() -->
 <div class="card border-0 shadow-sm rounded-4 mb-4">
   <div class="card-body p-4">
     <h6 class="fs-6 fw-bold text-gray-800 mb-3">Browse Topics</h6>
     <div class="d-flex flex-wrap gap-2">
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-cpu me-1"></i>TECHNOLOGY</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-palette me-1"></i>CULTURE</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-controller me-1"></i>GAMING</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-building me-1"></i>FEU</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-lightbulb me-1"></i>IDEAS</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-stars me-1"></i>CREATIVE</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-droplet-half me-1"></i>SCIENCE</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-newspaper me-1"></i>NEWS</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-robot me-1"></i>AI</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-book me-1"></i>ACADEMICS</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-emoji-smile me-1"></i>LIFESTYLE</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-film me-1"></i>ENTERTAINMENT</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-music-note me-1"></i>MUSIC</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-megaphone me-1"></i>POLITICS</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-exclamation-circle me-1"></i>ISSUES</a>
-      <a href="#community-page" class="badge badge-light-success rounded-pill px-4 py-2 fs-8 text-decoration-none dc-topic-tag"><i class="bi bi-trophy me-1"></i>SPORTS</a>
+      <?php
+      $sidebarTopics = [
+        'TECHNOLOGY',
+        'CULTURE',
+        'GAMING',
+        'FEU',
+        'IDEAS',
+        'CREATIVE',
+        'SCIENCE',
+        'NEWS',
+        'AI',
+        'ACADEMICS',
+        'LIFESTYLE',
+        'ENTERTAINMENT',
+        'MUSIC',
+        'POLITICS',
+        'ISSUES',
+        'SPORTS'
+      ];
+      foreach ($sidebarTopics as $topic):
+        $b = getCategoryBadgeStyle($topic);
+      ?>
+        <a href="/Discourse/pages/view/topic.php?t=<?php echo $topic; ?>" class="badge <?php echo $b['class']; ?> rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold">
+          <i class="bi <?php echo $b['icon']; ?> <?php echo $b['icon_color']; ?> me-1"></i><?php echo $topic; ?>
+        </a>
+      <?php endforeach; ?>
     </div>
   </div>
 </div>

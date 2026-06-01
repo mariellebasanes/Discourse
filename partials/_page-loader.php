@@ -1,5 +1,5 @@
 <div class="page-loader flex-column">
-	<img class="edith-logo-animation max-h-50px mb-8" src="/assets/img/logo.png" />
+	<img class="edith-logo-animation max-h-50px mb-8" src="/Discourse/assets/img/logo.png" />
 	<h2 class="mb-0 h4" style="color: #169546;">FEU Institute of Technology</h2>
 	<h2 class="h6">Educational Innovation and Technology Hub</h2>
 	<div class="d-flex align-items-center mt-5">

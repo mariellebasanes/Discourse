@@ -83,14 +83,69 @@
       window._dcFeedToast = setTimeout(function () { feedToast.style.display = 'none'; }, 2200);
     }
 
-    // Comment — navigate to the post's view page (use the title link href on the card)
+    // Comment — toggle quick comment drawer
     document.querySelectorAll('.dc-post-comment').forEach(function (btn) {
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
         var card = this.closest('[data-dc="post-card"]');
-        var titleLink = card ? card.querySelector('a.text-gray-800.fw-bold') : null;
-        if (titleLink && titleLink.href) {
-          window.location.href = titleLink.href;
+        var drawer = card ? card.querySelector('.dc-quick-comment-drawer') : null;
+        if (drawer) {
+          $(drawer).slideToggle(200);
+          var input = drawer.querySelector('input');
+          if (input) input.focus();
         }
+      });
+    });
+
+    // Handle quick comment submission
+    document.querySelectorAll('.dc-quick-comment-form').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = this.querySelector('input');
+        var commentText = input.value.trim();
+        if (!commentText) return;
+
+        var card = this.closest('[data-dc="post-card"]');
+        var commentsList = card.querySelector('.dc-quick-comments-list');
+        var commentCountBtn = card.querySelector('.dc-post-comment');
+
+        function escapeHtml(text) {
+          return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        var newCommentHtml = `
+          <div class="d-flex align-items-start gap-2 fs-7">
+            <img src="/Discourse/assets/images/catalina.webp" class="h-25px w-25px rounded-circle" alt="User avatar">
+            <div class="bg-light p-2 rounded-3 flex-grow-1">
+              <div class="d-flex justify-content-between">
+                <span class="fw-bold text-gray-800">You (Catalina)</span>
+                <span class="text-muted fs-9">just now</span>
+              </div>
+              <p class="text-gray-700 m-0 mt-1">${escapeHtml(commentText)}</p>
+            </div>
+          </div>
+        `;
+        
+        if (commentsList) {
+          commentsList.insertAdjacentHTML('beforeend', newCommentHtml);
+          commentsList.scrollTop = commentsList.scrollHeight;
+        }
+
+        input.value = '';
+
+        if (commentCountBtn) {
+          var countText = commentCountBtn.textContent.replace(/Comments?/g, '').trim();
+          var count = parseInt(countText, 10) || 0;
+          count++;
+          commentCountBtn.innerHTML = '<i class="bi bi-chat me-1"></i> ' + count + (count === 1 ? ' Comment' : ' Comments');
+        }
+
+        showFeedToast('Comment posted!');
       });
     });
 
@@ -98,7 +153,7 @@
     document.querySelectorAll('.dc-post-share').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var card = this.closest('[data-dc="post-card"]');
-        var titleLink = card ? card.querySelector('a.text-gray-800.fw-bold') : null;
+        var titleLink = card ? card.querySelector('a.dc-post-title-link') : null;
         var url = titleLink && titleLink.href ? titleLink.href : window.location.href;
         try { navigator.clipboard.writeText(url); } catch (e) {}
         this.style.color = '#0d6efd';

@@ -28,7 +28,7 @@
     const slug = "<?= $END_URL ?>";
 
     $.ajax({
-      url: "/sample/pages/view/index-ajax-page.php",
+      url: "/Discourse/pages/view/index-ajax-page.php",
       data: { slug: slug },
       dataType: "json",
       success: function (response) {

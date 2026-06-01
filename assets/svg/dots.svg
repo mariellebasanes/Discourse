@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="246px" height="158px" viewBox="0 0 246 158" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.039215688 0 0 0 0 0.101960786 0 0 0 0 0.22745098 0 0 0 0.14901961 0" />
+    </filter>
+  </defs>
+  <g id="Dots">
+    <g id="grey" transform="matrix(-4.371139E-08 1 -1 -4.371139E-08 246 0)" filter="url(#filter_1)">
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" id="Rectangle" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(0 22.042366)" id="Rectangle-Copy-4" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(0 44.084732)" id="Rectangle-Copy-8" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(0 66.1271)" id="Rectangle-Copy-12" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 0)" id="Rectangle-Copy" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 22.042366)" id="Rectangle-Copy-5" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 44.084732)" id="Rectangle-Copy-9" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 66.1271)" id="Rectangle-Copy-13" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 0)" id="Rectangle-Copy-2" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 22.042366)" id="Rectangle-Copy-6" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 44.084732)" id="Rectangle-Copy-10" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 66.1271)" id="Rectangle-Copy-14" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 0)" id="Rectangle-Copy-3" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 22.042366)" id="Rectangle-Copy-7" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 44.084732)" id="Rectangle-Copy-11" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 66.1271)" id="Rectangle-Copy-15" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(4.5474735E-13 87.54054)" id="Rectangle" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(4.5474735E-13 109.58291)" id="Rectangle-Copy-4" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(4.5474735E-13 131.62527)" id="Rectangle-Copy-8" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(4.5474735E-13 153.66763)" id="Rectangle-Copy-12" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 87.54054)" id="Rectangle-Copy" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 109.58291)" id="Rectangle-Copy-5" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 131.62527)" id="Rectangle-Copy-9" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 153.66763)" id="Rectangle-Copy-13" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 87.54054)" id="Rectangle-Copy-2" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 109.58291)" id="Rectangle-Copy-6" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 131.62527)" id="Rectangle-Copy-10" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 153.66763)" id="Rectangle-Copy-14" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 87.54054)" id="Rectangle-Copy-3" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 109.58291)" id="Rectangle-Copy-7" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 131.62527)" id="Rectangle-Copy-11" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 153.66763)" id="Rectangle-Copy-15" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(4.5474735E-13 175.08109)" id="Rectangle" fill="#D7D7D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(4.5474735E-13 197.12344)" id="Rectangle-Copy-4" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(4.5474735E-13 219.16582)" id="Rectangle-Copy-8" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(4.5474735E-13 241.20818)" id="Rectangle-Copy-12" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 175.08109)" id="Rectangle-Copy" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 197.12344)" id="Rectangle-Copy-5" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 219.16582)" id="Rectangle-Copy-9" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(22.192314 241.20818)" id="Rectangle-Copy-13" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 175.08109)" id="Rectangle-Copy-2" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 197.12344)" id="Rectangle-Copy-6" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 219.16582)" id="Rectangle-Copy-10" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(43.902187 241.20818)" id="Rectangle-Copy-14" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 175.08109)" id="Rectangle-Copy-3" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 197.12344)" id="Rectangle-Copy-7" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 219.16582)" id="Rectangle-Copy-11" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66.094505 241.20818)" id="Rectangle-Copy-15" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 0)" id="Rectangle" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 22.042366)" id="Rectangle-Copy-4" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 44.084732)" id="Rectangle-Copy-8" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 66.1271)" id="Rectangle-Copy-12" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 0)" id="Rectangle-Copy" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 22.042366)" id="Rectangle-Copy-5" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 44.084732)" id="Rectangle-Copy-9" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 66.1271)" id="Rectangle-Copy-13" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 0)" id="Rectangle-Copy-2" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 22.042366)" id="Rectangle-Copy-6" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 44.084732)" id="Rectangle-Copy-10" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 66.1271)" id="Rectangle-Copy-14" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 0)" id="Rectangle-Copy-3" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 22.042366)" id="Rectangle-Copy-7" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 44.084732)" id="Rectangle-Copy-11" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 66.1271)" id="Rectangle-Copy-15" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 87.54054)" id="Rectangle" fill="#D7D7D7" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 109.58291)" id="Rectangle-Copy-4" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 131.62527)" id="Rectangle-Copy-8" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 153.66763)" id="Rectangle-Copy-12" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 87.54054)" id="Rectangle-Copy" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 109.58291)" id="Rectangle-Copy-5" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 131.62527)" id="Rectangle-Copy-9" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 153.66763)" id="Rectangle-Copy-13" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 87.54054)" id="Rectangle-Copy-2" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 109.58291)" id="Rectangle-Copy-6" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 131.62527)" id="Rectangle-Copy-10" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 153.66763)" id="Rectangle-Copy-14" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 87.54054)" id="Rectangle-Copy-3" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 109.58291)" id="Rectangle-Copy-7" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 131.62527)" id="Rectangle-Copy-11" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 153.66763)" id="Rectangle-Copy-15" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 197.12344)" id="Rectangle-Copy-4" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 219.16582)" id="Rectangle-Copy-8" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(87.54054 241.20818)" id="Rectangle-Copy-12" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 197.12344)" id="Rectangle-Copy-5" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 219.16582)" id="Rectangle-Copy-9" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(109.73286 241.20818)" id="Rectangle-Copy-13" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 197.12344)" id="Rectangle-Copy-6" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 219.16582)" id="Rectangle-Copy-10" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(131.44273 241.20818)" id="Rectangle-Copy-14" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 197.12344)" id="Rectangle-Copy-7" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 219.16582)" id="Rectangle-Copy-11" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(153.63504 241.20818)" id="Rectangle-Copy-15" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+    </g>
+    <g id="Dots" transform="translate(65.91892 109.73286)">
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" id="Rectangle-Copy" fill="#d0382f" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(2.344791E-13 22)" id="Rectangle-Copy-2" fill="#fbbd14" fill-rule="evenodd" stroke="none" />
+      <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(2.344791E-13 44)" id="Rectangle-Copy-3" fill="#1b4d32" fill-rule="evenodd" stroke="none" />
+    </g>
+    <path d="M0 0L4.82442 0L4.82442 4.79182L0 4.79182L0 0Z" transform="translate(66 88)" id="Hilight" fill="#D8D8D8" fill-rule="evenodd" stroke="none" />
+  </g>
+</svg>

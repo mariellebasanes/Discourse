@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include($_SERVER['DOCUMENT_ROOT'] . '/functions-new.php');
+include(dirname(dirname(__DIR__)) . '/functions-new.php');
 $META_TITLE = "Create a Post";
 $META_DESC  = "Share something with the Paraverse community.";
 ?>
@@ -19,12 +19,12 @@ $META_DESC  = "Share something with the Paraverse community.";
   data-kt-app-header-fixed-mobile="true"
   class="app-default">
 
-  <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_page-loader.php'); ?>
+  <?php include(dirname(dirname(__DIR__)) . '/partials/_page-loader.php'); ?>
 
   <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_header.php'); ?>
+      <?php include(dirname(dirname(__DIR__)) . '/partials/_header.php'); ?>
 
       <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -312,13 +312,13 @@ $META_DESC  = "Share something with the Paraverse community.";
 
             </main>
           </div>
-          <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_footer.php'); ?>
+          <?php include(dirname(dirname(__DIR__)) . '/partials/_footer.php'); ?>
         </div>
       </div>
     </div>
   </div>
 
-  <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_scrolltop.php'); ?>
+  <?php include(dirname(dirname(__DIR__)) . '/partials/_scrolltop.php'); ?>
 
   <!-- Link Modal -->
   <div class="modal fade" id="modal-link" tabindex="-1" aria-hidden="true">

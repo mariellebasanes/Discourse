@@ -29,7 +29,7 @@
         </p>
 
         <!-- CTA Button -->
-        <a href="#all-communities"
+        <a href="/Discourse/pages/version/community-home-page.php"
           class="discourse-hero-btn btn d-inline-flex align-items-center justify-content-center border-0 px-6 py-3 fw-bold rounded-pill text-dark fs-6"
           style="background-color:#fbc501; box-shadow:0 4px 14px rgba(245,166,35,0.45);">
           <i class="bi bi-compass-fill me-2 text-dark fs-6"></i> Explore Communities
