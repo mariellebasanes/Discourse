@@ -416,7 +416,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                     foreach ($topicBadgeMap as $t => $b):
                                                         $isActive = ($t === $topic);
                                                     ?>
-                                                        <a href="/Discourse/pages/version/topic.php?t=<?php echo $t; ?>"
+                                                        <a href="/Discourse/pages/view/topic.php?t=<?php echo $t; ?>"
                                                             class="badge <?php echo $b['class']; ?> rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold <?php echo $isActive ? 'dc-topic-tag-active' : ''; ?>"
                                                             style="<?php echo $isActive ? 'outline:2px solid currentColor;outline-offset:1px;' : ''; ?>">
                                                             <i class="bi <?php echo $b['icon']; ?> me-1"></i><?php echo $t; ?>
