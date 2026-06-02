@@ -477,7 +477,7 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                                 <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-gray-500 pe-none fs-6"></i>
                                 <input type="text" class="form-control bg-white rounded-pill ps-12 fs-6 text-gray-700 search-input-v2 shadow-sm" placeholder="Search discussions, topics, people...">
                             </div>
-                            <a href="/Discourse/pages/view/create-post.php" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
+                            <a href="/Discourse/pages/version/create-post.php?c=<?php echo urlencode($community_name); ?>" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
                                 <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
                             </a>
                         </div>

@@ -2,6 +2,74 @@
 define('MBG', TRUE);
 include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
 
+// Fetch all communities
+$db_communities = [];
+if ($EDITH) {
+    $res = $EDITH->query("SELECT * FROM communities ORDER BY title ASC");
+    if ($res) {
+        while ($row = $res->fetch_assoc()) {
+            $db_communities[] = $row;
+        }
+    }
+}
+
+// Build community to topics map
+$community_topics_map = [
+    "" => ["Technology", "Culture", "Gaming", "FEU", "Ideas", "Creative", "Science", "News", "AI", "Academics", "Lifestyle", "Entertainment", "Music", "Politics", "Issues", "Sports", "Others"]
+];
+
+$seed_defaults = [
+    "FEU LIFE" => ["FEULife", "CampusLife", "Enrollment", "Events"],
+    "FEU ALABANG LIFE" => ["AlabangLife", "CampusLife", "Enrollment", "Events"],
+    "Freshies" => ["Freshies", "Advice", "General"],
+    "Enrollment" => ["Enrollment", "Diliman", "Requirements"],
+    "Cosplaying" => ["Cosplay", "Anime", "Gaming", "Events"],
+    "FEU TECH DEV" => ["Development", "Programming", "WebDev", "Projects"],
+    "Food Trip Around TECH" => ["Food", "Restaurants", "TechArea"],
+    "Thesis Advice" => ["Thesis", "Advice", "Research", "Defense"],
+    "Alabang Innovators" => ["Startups", "Innovation", "Tech"],
+    "Diliman Artists" => ["Art", "Creative", "Design"],
+    "Tech Support" => ["TechSupport", "IT", "Help"],
+    "Study Group" => ["Study", "Groups", "Academics"]
+];
+
+foreach ($db_communities as $comm) {
+    $title = $comm['title'];
+    $title_key = str_replace(' ', '', strtolower($title));
+    
+    // Start with seed defaults or general fallback
+    $topics = ["General", "Discussions", "Questions"];
+    foreach ($seed_defaults as $s_title => $s_topics) {
+        if (str_replace(' ', '', strtolower($s_title)) === $title_key) {
+            $topics = $s_topics;
+            break;
+        }
+    }
+    
+    // Query unique topics from existing posts in DB
+    if ($EDITH) {
+        $stmt_t = $EDITH->prepare("SELECT DISTINCT topic FROM posts WHERE REPLACE(LOWER(community), ' ', '') = ? AND topic IS NOT NULL AND topic != ''");
+        if ($stmt_t) {
+            $stmt_t->bind_param("s", $title_key);
+            $stmt_t->execute();
+            $res_t = $stmt_t->get_result();
+            while ($row_t = $res_t->fetch_assoc()) {
+                $t_val = $row_t['topic'];
+                $t_display = htmlspecialchars(ucfirst(strtolower($t_val)));
+                if (!in_array($t_display, $topics)) {
+                    $topics[] = $t_display;
+                }
+            }
+            $stmt_t->close();
+        }
+    }
+    $community_topics_map[$title] = $topics;
+}
+
+// Read default selected community from query parameter
+$default_community = isset($_GET['c']) ? trim($_GET['c']) : '';
+
+
 $META_TITLE = "Create a Post - Discourse";
 
 // Generate initials for the current logged-in user
@@ -94,32 +162,21 @@ if (empty($initials)) {
                                     <div class="col-md-6">
                                         <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">COMMUNITY</label>
                                         <select name="community" class="form-select form-select-solid border" data-control="select2" data-hide-search="true" data-placeholder="Select a community...">
-                                            <option></option>
-                                            <option value="FEUTech" selected>FEU TECH</option>
-                                            <option value="FEULife">FEU LIFE</option>
-                                            <option value="CultureHub">CULTURE HUB</option>
+                                            <option value="">No community</option>
+                                            <?php foreach ($db_communities as $comm): ?>
+                                                <?php 
+                                                $isSelected = (strcasecmp($comm['title'], $default_community) === 0);
+                                                ?>
+                                                <option value="<?php echo htmlspecialchars($comm['title']); ?>" <?php echo $isSelected ? 'selected' : ''; ?>>
+                                                    <?php echo htmlspecialchars(strtoupper($comm['title'])); ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">TOPIC *</label>
                                         <select name="topic" class="form-select form-select-solid border" data-control="select2" data-hide-search="true" data-placeholder="Select a topic..." required>
                                             <option></option>
-                                            <option value="TECHNOLOGY">Technology</option>
-                                            <option value="CULTURE">Culture</option>
-                                            <option value="GAMING">Gaming</option>
-                                            <option value="FEU">FEU</option>
-                                            <option value="IDEAS">Ideas</option>
-                                            <option value="CREATIVE">Creative</option>
-                                            <option value="SCIENCE">Science</option>
-                                            <option value="NEWS">News</option>
-                                            <option value="AI">AI</option>
-                                            <option value="ACADEMICS">Academics</option>
-                                            <option value="LIFESTYLE">Lifestyle</option>
-                                            <option value="ENTERTAINMENT">Entertainment</option>
-                                            <option value="MUSIC">Music</option>
-                                            <option value="POLITICS">Politics</option>
-                                            <option value="ISSUES">Issues</option>
-                                            <option value="SPORTS">Sports</option>
                                         </select>
                                     </div>
                                 </div>
@@ -284,6 +341,29 @@ if (empty($initials)) {
                   .text('Posting as ' + userDisplayName);
           }
       });
+
+      // ── Dynamic Topic Badges Mapping ──
+      const communityTopics = <?php echo json_encode($community_topics_map); ?>;
+      const communitySelect = $('select[name="community"]');
+      const topicSelect = $('select[name="topic"]');
+
+      function updateTopics() {
+          const selectedComm = communitySelect.val() || "";
+          const topics = communityTopics[selectedComm] || communityTopics[""];
+          
+          topicSelect.empty();
+          topicSelect.append('<option></option>'); // Placeholder option for select2
+          topics.forEach(function(t) {
+              topicSelect.append(new Option(t, t.toUpperCase()));
+          });
+          topicSelect.trigger('change');
+      }
+
+      // Initialize on load
+      updateTopics();
+
+      // Listen for changes
+      communitySelect.on('change', updateTopics);
   });
   </script>
 </body>
