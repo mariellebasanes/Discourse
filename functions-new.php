@@ -445,3 +445,39 @@ if (!function_exists('IS_POST_SAVED')) {
 }
 
 
+
+if (!function_exists('renderTopicBadge')) {
+    function renderTopicBadge($topic) {
+        if (empty($topic)) return '';
+        if (!function_exists('getCategoryBadgeStyle')) return '';
+        $badge = getCategoryBadgeStyle(strtoupper(trim($topic)));
+        $label = strtoupper(trim($topic));
+        $url   = '/Discourse/pages/view/topic.php?t=' . urlencode($label);
+        return '<a href="' . $url . '" class="badge ' . $badge['class'] . ' rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none me-1">'
+             . '<i class="bi ' . $badge['icon'] . ' ' . $badge['icon_color'] . ' me-1"></i>'
+             . htmlspecialchars($label)
+             . '</a>';
+    }
+}
+
+if (!function_exists('renderHashtagBadges')) {
+    function renderHashtagBadges($tags_raw, $limit = 4) {
+        if (empty($tags_raw)) return '';
+        // Split by comma or bullet separator
+        $tags = preg_split('/[,•]+/', $tags_raw);
+        $html = '';
+        $count = 0;
+        foreach ($tags as $t) {
+            $t = trim($t);
+            if ($t === '') continue;
+            $url = '/Discourse/pages/view/hashtag.php?tag=' . urlencode($t);
+            $html .= '<a href="' . $url . '" class="badge rounded-pill px-2 py-1 fs-9 fw-semibold text-decoration-none text-muted" '
+                   . 'style="background:#f1f3f4;border:1px solid #e0e0e0;" '
+                   . 'onmouseover="this.style.background=\'#e8ede9\'" onmouseout="this.style.background=\'#f1f3f4\'">'
+                   . '#' . htmlspecialchars(strtolower($t))
+                   . '</a> ';
+            if (++$count >= $limit) break;
+        }
+        return $html;
+    }
+}

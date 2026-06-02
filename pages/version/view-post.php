@@ -384,12 +384,14 @@ if (!$db_post_loaded && $showImage) {
                                                 </div>
 
                                                 <!-- Post Title & Body -->
-                                                <div class="mb-2 text-start">
-                                                    <?php $postBadge = getCategoryBadgeStyle($tag); ?>
-                                                    <a href="/Discourse/pages/view/topic.php?t=<?php echo strtoupper($tag); ?>" class="badge <?php echo $postBadge['class']; ?> rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none">
-                                                        <i class="bi <?php echo $postBadge['icon']; ?> <?php echo $postBadge['icon_color']; ?> me-1"></i>
-                                                        <?php echo strtoupper($tag); ?>
-                                                    </a>
+                                                <div class="mb-2 text-start d-flex flex-wrap align-items-center gap-1">
+                                                    <?php
+                                                    // Topic = post['topic'], hashtags = post['tags'] (separate from topic)
+                                                    $post_topic = $post ? ($post['topic'] ?? $tag) : $tag;
+                                                    $post_tags  = $post ? ($post['tags']  ?? '') : '';
+                                                    echo renderTopicBadge($post_topic);
+                                                    echo renderHashtagBadges($post_tags, 6);
+                                                    ?>
                                                 </div>
                                                 <h1 class="fw-bolder text-dark fs-2x mb-4"><?php echo $postTitle; ?></h1>
                                                 <div class="text-gray-800 fs-6 lh-lg mb-6">
