@@ -16,10 +16,6 @@ if (!function_exists('getCommunityIconDetails')) {
       $icon       = "bi-music-note-beamed";
       $bg_class   = "bg-light-primary";
       $text_class = "text-primary";
-    } elseif (strpos($name_lower, 'fresh') !== false || strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false) {
-      $icon       = "bi-people-fill";
-      $bg_class   = "bg-light-info";
-      $text_class = "text-info";
     } elseif (strpos($name_lower, 'food') !== false || strpos($name_lower, 'trip') !== false) {
       $icon       = "bi-cup-hot-fill";
       $bg_class   = "bg-light-warning";
@@ -32,7 +28,7 @@ if (!function_exists('getCommunityIconDetails')) {
       $icon       = "bi-journal-bookmark-fill";
       $bg_class   = "bg-light-warning";
       $text_class = "text-warning";
-    } elseif (strpos($name_lower, 'innovat') !== false) {
+    } elseif (strpos($name_lower, 'innovat') !== false || strpos($name_lower, 'startup') !== false) {
       $icon       = "bi-lightbulb-fill";
       $bg_class   = "bg-light-warning";
       $text_class = "text-warning";
@@ -44,6 +40,14 @@ if (!function_exists('getCommunityIconDetails')) {
       $icon       = "bi-mortarboard-fill";
       $bg_class   = "bg-light-info";
       $text_class = "text-info";
+    } elseif (strpos($name_lower, 'fresh') !== false || strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false) {
+      $icon       = "bi-people-fill";
+      $bg_class   = "bg-light-info";
+      $text_class = "text-info";
+    } elseif (strpos($name_lower, 'tech') !== false || strpos($name_lower, 'dev') !== false || strpos($name_lower, 'support') !== false) {
+      $icon       = "bi-cpu-fill";
+      $bg_class   = "bg-light-success";
+      $text_class = "text-success";
     }
 
     return [
@@ -200,7 +204,7 @@ if (empty($feed_posts)) {
             'author_id' => 'T202110294',
             'display_name' => 'Ravi Joshi',
             'avatar_md' => '/Discourse/assets/images/catalina.webp',
-            'community' => 'FEUTech',
+            'community' => 'FEU TECH DEV',
             'topic' => 'TECHNOLOGY',
             'tags' => 'Technology',
             'slug' => 'silent-revolution-edge-ai',
@@ -226,7 +230,7 @@ if (empty($feed_posts)) {
             'author_id' => 'T202008123',
             'display_name' => 'John Doe',
             'avatar_md' => '/Discourse/assets/images/catalina.webp',
-            'community' => 'FEUTech',
+            'community' => 'FEU TECH DEV',
             'topic' => 'TECHNOLOGY',
             'tags' => 'Technology',
             'slug' => 'lorem-ipsum-dolor-sit-amet',
@@ -252,7 +256,7 @@ if (empty($feed_posts)) {
             'author_id' => 'T202210202',
             'display_name' => 'Anonymous',
             'avatar_md' => '/Discourse/assets/images/anonymous.png',
-            'community' => 'FEUTech',
+            'community' => 'FEU TECH DEV',
             'topic' => 'TECHNOLOGY',
             'tags' => 'Technology',
             'slug' => 'what-if-feu-had-mental-health-leave',
@@ -278,7 +282,7 @@ if (empty($feed_posts)) {
             'author_id' => 'T202008123',
             'display_name' => 'John Doe',
             'avatar_md' => '/Discourse/assets/images/catalina.webp',
-            'community' => 'FEUTech',
+            'community' => 'FEU TECH DEV',
             'topic' => 'TECHNOLOGY',
             'tags' => 'Technology',
             'slug' => 'lorem-ipsum-consectetur-adipiscing',
@@ -304,7 +308,7 @@ if (empty($feed_posts)) {
             'author_id' => 'T202102837',
             'display_name' => 'Marco Torres',
             'avatar_md' => '/Discourse/assets/images/catalina.webp',
-            'community' => 'FEULife',
+            'community' => 'FEU LIFE',
             'topic' => 'FEU',
             'tags' => 'FEU',
             'slug' => 'poll-how-do-you-study-finals',
@@ -337,7 +341,7 @@ if (empty($feed_posts)) {
             'author_id' => 'T202210202',
             'display_name' => 'Catalina Smith',
             'avatar_md' => '/Discourse/assets/images/catalina.webp',
-            'community' => 'FEUTech',
+            'community' => 'FEU TECH DEV',
             'topic' => 'TECHNOLOGY',
             'tags' => 'Technology',
             'slug' => 'feu-tech-library-study-rooms',
@@ -397,7 +401,7 @@ if (!function_exists('renderPostCardMarkup')) {
                 <!-- Row 1: Community badge + Report button -->
                 <div class="col-12 mb-2">
                   <div class="d-flex justify-content-between align-items-center">
-                    <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center gap-2 text-decoration-none">
+                    <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($post['community']); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
                       <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
                            style="width: 24px; height: 24px;">
                         <i class="bi <?php echo $commDetails['icon']; ?> fs-8 <?php echo $commDetails['text_class']; ?>"></i>
@@ -425,7 +429,12 @@ if (!function_exists('renderPostCardMarkup')) {
                 <div class="col-12 mb-2">
                   <div class="d-flex flex-column gap-2 text-start">
                     <div>
-                      <?php echo renderCategoryBadge($post['topic']); ?>
+                      <?php
+                        $badge = getCategoryBadgeStyle($post['topic']);
+                        echo '<a href="/Discourse/pages/view/topic.php?t=' . urlencode(strtoupper($post['topic'])) . '" class="badge ' . $badge['class'] . ' rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none">'
+                           . '<i class="bi ' . $badge['icon'] . ' ' . $badge['icon_color'] . ' me-1"></i>'
+                           . htmlspecialchars(strtoupper($post['topic'])) . '</a>';
+                      ?>
                     </div>
                     <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                       <?php echo htmlspecialchars($post['title']); ?>

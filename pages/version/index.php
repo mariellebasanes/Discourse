@@ -102,23 +102,14 @@ $META_TITLE = "Discourse - FEU Communities";
                         }
                     }
 
-                    if (empty($communities_list)) {
-                        $communities_list = [
-                            ["title" => "FEU LIFE", "desc" => "Campus life, events, enrollment tips, and all things FEU Institute of Technology.", "category" => "FEU TECH", "members" => 4894, "posts" => 12450],
-                            ["title" => "FEU ALABANG LIFE", "desc" => "Campus life, events, enrollment tips, and all things FEU Alabang.", "category" => "FEU ALABANG", "members" => 3201, "posts" => 8400],
-                            ["title" => "Freshies", "desc" => "A community for all the newcomers to share their thoughts and get advice.", "category" => "my-communities", "members" => 1500, "posts" => 320],
-                            ["title" => "Enrollment", "desc" => "Everything you need to know about enrollment in FEU Diliman.", "category" => "FEU DILIMAN", "members" => 890, "posts" => 120],
-                            ["title" => "Cosplaying", "desc" => "A place for cosplayers to meet and share their passion.", "category" => "FEU TECH", "members" => 450, "posts" => 201],
-                            ["title" => "FEU TECH DEV", "desc" => "For aspiring developers and software engineers in FEU Tech.", "category" => "FEU TECH", "members" => 2100, "posts" => 5400],
-                            ["title" => "Food Trip Around TECH", "desc" => "Best spots to eat around the campus.", "category" => "FEU TECH", "members" => 3400, "posts" => 670],
-                            ["title" => "Thesis Advice", "desc" => "Help and resources for your final year project.", "category" => "FEU DILIMAN", "members" => 600, "posts" => 450],
-                            ["title" => "Alabang Innovators", "desc" => "Tech startup and innovation community in Alabang.", "category" => "FEU ALABANG", "members" => 210, "posts" => 80],
-                            ["title" => "Diliman Artists", "desc" => "Art and creative works from FEU Diliman.", "category" => "FEU DILIMAN", "members" => 750, "posts" => 340],
-                            ["title" => "Study Group", "desc" => "Find study partners across all campuses.", "category" => "my-communities", "members" => 1200, "posts" => 890],
-                            ["title" => "Tech Support", "desc" => "IT support and discussions for students.", "category" => "FEU TECH", "members" => 850, "posts" => 230]
-                        ];
-                    }
-                    
+                    // No hardcoded fallback — show empty state when DB unavailable
+                    if (empty($communities_list)) { ?>
+                      <div class="col-12 text-center py-10 text-muted">
+                        <i class="bi bi-people fs-1 d-block mb-3 opacity-50"></i>
+                        <p class="fs-5 fw-bold mb-1">No communities yet</p>
+                        <p class="fs-7">Be the first to create one!</p>
+                      </div>
+                    <?php }
                     foreach($communities_list as $community) {
                         $comm_cat = $community['category'] ?? ($community['cat'] ?? 'FEU TECH');
                         $comm_desc = $community['desc'];
@@ -130,13 +121,8 @@ $META_TITLE = "Discourse - FEU Communities";
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body p-6 text-center d-flex flex-column">
                                 <div class="mb-4 d-flex justify-content-center">
-                                    <?php 
-                                    $iconDetails = getCommunityIconDetails($comm_title, $comm_cat);
-                                    ?>
-                                    <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                                         style="background-color: <?php echo $iconDetails['bg_hex']; ?>;">
-                                        <i class="bi <?php echo $iconDetails['icon']; ?> fs-2hx"
-                                           style="color: <?php echo $iconDetails['color_hex']; ?>;"></i>
+                                    <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm <?php echo $community['bg_class'] ?? 'bg-light-success'; ?>">
+                                        <i class="bi <?php echo $community['icon'] ?? 'bi-people-fill'; ?> fs-2hx <?php echo $community['text_class'] ?? 'text-success'; ?>"></i>
                                     </div>
                                 </div>
                                 <h3 class="fs-6 fw-bolder mb-2 text-dark">

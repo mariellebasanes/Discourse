@@ -12,6 +12,67 @@ $other_account = GET_ACCOUNT_DETAILS($other_id);
 $META_TITLE = htmlspecialchars($other_account['display_name']) . " - Discourse Profile";
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 $profile_user_name = strtoupper($other_account['display_name']);
+
+// ── Real DB stats for other user ─────────────────────────────
+$o_post_count    = 0;
+$o_comment_count = 0;
+$o_karma         = 0;
+$o_joined_count  = 0;
+$o_posts         = [];
+$o_comments      = [];
+$o_communities   = [];
+
+if ($EDITH && $other_id) {
+    $oid = $EDITH->real_escape_string($other_id);
+    $r = $EDITH->query("SELECT COUNT(*) as c FROM posts WHERE author_id='$oid' AND is_anonymous=0");
+    $o_post_count = $r ? (int)$r->fetch_assoc()['c'] : 0;
+
+    $r = $EDITH->query("SELECT COUNT(*) as c FROM comments WHERE author_id='$oid'");
+    $o_comment_count = $r ? (int)$r->fetch_assoc()['c'] : 0;
+
+    $r = $EDITH->query("SELECT COALESCE(SUM(upvotes),0) as k FROM posts WHERE author_id='$oid'");
+    $o_karma = $r ? (int)$r->fetch_assoc()['k'] : 0;
+
+    $r = $EDITH->query("SELECT COUNT(*) as c FROM community_members WHERE identification='$oid'");
+    $o_joined_count = $r ? (int)$r->fetch_assoc()['c'] : 0;
+
+    // Posts
+    $stmt = $EDITH->prepare(
+        "SELECT p.id, p.title, p.body, p.topic, p.community, p.upvotes, p.downvotes, p.created_at,
+                (SELECT COUNT(*) FROM comments c WHERE c.post_id=p.id) AS comment_count
+         FROM posts p WHERE p.author_id=? AND p.is_anonymous=0
+         ORDER BY p.created_at DESC LIMIT 20"
+    );
+    if ($stmt) { $stmt->bind_param("s", $other_id); $stmt->execute(); $o_posts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC); $stmt->close(); }
+
+    // Comments
+    $stmt = $EDITH->prepare(
+        "SELECT c.id, c.body, c.created_at, p.id as post_id, p.title as post_title, p.community
+         FROM comments c JOIN posts p ON c.post_id = p.id
+         WHERE c.author_id=? ORDER BY c.created_at DESC LIMIT 20"
+    );
+    if ($stmt) { $stmt->bind_param("s", $other_id); $stmt->execute(); $o_comments = $stmt->get_result()->fetch_all(MYSQLI_ASSOC); $stmt->close(); }
+
+    // Communities this user joined
+    $stmt = $EDITH->prepare(
+        "SELECT cm.community_title, COALESCE(c.members,0) as members
+         FROM community_members cm
+         LEFT JOIN communities c ON c.title = cm.community_title
+         WHERE cm.identification=? ORDER BY cm.id ASC"
+    );
+    if ($stmt) { $stmt->bind_param("s", $other_id); $stmt->execute(); $o_communities = $stmt->get_result()->fetch_all(MYSQLI_ASSOC); $stmt->close(); }
+}
+
+if (!function_exists('profile_relative_time')) {
+    function profile_relative_time($dt) {
+        $t = strtotime($dt); if (!$t) return '1d ago';
+        $d = time() - $t;
+        if ($d < 60) return 'Just now';
+        $d = round($d/60); if ($d < 60) return $d.'m ago';
+        $d = round($d/60); if ($d < 24) return $d.'h ago';
+        $d = round($d/24); return $d.'d ago';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -88,9 +149,27 @@ $profile_user_name = strtoupper($other_account['display_name']);
                               </div>
                             </div>
                             <!-- Actions (Follow) -->
+                            <?php
+                            $prof_is_following = false;
+                            if ($EDITH && $identification && $other_id) {
+                                $stmt_pf = $EDITH->prepare("SELECT id FROM followers WHERE follower_id=? AND following_id=?");
+                                $stmt_pf->bind_param("ss", $identification, $other_id);
+                                $stmt_pf->execute();
+                                $stmt_pf->store_result();
+                                $prof_is_following = $stmt_pf->num_rows > 0;
+                                $stmt_pf->close();
+                            }
+                            ?>
                             <div class="flex-shrink-0">
-                              <button class="btn fw-bold text-white follow-btn px-6 d-flex align-items-center gap-2 shadow-sm" style="background-color: #1e7145;">
-                                <i class="ki-duotone ki-user-tick text-white"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> Follow
+                              <button id="profile-follow-btn"
+                                class="btn fw-bold px-6 d-flex align-items-center gap-2 shadow-sm"
+                                data-target="<?php echo htmlspecialchars($other_id); ?>"
+                                data-following="<?php echo $prof_is_following ? '1' : '0'; ?>"
+                                style="<?php echo $prof_is_following
+                                    ? 'background:transparent;color:#1A8B44;border:2px solid #1A8B44;'
+                                    : 'background:#1A8B44;color:#fff;border:2px solid #1A8B44;'; ?>">
+                                <i class="bi <?php echo $prof_is_following ? 'bi-check-lg' : 'bi-person-plus-fill'; ?>"></i>
+                                <?php echo $prof_is_following ? 'Followed' : 'Follow'; ?>
                               </button>
                             </div>
                           </div>
@@ -108,11 +187,11 @@ $profile_user_name = strtoupper($other_account['display_name']);
                           </div>
                           <div class="col-md-5 d-flex justify-content-md-end align-items-start gap-4">
                             <div class="border border-dashed border-gray-300 rounded px-5 py-3 text-center flex-grow-1 flex-md-grow-0">
-                              <div class="fs-2 fw-bolder text-dark mb-1">4.8k</div>
-                              <div class="fw-bold text-gray-500 fs-8 text-uppercase tracking-wider">Followers</div>
+                              <div class="fs-2 fw-bolder text-dark mb-1"><?php echo $o_joined_count; ?></div>
+                              <div class="fw-bold text-gray-500 fs-8 text-uppercase tracking-wider">Communities</div>
                             </div>
                             <div class="border border-dashed border-gray-300 rounded px-5 py-3 text-center flex-grow-1 flex-md-grow-0">
-                              <div class="fs-2 fw-bolder text-dark mb-1">24.8k</div>
+                              <div class="fs-2 fw-bolder text-dark mb-1"><?php echo $o_karma >= 1000 ? round($o_karma/1000,1).'k' : $o_karma; ?></div>
                               <div class="fw-bold text-gray-500 fs-8 text-uppercase tracking-wider">Karma</div>
                             </div>
                           </div>
@@ -133,28 +212,16 @@ $profile_user_name = strtoupper($other_account['display_name']);
 
                     <!-- Overview Tab -->
                     <div class="tab-pane active" id="tab-overview">
-                      <?php
-                      $activities = [
-                        [
-                          "community" => "FEU-LIFE",
-                          "post_title" => "Any tips for surviving the midterms week?",
-                          "action" => "Replied to",
-                          "action_target" => "Freshman22",
-                          "time" => "4 hrs ago",
-                          "body" => "Make sure to prioritize your sleep! Pulling an all-nighter usually does more harm than good. Create a schedule and stick to it, and don't forget to take short breaks.",
-                          "upvotes" => 25, "downvotes" => 1, "comments" => 10
-                        ],
-                        [
-                          "community" => "Enrollment",
-                          "post_title" => "System is down again during sectioning",
-                          "action" => "Commented",
-                          "action_target" => "",
-                          "time" => "1 day ago",
-                          "body" => "I've been trying to load the page for the last three hours. I hope they extend the deadline for adding subjects because this is completely out of our control.",
-                          "upvotes" => 89, "downvotes" => 0, "comments" => 14
-                        ]
-                      ];
-                      foreach ($activities as $act) {
+                      <?php if (empty($o_comments) && empty($o_posts)) { ?>
+                      <div class="text-center py-10 text-muted">
+                        <i class="bi bi-journal-text fs-1 d-block mb-3 opacity-50"></i>
+                        <p class="fs-6">No activity yet.</p>
+                      </div>
+                      <?php }
+                      $overview_items = array_slice($o_comments, 0, 5);
+                      foreach ($overview_items as $act) {
+                        $act['action'] = 'Commented'; $act['action_target'] = '';
+                        $act['post_title'] = $act['post_title'] ?? '';
                       ?>
                       <div class="card border border-gray-300 shadow-none mb-5 highlight-card rounded-2">
                         <div class="card-body p-6">
@@ -173,38 +240,22 @@ $profile_user_name = strtoupper($other_account['display_name']);
                                 <span class="fw-bolder text-primary fs-7 ms-1"><?php echo $act['action_target']; ?></span>
                                 <?php } ?>
                               </div>
-                              <span class="text-muted fs-8"><?php echo $act['time']; ?></span>
+                              <span class="text-muted fs-8"><?php echo profile_relative_time($act['created_at'] ?? ''); ?></span>
                             </div>
                           </div>
-
-                          <!-- Original Post Reference -->
                           <div class="bg-light rounded p-4 mb-4 border border-gray-200">
                             <div class="d-flex align-items-center gap-2 mb-1">
                               <div class="symbol symbol-20px avatar-circle shadow-sm" style="background-color: #8C9933;">
                                 <img src="/Discourse/assets/img/logo/feu-tech.webp" alt="" class="w-100 p-1">
                               </div>
-                              <span class="fw-bolder text-dark fs-8">D/<?php echo $act['community']; ?></span>
+                              <span class="fw-bolder text-dark fs-8">D/<?php echo htmlspecialchars($act['community'] ?? ''); ?></span>
                             </div>
-                            <a href="/Discourse/pages/version/view-post.php" class="fw-bold text-dark text-hover-primary fs-6 d-block mb-1 text-truncate"><?php echo $act['post_title']; ?></a>
+                            <a href="/Discourse/pages/version/view-post.php?id=<?php echo $act['post_id'] ?? ''; ?>" class="fw-bold text-dark text-hover-primary fs-6 d-block mb-1 text-truncate"><?php echo htmlspecialchars($act['post_title'] ?? ''); ?></a>
                           </div>
-                          
-                          <!-- Body -->
-                          <p class="text-gray-700 fs-6 lh-lg mb-4"><?php echo $act['body']; ?></p>
-                          
-                          <!-- Actions -->
+                          <p class="text-gray-700 fs-6 lh-lg mb-4"><?php echo htmlspecialchars($act['body'] ?? ''); ?></p>
                           <div class="d-flex align-items-center gap-1">
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="bi bi-hand-thumbs-up fs-8"></i> <span class="fw-bold fs-8"><?php echo $act['upvotes']; ?></span>
-                            </button>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="bi bi-hand-thumbs-down fs-8"></i> <span class="fw-bold fs-8"><?php echo $act['downvotes']; ?></span>
-                            </button>
-                            <a href="/Discourse/pages/version/view-post.php" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill text-decoration-none">
-                              <i class="bi bi-chat fs-8"></i> <span class="fw-bold fs-8"><?php echo $act['comments']; ?></span>
-                            </a>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="bi bi-share fs-8"></i> <span class="fw-bold fs-8">Share</span>
-                            </button>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill"><i class="bi bi-hand-thumbs-up fs-8"></i> <span class="fw-bold fs-8">0</span></button>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill"><i class="bi bi-share fs-8"></i> <span class="fw-bold fs-8">Share</span></button>
                           </div>
                         </div>
                       </div>
@@ -213,65 +264,34 @@ $profile_user_name = strtoupper($other_account['display_name']);
 
                     <!-- Posts Tab -->
                     <div class="tab-pane" id="tab-posts">
-                      <?php
-                      $posts = [
-                        [
-                          "community" => "FEU TECH",
-                          "title" => "Hackathon winners announced!",
-                          "body" => "Congratulations to all the teams who participated in the weekend hackathon. The innovative solutions presented were truly inspiring for our tech community.",
-                          "tag" => "News", "tag_color" => "info",
-                          "time" => "2 days ago",
-                          "image" => "",
-                          "upvotes" => 210, "downvotes" => 4, "comments" => 35
-                        ],
-                        [
-                          "community" => "Food Trip Around TECH",
-                          "title" => "Found a hidden gem near P. Campa",
-                          "body" => "If you guys haven't tried the new wings place, you're missing out. It's affordable and perfect for students on a budget.",
-                          "tag" => "Review", "tag_color" => "success",
-                          "time" => "1 week ago",
-                          "image" => "https://images.unsplash.com/photo-1524117074681-31bd4de22ad3?w=800&q=80",
-                          "upvotes" => 124, "downvotes" => 2, "comments" => 18
-                        ]
-                      ];
-                      foreach ($posts as $post) {
-                      ?>
+                      <?php if (empty($o_posts)) { ?>
+                      <div class="text-center py-10 text-muted">
+                        <i class="bi bi-pencil-square fs-1 d-block mb-3 opacity-50"></i>
+                        <p class="fs-6">No posts yet.</p>
+                      </div>
+                      <?php }
+                      foreach ($o_posts as $post) { ?>
                       <div class="card border border-gray-300 shadow-none mb-5 rounded-2">
                         <div class="card-body p-5">
                           <div class="d-flex align-items-center gap-2 mb-3">
                             <div class="symbol symbol-20px avatar-circle shadow-sm" style="background-color: #8C9933;">
                               <img src="/Discourse/assets/img/logo/feu-tech.webp" alt="" class="w-100 p-1">
                             </div>
-                            <span class="fw-bold text-dark fs-8"><?php echo $post['community']; ?></span>
-                            <span class="text-muted fs-9">· <?php echo $post['time']; ?></span>
+                            <span class="fw-bold text-dark fs-8"><?php echo htmlspecialchars($post['community']); ?></span>
+                            <span class="text-muted fs-9">· <?php echo profile_relative_time($post['created_at']); ?></span>
                           </div>
-                          <div class="mb-2">
-                             <?php echo renderCategoryBadge($post['tag']); ?>
-                          </div>
+                          <div class="mb-2"><?php echo renderCategoryBadge($post['topic'] ?? 'GENERAL'); ?></div>
                           <h4 class="fw-bolder fs-4 mb-2">
-                            <a href="/Discourse/pages/version/view-post.php<?php echo !empty($post['image']) ? '?img=1' : ''; ?>" class="text-dark text-hover-primary"><?php echo $post['title']; ?></a>
+                            <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-dark text-hover-primary"><?php echo htmlspecialchars($post['title']); ?></a>
                           </h4>
                           <?php if (!empty($post['body'])) { ?>
-                          <p class="text-gray-700 fs-7 mb-3"><?php echo $post['body']; ?></p>
-                          <?php } ?>
-                          <?php if (!empty($post['image'])) { ?>
-                          <div class="mb-3 rounded-3 overflow-hidden">
-                            <img src="<?php echo $post['image']; ?>" class="w-100 rounded-3" alt="Post image" style="max-height: 300px; object-fit: cover;">
-                          </div>
+                          <p class="text-gray-700 fs-7 mb-3"><?php echo htmlspecialchars(mb_substr(strip_tags($post['body']), 0, 200)) . (mb_strlen(strip_tags($post['body'])) > 200 ? '...' : ''); ?></p>
                           <?php } ?>
                           <div class="d-flex align-items-center gap-1 pt-2 border-top border-gray-200">
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['upvotes']; ?></span>
-                            </button>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['downvotes']; ?></span>
-                            </button>
-                            <a href="/Discourse/pages/version/view-post.php" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill text-decoration-none">
-                              <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['comments']; ?></span>
-                            </a>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="bi bi-share fs-9"></i> <span class="fw-bold fs-9">Share</span>
-                            </button>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['upvotes']; ?></span></button>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['downvotes']; ?></span></button>
+                            <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill text-decoration-none"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['comment_count'] ?? 0; ?></span></a>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-share fs-9"></i> <span class="fw-bold fs-9">Share</span></button>
                           </div>
                         </div>
                       </div>
@@ -280,18 +300,15 @@ $profile_user_name = strtoupper($other_account['display_name']);
 
                     <!-- Comments Tab -->
                     <div class="tab-pane" id="tab-comments">
-                      <?php
-                      $comments = [
-                        ["community" => "FEU-LIFE", "post" => "Where can I get the university ID replacement?", "time" => "2 hrs ago",
-                         "body" => "You need to go to the Student Affairs office on the 3rd floor. Bring an affidavit of loss and 150 pesos for the processing fee. Usually takes about a week to release."],
-                        ["community" => "Thesis Advice", "post" => "How to write a good related literature review?", "time" => "3 days ago",
-                         "body" => "Don't just summarize papers one by one. Group them by themes and discuss how they relate to your specific research gap. It should tell a story about the current state of research."]
-                      ];
-                      foreach ($comments as $c) {
-                      ?>
+                      <?php if (empty($o_comments)) { ?>
+                      <div class="text-center py-10 text-muted">
+                        <i class="bi bi-chat-left-text fs-1 d-block mb-3 opacity-50"></i>
+                        <p class="fs-6">No comments yet.</p>
+                      </div>
+                      <?php }
+                      foreach ($o_comments as $c) { ?>
                       <div class="card border border-gray-300 shadow-none mb-5 highlight-card rounded-2">
                         <div class="card-body p-6">
-                          <!-- Header: Action Context -->
                           <div class="d-flex align-items-center mb-4">
                             <div class="symbol symbol-40px me-3">
                               <div class="symbol-label fs-7 fw-bold bg-light-info text-info">
@@ -303,38 +320,23 @@ $profile_user_name = strtoupper($other_account['display_name']);
                                 <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars($other_account['display_name']); ?></span>
                                 <span class="text-muted fs-7">Commented on a post</span>
                               </div>
-                              <span class="text-muted fs-8"><?php echo $c['time']; ?></span>
+                              <span class="text-muted fs-8"><?php echo profile_relative_time($c['created_at']); ?></span>
                             </div>
                           </div>
-
-                          <!-- Original Post Reference -->
                           <div class="bg-light rounded p-4 mb-4 border border-gray-200">
                             <div class="d-flex align-items-center gap-2 mb-1">
                               <div class="symbol symbol-20px avatar-circle shadow-sm" style="background-color: #8C9933;">
                                 <img src="/Discourse/assets/img/logo/feu-tech.webp" alt="" class="w-100 p-1">
                               </div>
-                              <span class="fw-bolder text-dark fs-8">D/<?php echo $c['community']; ?></span>
+                              <span class="fw-bolder text-dark fs-8">D/<?php echo htmlspecialchars($c['community'] ?? ''); ?></span>
                             </div>
-                            <a href="/Discourse/pages/version/view-post.php" class="fw-bold text-dark text-hover-primary fs-6 d-block mb-1 text-truncate"><?php echo $c['post']; ?></a>
+                            <a href="/Discourse/pages/version/view-post.php?id=<?php echo $c['post_id'] ?? ''; ?>" class="fw-bold text-dark text-hover-primary fs-6 d-block mb-1 text-truncate"><?php echo htmlspecialchars($c['post_title'] ?? ''); ?></a>
                           </div>
-                          
-                          <!-- Body -->
-                          <p class="text-gray-700 fs-6 lh-lg mb-4"><?php echo $c['body']; ?></p>
-                          
-                          <!-- Actions -->
+                          <p class="text-gray-700 fs-6 lh-lg mb-4"><?php echo htmlspecialchars($c['body'] ?? ''); ?></p>
                           <div class="d-flex align-items-center gap-1 mt-2">
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="bi bi-hand-thumbs-up fs-8"></i> <span class="fw-bold fs-8">3</span>
-                            </button>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="bi bi-hand-thumbs-down fs-8"></i> <span class="fw-bold fs-8">1</span>
-                            </button>
-                            <a href="/Discourse/pages/version/view-post.php" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill text-decoration-none">
-                              <i class="bi bi-chat fs-8"></i> <span class="fw-bold fs-8">12</span>
-                            </a>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="bi bi-share fs-8"></i> <span class="fw-bold fs-8">Share</span>
-                            </button>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill"><i class="bi bi-hand-thumbs-up fs-8"></i> <span class="fw-bold fs-8">0</span></button>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill"><i class="bi bi-hand-thumbs-down fs-8"></i> <span class="fw-bold fs-8">0</span></button>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill"><i class="bi bi-share fs-8"></i> <span class="fw-bold fs-8">Share</span></button>
                           </div>
                         </div>
                       </div>
@@ -343,85 +345,35 @@ $profile_user_name = strtoupper($other_account['display_name']);
 
                     <!-- Upvoted Tab -->
                     <div class="tab-pane" id="tab-upvoted">
-                      <?php
-                      $upvoted = [
-                        ["community" => "FEU-LIFE", "user" => "John Doe", "title" => "Is the cafeteria open during weekends?", "time" => "2 hrs ago",
-                         "body" => "I've been wondering if the cafeteria has extended hours during exam week. Does anyone know the schedule?", "upvotes" => 15, "comments" => 8],
-                        ["community" => "FEU TECH", "user" => "Ravi Joshi", "title" => "Tips for surviving thesis defense", "time" => "1 day ago",
-                         "body" => "Just defended my thesis last week. Here are some tips that really helped me prepare and stay calm during the presentation.", "upvotes" => 42, "comments" => 23]
-                      ];
-                      foreach ($upvoted as $u) {
-                      ?>
-                      <div class="card border border-gray-300 shadow-none mb-5 highlight-card rounded-2">
-                        <div class="card-body p-6">
-                          <div class="d-flex align-items-center mb-4">
-                            <div class="symbol symbol-40px me-3">
-                              <div class="symbol-label fs-7 fw-bold bg-light-success">
-                                <i class="bi bi-hand-thumbs-up-fill fs-4 text-success"></i>
-                              </div>
-                            </div>
-                            <div class="flex-grow-1">
-                              <div class="d-flex align-items-center">
-                                <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars($other_account['display_name']); ?></span>
-                                <span class="text-muted fs-7">Upvoted a post</span>
-                              </div>
-                              <span class="text-muted fs-8"><?php echo $u['time']; ?></span>
-                            </div>
-                          </div>
-
-                          <div class="bg-light rounded p-4 mb-4 border border-gray-200">
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                              <div class="symbol symbol-20px avatar-circle shadow-sm" style="background-color: #8C9933;">
-                                <img src="/Discourse/assets/img/logo/feu-tech.webp" alt="" class="w-100 p-1">
-                              </div>
-                              <span class="fw-bolder text-dark fs-8">D/<?php echo $u['community']; ?></span>
-                              <span class="text-muted fs-9">· Posted by <?php echo $u['user']; ?></span>
-                            </div>
-                            <h5 class="fw-bolder fs-5 mb-2 mt-2">
-                              <a href="/Discourse/pages/version/view-post.php" class="text-dark text-hover-primary"><?php echo $u['title']; ?></a>
-                            </h5>
-                            <p class="text-gray-700 fs-6 lh-base mb-0"><?php echo $u['body']; ?></p>
-                          </div>
-
-                          <div class="d-flex align-items-center gap-1">
-                            <button class="btn btn-sm btn-success vote-btn active d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="bi bi-hand-thumbs-up-fill fs-8 text-white"></i> <span class="fw-bold fs-8 text-white"><?php echo $u['upvotes']; ?></span>
-                            </button>
-                            <a href="/Discourse/pages/version/view-post.php" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill text-decoration-none">
-                              <i class="bi bi-chat fs-8"></i> <span class="fw-bold fs-8"><?php echo $u['comments']; ?></span>
-                            </a>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                              <i class="bi bi-share fs-8"></i> <span class="fw-bold fs-8">Share</span>
-                            </button>
-                          </div>
-                        </div>
+                      <div class="text-center py-10 text-muted">
+                        <i class="bi bi-hand-thumbs-up fs-1 d-block mb-3 opacity-50"></i>
+                        <p class="fs-6">Upvote tracking coming soon.</p>
                       </div>
-                      <?php } ?>
                     </div>
 
                     <!-- Communities Tab -->
                     <div class="tab-pane" id="tab-communities">
                       <div class="row g-4">
-                        <?php
-                        $communities = [
-                          ["name" => "FEU LIFE", "members" => "4.8k", "color" => "#2d6a4f"],
-                          ["name" => "FEU TECH", "members" => "3.2k", "color" => "#8C9933"],
-                          ["name" => "FEU ALABANG", "members" => "2.1k", "color" => "#b5651d"],
-                          ["name" => "FEU DILIMAN", "members" => "1.9k", "color" => "#6a4c93"],
-                        ];
-                        foreach ($communities as $comm) {
+                        <?php if (empty($o_communities)) { ?>
+                        <div class="col-12 text-center py-10 text-muted">
+                          <i class="bi bi-people fs-1 d-block mb-3 opacity-50"></i>
+                          <p class="fs-6">Not a member of any community yet.</p>
+                        </div>
+                        <?php }
+                        foreach ($o_communities as $comm) {
+                          $mCount = $comm['members'] >= 1000 ? round($comm['members']/1000,1).'k' : $comm['members'];
                         ?>
                         <div class="col-md-6">
-                          <div class="card border border-gray-300 shadow-none community-card rounded-2" onclick="window.location.href='/Discourse/pages/version/community.php'">
+                          <div class="card border border-gray-300 shadow-none community-card rounded-2" onclick="window.location.href='/Discourse/pages/version/community.php?c=<?php echo urlencode($comm['community_title']); ?>'">
                             <div class="card-body p-5 d-flex align-items-center gap-4">
                               <div class="w-50px h-50px rounded-3 d-flex align-items-center justify-content-center avatar-circle flex-shrink-0" style="background-color: #8C9933;">
                                 <img src="/Discourse/assets/img/logo/feu-tech.webp" alt="">
                               </div>
                               <div class="flex-grow-1">
-                                <h5 class="fw-bolder text-dark fs-5 mb-1"><?php echo $comm['name']; ?></h5>
+                                <h5 class="fw-bolder text-dark fs-5 mb-1"><?php echo htmlspecialchars($comm['community_title']); ?></h5>
                                 <div class="d-flex align-items-center gap-1 text-muted fs-8">
                                   <i class="ki-duotone ki-people fs-9"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
-                                  <span><?php echo $comm['members']; ?> members</span>
+                                  <span><?php echo $mCount; ?> members</span>
                                 </div>
                               </div>
                               <i class="ki-duotone ki-arrow-right text-muted fs-8"><span class="path1"></span><span class="path2"></span></i>
@@ -453,6 +405,33 @@ $profile_user_name = strtoupper($other_account['display_name']);
         var tab = $(this).data('tab');
         $('.tab-pane').removeClass('active');
         $('#tab-' + tab).addClass('active');
+      });
+
+      $('#profile-follow-btn').on('click', function() {
+        const btn = $(this);
+        const target = btn.data('target');
+        const following = btn.data('following') == '1';
+        btn.prop('disabled', true);
+        $.ajax({
+          url: '/Discourse/pages/version/follow-action.php',
+          method: 'POST',
+          data: { target_id: target },
+          dataType: 'json',
+          success: function(res) {
+            if (res.success) {
+              const nowFollowing = res.following;
+              btn.data('following', nowFollowing ? '1' : '0');
+              if (nowFollowing) {
+                btn.css({'background':'transparent','color':'#1A8B44','border':'2px solid #1A8B44'});
+                btn.html('<i class="bi bi-check-lg"></i> Followed');
+              } else {
+                btn.css({'background':'#1A8B44','color':'#fff','border':'2px solid #1A8B44'});
+                btn.html('<i class="bi bi-person-plus-fill"></i> Follow');
+              }
+            }
+          },
+          complete: function() { btn.prop('disabled', false); }
+        });
       });
     });
   </script>

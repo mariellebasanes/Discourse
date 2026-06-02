@@ -15,7 +15,7 @@ $tags = isset($_POST['tags']) ? trim($_POST['tags']) : '';
 $is_anonymous = isset($_POST['is_anonymous']) ? 1 : 0;
 
 if (empty($title) || empty($topic)) {
-    header("Location: /Discourse/pages/version/create-post.php?error=missing_fields");
+    header("Location: /Discourse/pages/view/create-post.php?error=missing_fields");
     exit();
 }
 
@@ -65,6 +65,9 @@ if ($EDITH) {
         $stmt->bind_param("sssssssi", $title, $body, $author_id, $community, $topic, $tags, $slug, $is_anonymous);
         if ($stmt->execute()) {
             $inserted_id = $stmt->insert_id;
+            // Increment community post count
+            $esc_comm = $EDITH->real_escape_string($community);
+            $EDITH->query("UPDATE communities SET posts = posts + 1 WHERE title = '$esc_comm'");
         }
         $stmt->close();
     }

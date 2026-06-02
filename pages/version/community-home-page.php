@@ -102,23 +102,14 @@ $META_TITLE = "Discourse - FEU Communities";
                         }
                     }
 
-                    if (empty($communities_list)) {
-                        $communities_list = [
-                            ["title" => "FEU LIFE", "desc" => "Campus life, events, enrollment tips, and all things FEU Institute of Technology.", "category" => "FEU TECH", "members" => 4894, "posts" => 12450],
-                            ["title" => "FEU ALABANG LIFE", "desc" => "Campus life, events, enrollment tips, and all things FEU Alabang.", "category" => "FEU ALABANG", "members" => 3201, "posts" => 8400],
-                            ["title" => "Freshies", "desc" => "A community for all the newcomers to share their thoughts and get advice.", "category" => "my-communities", "members" => 1500, "posts" => 320],
-                            ["title" => "Enrollment", "desc" => "Everything you need to know about enrollment in FEU Diliman.", "category" => "FEU DILIMAN", "members" => 890, "posts" => 120],
-                            ["title" => "Cosplaying", "desc" => "A place for cosplayers to meet and share their passion.", "category" => "FEU TECH", "members" => 450, "posts" => 201],
-                            ["title" => "FEU TECH DEV", "desc" => "For aspiring developers and software engineers in FEU Tech.", "category" => "FEU TECH", "members" => 2100, "posts" => 5400],
-                            ["title" => "Food Trip Around TECH", "desc" => "Best spots to eat around the campus.", "category" => "FEU TECH", "members" => 3400, "posts" => 670],
-                            ["title" => "Thesis Advice", "desc" => "Help and resources for your final year project.", "category" => "FEU DILIMAN", "members" => 600, "posts" => 450],
-                            ["title" => "Alabang Innovators", "desc" => "Tech startup and innovation community in Alabang.", "category" => "FEU ALABANG", "members" => 210, "posts" => 80],
-                            ["title" => "Diliman Artists", "desc" => "Art and creative works from FEU Diliman.", "category" => "FEU DILIMAN", "members" => 750, "posts" => 340],
-                            ["title" => "Study Group", "desc" => "Find study partners across all campuses.", "category" => "my-communities", "members" => 1200, "posts" => 890],
-                            ["title" => "Tech Support", "desc" => "IT support and discussions for students.", "category" => "FEU TECH", "members" => 850, "posts" => 230]
-                        ];
-                    }
-                    
+                    // No fallback — show empty state if DB is empty
+                    if (empty($communities_list)) { ?>
+                      <div class="col-12 text-center py-10 text-muted">
+                        <i class="bi bi-people fs-1 d-block mb-3 opacity-50"></i>
+                        <p class="fs-5 fw-bold mb-1">No communities yet</p>
+                        <p class="fs-7">Be the first to create one!</p>
+                      </div>
+                    <?php }
                     foreach($communities_list as $community) {
                         $comm_cat = $community['category'] ?? ($community['cat'] ?? 'FEU TECH');
                         $comm_desc = $community['desc'];
@@ -130,13 +121,8 @@ $META_TITLE = "Discourse - FEU Communities";
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body p-6 text-center d-flex flex-column">
                                 <div class="mb-4 d-flex justify-content-center">
-                                    <?php 
-                                    $iconDetails = getCommunityIconDetails($comm_title, $comm_cat);
-                                    ?>
-                                    <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm"
-                                         style="background-color: <?php echo $iconDetails['bg_hex']; ?>;">
-                                        <i class="bi <?php echo $iconDetails['icon']; ?> fs-2hx"
-                                           style="color: <?php echo $iconDetails['color_hex']; ?>;"></i>
+                                    <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm <?php echo $community['bg_class'] ?? 'bg-light-success'; ?>">
+                                        <i class="bi <?php echo $community['icon'] ?? 'bi-people-fill'; ?> fs-2hx <?php echo $community['text_class'] ?? 'text-success'; ?>"></i>
                                     </div>
                                 </div>
                                 <h3 class="fs-6 fw-bolder mb-2 text-dark">
@@ -227,9 +213,16 @@ $META_TITLE = "Discourse - FEU Communities";
                                     </div>
                                     
                                     <div class="fv-row mb-8">
-                                        <button type="button" class="btn btn-light-secondary text-muted bg-light fw-bold">
-                                            <i class="fas fa-plus text-muted"></i> Add Categories
-                                        </button>
+                                        <label class="fs-6 fw-bold mb-2 text-dark">Custom Topic Categories <span class="text-muted fw-normal fs-7">(optional)</span></label>
+                                        <div id="comm-topics-wrap" class="d-flex flex-wrap gap-2 mb-2" style="min-height:36px;"></div>
+                                        <div class="d-flex gap-2">
+                                            <input type="text" id="comm-topic-input" class="form-control form-control-solid bg-light flex-grow-1" placeholder="e.g. Gaming, Events, Projects…" />
+                                            <button type="button" id="comm-topic-add-btn" class="btn btn-light-success fw-bold px-4">
+                                                <i class="bi bi-plus-lg"></i> Add
+                                            </button>
+                                        </div>
+                                        <input type="hidden" id="comm-topics-hidden" name="custom_topics" value="" />
+                                        <div class="text-muted fs-8 mt-2">Type a category and click Add. These will appear as topic filters in your community.</div>
                                     </div>
                                     
                                     <div class="d-flex flex-stack gap-4">
@@ -255,6 +248,43 @@ $META_TITLE = "Discourse - FEU Communities";
   <!-- Theme Color Picker Script -->
   <script>
     $(document).ready(function() {
+        // 0. Custom topic tags
+        var commTopics = [];
+
+        function renderTopicTags() {
+            var wrap = $('#comm-topics-wrap');
+            wrap.empty();
+            commTopics.forEach(function(t, i) {
+                wrap.append(
+                    $('<span class="badge bg-light-success text-success fw-bold px-3 py-2 d-inline-flex align-items-center gap-1" style="font-size:12px;"></span>')
+                    .text(t)
+                    .append($('<i class="bi bi-x ms-1" style="cursor:pointer;font-size:11px;"></i>').on('click', function() {
+                        commTopics.splice(i, 1);
+                        renderTopicTags();
+                    }))
+                );
+            });
+            $('#comm-topics-hidden').val(commTopics.join(','));
+        }
+
+        $('#comm-topic-add-btn').on('click', function() {
+            var val = $('#comm-topic-input').val().trim();
+            if (val && commTopics.length < 20 && !commTopics.includes(val)) {
+                commTopics.push(val.charAt(0).toUpperCase() + val.slice(1));
+                renderTopicTags();
+            }
+            $('#comm-topic-input').val('').focus();
+        });
+        $('#comm-topic-input').on('keypress', function(e) {
+            if (e.which === 13) { e.preventDefault(); $('#comm-topic-add-btn').click(); }
+        });
+
+        // Reset topics on modal close
+        $('#create_community_modal').on('hidden.bs.modal', function() {
+            commTopics = [];
+            renderTopicTags();
+        });
+
         // 1. Handle theme color selection
         $('.theme-color-btn').on('click', function() {
             // Remove active class from all buttons
@@ -315,7 +345,8 @@ $META_TITLE = "Discourse - FEU Communities";
                     name: name,
                     desc: desc,
                     category: cat,
-                    theme_color: activeColor
+                    theme_color: activeColor,
+                    custom_topics: $('#comm-topics-hidden').val()
                 },
                 dataType: 'json',
                 success: function(response) {

@@ -3,6 +3,7 @@ define('MBG', TRUE);
 include(dirname(dirname(__DIR__)) . '/functions-new.php');
 $META_TITLE = "Create a Post";
 $META_DESC  = "Share something with the Paraverse community.";
+$default_community = isset($_GET['c']) ? trim($_GET['c']) : '';
 ?>
 
 <head>
@@ -51,6 +52,10 @@ $META_DESC  = "Share something with the Paraverse community.";
               <!-- Content -->
               <div id="kt_app_content">
                 <div class="app-container container-xxl">
+                  <form id="createPostForm" action="/Discourse/pages/version/create-post-action.php" method="POST">
+                  <textarea name="body" id="body-hidden" style="display:none;"></textarea>
+                  <input type="hidden" name="is_anonymous" id="is_anonymous_hidden" value="0">
+                  <input type="hidden" name="tags" id="tags-hidden" value="">
                   <div class="row g-5 align-items-start py-5">
 
                     <!-- Left Column -->
@@ -78,14 +83,14 @@ $META_DESC  = "Share something with the Paraverse community.";
                                 aria-labelledby="identityDropdown">
                                 <li>
                                   <a class="dropdown-item menu-link px-4 active" href="#"
-                                    onclick="changeIdentity(event, 'Posting as yourself', '/Discourse/assets/images/avatars/300-1.jpg')">
+                                    onclick="changeIdentity(event, 'Posting as yourself', '/Discourse/assets/images/avatars/300-1.jpg'); document.getElementById('is_anonymous_hidden').value='0';">
                                     <span class="menu-icon"><i class="bi bi-person fs-5 me-2"></i></span>
                                     <span class="menu-title">Yourself</span>
                                   </a>
                                 </li>
                                 <li>
                                   <a class="dropdown-item menu-link px-4" href="#"
-                                    onclick="changeIdentity(event, 'Posting anonymously', 'https://ui-avatars.com/api/?name=A&background=7e8299&color=fff&size=32')">
+                                    onclick="changeIdentity(event, 'Posting anonymously', 'https://ui-avatars.com/api/?name=A&background=7e8299&color=fff&size=32'); document.getElementById('is_anonymous_hidden').value='1';">
                                     <span class="menu-icon"><i class="bi bi-eye-slash fs-5 text-danger me-2"></i></span>
                                     <span class="menu-title text-danger">Anonymous</span>
                                   </a>
@@ -103,8 +108,8 @@ $META_DESC  = "Share something with the Paraverse community.";
                             <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">
                               Title <span class="text-danger">*</span>
                             </label>
-                            <input type="text" class="form-control form-control-solid" id="post_title"
-                              placeholder="What's on your mind? (Give it a good headline...)">
+                            <input type="text" class="form-control form-control-solid" id="post_title" name="title"
+                              placeholder="What's on your mind? (Give it a good headline...)" required>
                           </div>
 
                           <!-- Community + Topic -->
@@ -113,37 +118,35 @@ $META_DESC  = "Share something with the Paraverse community.";
                               <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">
                                 Community <span class="text-danger">*</span>
                               </label>
-                              <select class="form-select form-select-solid">
+                              <select class="form-select form-select-solid" name="community" id="community-select">
                                 <option value="">No community</option>
-                                <option>CS Department</option>
-                                <option>General</option>
-                                <option>FEU Tech</option>
+                                <?php
+                                if ($EDITH) {
+                                    $res = $EDITH->query("SELECT title FROM communities ORDER BY title ASC");
+                                    if ($res) { while ($row = $res->fetch_assoc()) {
+                                        $sel = ($row['title'] === $default_community) ? ' selected' : '';
+                                        echo '<option value="' . htmlspecialchars($row['title']) . '"' . $sel . '>' . htmlspecialchars($row['title']) . '</option>';
+                                    }}
+                                } else {
+                                    foreach (['FEU Life','FEU Alabang Life','Freshies','Enrollment','Cosplaying','FEU Tech Dev','Food Trip Around Tech','Thesis Advice','Alabang Innovators','Diliman Artists','Tech Support','Study Group'] as $c) {
+                                        $sel = ($c === $default_community) ? ' selected' : '';
+                                        echo '<option value="' . htmlspecialchars($c) . '"' . $sel . '>' . htmlspecialchars($c) . '</option>';
+                                    }
+                                }
+                                ?>
                               </select>
                             </div>
                             <div class="col-sm-6">
                               <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">
                                 Topic <span class="text-danger">*</span>
                               </label>
-                              <select class="form-select form-select-solid">
+                              <select class="form-select form-select-solid" name="topic" id="topic-select" required>
                                 <option value="">Select a topic...</option>
-                                <option>Technology</option>
-                                <option>Culture</option>
-                                <option>Gaming</option>
-                                <option>FEU</option>
-                                <option>Ideas</option>
-                                <option>Creative</option>
-                                <option>Science</option>
-                                <option>News</option>
-                                <option>AI</option>
-                                <option>Academics</option>
-                                <option>Lifestyle</option>
-                                <option>Entertainment</option>
-                                <option>Music</option>
-                                <option>Politics</option>
-                                <option>Issues</option>
-                                <option>Sports</option>
-                                <option>Others</option>
+                                <?php foreach (["Technology","Culture","Gaming","FEU","Ideas","Creative","Science","News","AI","Academics","Lifestyle","Entertainment","Music","Politics","Issues","Sports","Others"] as $t) { echo '<option value="' . $t . '">' . $t . '</option>'; } ?>
                               </select>
+                              <div id="topic-hint" class="text-muted fs-8 mt-1" style="display:none;">
+                                <i class="bi bi-info-circle me-1"></i> Showing topics for this community
+                              </div>
                             </div>
                           </div>
 
@@ -307,6 +310,7 @@ $META_DESC  = "Share something with the Paraverse community.";
                     </div><!-- /col-lg-4 -->
 
                   </div><!-- /row -->
+                  </form>
                 </div>
               </div>
 
@@ -401,5 +405,82 @@ $META_DESC  = "Share something with the Paraverse community.";
 
   <script>window.DC_EDITOR_ID = 'dc-editor';</script>
   <script src="/Discourse/assets/js/dc-editor.js"></script>
+  <script>
+  // Dynamic topics based on selected community
+  (function() {
+    var commSel  = document.getElementById('community-select');
+    var topicSel = document.getElementById('topic-select');
+    var hint     = document.getElementById('topic-hint');
+
+    var globalTopics = ["Technology","Culture","Gaming","FEU","Ideas","Creative","Science","News","AI","Academics","Lifestyle","Entertainment","Music","Politics","Issues","Sports","Others"];
+
+    function loadTopics(community) {
+      var url = community
+        ? '/Discourse/pages/version/get-community-topics.php?c=' + encodeURIComponent(community)
+        : null;
+
+      if (!url) {
+        renderTopics(globalTopics, false);
+        return;
+      }
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) { renderTopics(data.topics, data.source === 'custom'); })
+        .catch(function()    { renderTopics(globalTopics, false); });
+    }
+
+    function renderTopics(topics, isCustom) {
+      var prev = topicSel.value;
+      topicSel.innerHTML = '<option value="">Select a topic...</option>';
+      topics.forEach(function(t) {
+        var opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        if (t === prev) opt.selected = true;
+        topicSel.appendChild(opt);
+      });
+      hint.style.display = isCustom ? '' : 'none';
+    }
+
+    if (commSel) {
+      commSel.addEventListener('change', function() { loadTopics(this.value); });
+      // Init on load if community pre-selected
+      if (commSel.value) loadTopics(commSel.value);
+    }
+  })();
+
+  // Override dc-editor's submitPost to collect data and POST to DB
+  window.submitPost = function() {
+    var title = document.getElementById('post_title');
+    if (!title || !title.value.trim()) { if(title) title.focus(); return; }
+    var topic = document.getElementById('topic-select');
+    if (!topic || !topic.value) { alert('Please select a topic.'); if(topic) topic.focus(); return; }
+    var editor = document.getElementById('dc-editor');
+    document.getElementById('body-hidden').value = editor ? editor.innerHTML : '';
+    var tagChips = document.querySelectorAll('#tag-wrap .dc-tag-chip');
+    var tags = Array.from(tagChips).map(function(c){ return c.dataset.value || c.textContent.replace('×','').trim(); });
+    document.getElementById('tags-hidden').value = tags.join(',');
+    if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
+    document.getElementById('createPostForm').submit();
+  };
+  </script>
+  <script>
+    // Override dc-editor's submitPost to collect data and POST to DB
+    window.submitPost = function() {
+      var title = document.getElementById('post_title');
+      if (!title || !title.value.trim()) { if(title) title.focus(); return; }
+      var topic = document.getElementById('topic-select');
+      if (!topic || !topic.value) { alert('Please select a topic.'); if(topic) topic.focus(); return; }
+      // Collect editor body HTML
+      var editor = document.getElementById('dc-editor');
+      document.getElementById('body-hidden').value = editor ? editor.innerHTML : '';
+      // Collect tags from dc-tag-wrap chips
+      var tagChips = document.querySelectorAll('#tag-wrap .dc-tag-chip');
+      var tags = Array.from(tagChips).map(function(c){ return c.dataset.value || c.textContent.replace('×','').trim(); });
+      document.getElementById('tags-hidden').value = tags.join(',');
+      if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
+      document.getElementById('createPostForm').submit();
+    };
+  </script>
 
 </body>

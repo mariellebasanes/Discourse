@@ -37,30 +37,18 @@ foreach ($db_communities as $comm) {
     $title = $comm['title'];
     $title_key = str_replace(' ', '', strtolower($title));
     
-    // Start with seed defaults or general fallback
-    $topics = ["General", "Discussions", "Questions"];
-    foreach ($seed_defaults as $s_title => $s_topics) {
-        if (str_replace(' ', '', strtolower($s_title)) === $title_key) {
-            $topics = $s_topics;
-            break;
-        }
-    }
-    
-    // Query unique topics from existing posts in DB
-    if ($EDITH) {
-        $stmt_t = $EDITH->prepare("SELECT DISTINCT topic FROM posts WHERE REPLACE(LOWER(community), ' ', '') = ? AND topic IS NOT NULL AND topic != ''");
-        if ($stmt_t) {
-            $stmt_t->bind_param("s", $title_key);
-            $stmt_t->execute();
-            $res_t = $stmt_t->get_result();
-            while ($row_t = $res_t->fetch_assoc()) {
-                $t_val = $row_t['topic'];
-                $t_display = htmlspecialchars(ucfirst(strtolower($t_val)));
-                if (!in_array($t_display, $topics)) {
-                    $topics[] = $t_display;
-                }
+    // If community has custom topics, use ONLY those
+    if (!empty($comm['custom_topics'])) {
+        $topics = array_filter(array_map('trim', explode(',', $comm['custom_topics'])));
+        $topics = array_values($topics);
+    } else {
+        // Fall back to seed defaults or general topics
+        $topics = ["Technology","Culture","Gaming","FEU","Ideas","Creative","Science","News","AI","Academics","Lifestyle","Entertainment","Music","Politics","Issues","Sports","Others"];
+        foreach ($seed_defaults as $s_title => $s_topics) {
+            if (str_replace(' ', '', strtolower($s_title)) === $title_key) {
+                $topics = $s_topics;
+                break;
             }
-            $stmt_t->close();
         }
     }
     $community_topics_map[$title] = $topics;
