@@ -2,8 +2,6 @@
 $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
   <title><?php echo $META_TITLE; ?></title>
@@ -42,6 +40,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
       overflow: hidden;
       border-bottom: 3px solid #fbc501;
     }
+
     .community-banner-glow {
       position: absolute;
       width: 100%;
@@ -51,6 +50,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
       background: radial-gradient(circle at 80% 50%, rgba(5, 177, 102, 0.15) 0%, transparent 60%);
       pointer-events: none;
     }
+
     .community-logo-container {
       background-color: #dce8df;
       border-radius: 16px;
@@ -58,22 +58,27 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
       border: 3px solid rgba(255, 255, 255, 0.15);
       transition: transform 0.3s ease;
     }
+
     .community-logo-container:hover {
       transform: scale(1.05);
     }
+
     .vote-btn-v2 {
       background: transparent;
       border: none;
       color: #6c757d;
       transition: all 0.2s ease;
     }
+
     .vote-btn-v2:hover {
       color: #1a8b44;
       transform: scale(1.15);
     }
+
     .active-vote-up {
       color: #166534 !important;
     }
+
     .active-vote-down {
       color: #991b1b !important;
     }
@@ -90,42 +95,42 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
           <div class="d-flex flex-column flex-column-fluid">
             <main>
-              
+
               <!-- Full-width Community Banner -->
               <div class="community-banner w-100 mb-8 py-10 position-relative">
                 <div class="community-banner-glow"></div>
                 <div class="container-xxl position-relative z-index-1">
-                    <div class="d-flex align-items-center flex-wrap gap-6">
-                      <!-- Community Logo -->
-                      <div class="flex-shrink-0">
-                        <div class="w-100px h-100px w-lg-120px h-lg-120px d-flex align-items-center justify-content-center community-logo-container shadow rounded-3 bg-light-danger text-danger fs-1">
-                          <i class="bi bi-heart-fill fs-2hx"></i>
-                        </div>
-                      </div>
-                      <!-- Community Info -->
-                      <div class="flex-grow-1 text-start">
-                        <h1 class="text-white fw-bolder fs-2tx mb-2">FEU LIFE</h1>
-                        <p class="text-white text-opacity-75 fs-6 mb-4 mw-600px">Connect with fellow Tamaraws, share academic resources, discuss campus events, and build lasting friendships.</p>
-                        <div class="d-flex gap-3">
-                          <div class="border border-white border-opacity-25 rounded px-3 py-1 d-flex align-items-center gap-2">
-                            <i class="bi bi-people text-white fs-7"></i>
-                            <span class="text-white fw-bold fs-7">4,894</span>
-                            <span class="text-white text-opacity-75 fs-9">Members</span>
-                          </div>
-                          <div class="border border-white border-opacity-25 rounded px-3 py-1 d-flex align-items-center gap-2">
-                            <i class="bi bi-pencil-square text-white fs-7"></i>
-                            <span class="text-white fw-bold fs-7">1,245</span>
-                            <span class="text-white text-opacity-75 fs-9">Posts</span>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- Join Button -->
-                      <div class="flex-shrink-0 ms-auto">
-                        <button class="btn btn-warning fw-bolder text-white px-8 py-3 d-flex align-items-center gap-2 rounded-pill" style="background-color:#fbc501; box-shadow:0 4px 14px rgba(245,166,35,0.3);">
-                          <i class="bi bi-plus-lg text-white fs-6"></i> JOIN COMMUNITY
-                        </button>
+                  <div class="d-flex align-items-center flex-wrap gap-6">
+                    <!-- Community Logo -->
+                    <div class="flex-shrink-0">
+                      <div class="w-100px h-100px w-lg-120px h-lg-120px d-flex align-items-center justify-content-center community-logo-container shadow rounded-3 bg-light-danger text-danger fs-1">
+                        <i class="bi bi-heart-fill fs-2hx"></i>
                       </div>
                     </div>
+                    <!-- Community Info -->
+                    <div class="flex-grow-1 text-start">
+                      <h1 class="text-white fw-bolder fs-2tx mb-2">FEU LIFE</h1>
+                      <p class="text-white text-opacity-75 fs-6 mb-4 mw-600px">Connect with fellow Tamaraws, share academic resources, discuss campus events, and build lasting friendships.</p>
+                      <div class="d-flex gap-3">
+                        <div class="border border-white border-opacity-25 rounded px-3 py-1 d-flex align-items-center gap-2">
+                          <i class="bi bi-people text-white fs-7"></i>
+                          <span class="text-white fw-bold fs-7">4,894</span>
+                          <span class="text-white text-opacity-75 fs-9">Members</span>
+                        </div>
+                        <div class="border border-white border-opacity-25 rounded px-3 py-1 d-flex align-items-center gap-2">
+                          <i class="bi bi-pencil-square text-white fs-7"></i>
+                          <span class="text-white fw-bold fs-7">1,245</span>
+                          <span class="text-white text-opacity-75 fs-9">Posts</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Join Button -->
+                    <div class="flex-shrink-0 ms-auto">
+                      <button class="btn btn-warning fw-bolder text-white px-8 py-3 d-flex align-items-center gap-2 rounded-pill" style="background-color:#fbc501; box-shadow:0 4px 14px rgba(245,166,35,0.3);">
+                        <i class="bi bi-plus-lg text-white fs-6"></i> JOIN COMMUNITY
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -137,230 +142,230 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                   <!-- ── LEFT COLUMN ──────────────────────────────────────── -->
                   <div class="discourse-feed-col">
 
-                        <!-- Community Highlights -->
-                        <div class="mb-6 mt-5">
-                          <div class="d-flex align-items-center gap-2 mb-4">
-                            <i class="bi bi-bookmark-fill text-gray-700 fs-6"></i>
-                            <h6 class="fs-5 fw-bold text-gray-800 mb-0">Community Highlights</h6>
+                    <!-- Community Highlights -->
+                    <div class="mb-6 mt-5">
+                      <div class="d-flex align-items-center gap-2 mb-4">
+                        <i class="bi bi-bookmark-fill text-gray-700 fs-6"></i>
+                        <h6 class="fs-5 fw-bold text-gray-800 mb-0">Community Highlights</h6>
+                      </div>
+
+                      <div class="row g-4 mb-5">
+                        <!-- Announcement Card 1 -->
+                        <div class="col-6">
+                          <a href="/Discourse/pages/version/view-post.php" class="card border-0 shadow-sm rounded-3 h-100 text-decoration-none d-block" style="transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
+                            <div class="card-body p-5">
+                              <h5 class="fw-bolder text-gray-900 fs-4 mb-2">Announcement!</h5>
+                              <div class="d-flex align-items-center gap-3 mb-4">
+                                <span class="text-muted fs-8">8 votes</span>
+                                <span class="text-muted fs-8">·</span>
+                                <span class="text-muted fs-8">100 Comments</span>
+                              </div>
+                              <span class="badge badge-light-warning rounded-pill px-4 py-2 fs-8 fw-bold">Announcements</span>
+                            </div>
+                          </a>
+                        </div>
+                        <!-- Announcement Card 2 -->
+                        <div class="col-6">
+                          <a href="/Discourse/pages/version/view-post.php" class="card border-0 shadow-sm rounded-3 h-100 text-decoration-none d-block" style="transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
+                            <div class="card-body p-5">
+                              <h5 class="fw-bolder text-gray-900 fs-4 mb-2">How to enroll using solar with the help...</h5>
+                              <div class="d-flex align-items-center gap-3 mb-4">
+                                <span class="text-muted fs-8">7 votes</span>
+                                <span class="text-muted fs-8">·</span>
+                                <span class="text-muted fs-8">5 Comments</span>
+                              </div>
+                              <span class="badge badge-light-warning rounded-pill px-4 py-2 fs-8 fw-bold">Announcements</span>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+
+                      <!-- Separator -->
+                      <hr class="border-gray-200 my-4">
+                    </div>
+
+                    <!-- Search and New Post Row -->
+                    <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-3 mb-5">
+                      <div class="position-relative flex-grow-1">
+                        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-gray-500 pe-none fs-6"></i>
+                        <input type="text" class="form-control bg-white rounded-pill ps-12 fs-6 text-gray-700 search-input-v2 shadow-sm" placeholder="Search discussions, topics, people...">
+                      </div>
+                      <a href="/Discourse/pages/view/create-post.php" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
+                        <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
+                      </a>
+                    </div>
+
+                    <!-- Filters Row -->
+                    <div class="d-flex align-items-center justify-content-between border-bottom border-2 border-gray-200 mb-5">
+                      <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold mb-0" id="discoursePostTabs" role="tablist">
+                        <li class="nav-item">
+                          <button class="nav-link active px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" href="#hot"><i class="bi bi-fire me-1"></i> HOT</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" href="#new"><i class="bi bi-lightning-charge me-1"></i> NEW</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" href="#top"><i class="bi bi-trophy me-1"></i> TOP</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" href="#rising"><i class="bi bi-graph-up-arrow me-1"></i> RISING</button>
+                        </li>
+                      </ul>
+                      <div class="dropdown">
+                        <button class="btn btn-sm btn-light rounded-pill border border-gray-300 text-gray-700 fs-7 px-4 py-2 dropdown-toggle" type="button" id="topicsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                          All Topics
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 fs-7 min-w-150px" aria-labelledby="topicsDropdown">
+                          <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Technology</a></li>
+                          <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Academics</a></li>
+                          <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Lifestyle</a></li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <!-- Feed -->
+                    <?php
+                    $posts = [
+                      [
+                        "author" => "Catalina Smith",
+                        "avatar" => "/Discourse/assets/images/catalina.webp",
+                        "time" => "2h ago",
+                        "tag" => "LIFESTYLE",
+                        "title" => "Honest review of every FEU canteen — ranked by someone who eats there every day",
+                        "body" => "After two semesters of trial and error, I've eaten at literally every food stall in FEU. From the silog station near the gym to the overpriced pasta place by the lib — here's my honest tier list with prices, wait times, and what to actually order.",
+                        "votes" => 312,
+                        "comments_count" => 27,
+                        "first_comment" => "The goto place near the SHS building hits different at 7am. Underrated pick!"
+                      ],
+                      [
+                        "author" => "Marco Torres",
+                        "avatar" => "https://ui-avatars.com/api/?name=Marco+Torres&background=e0f2fe&color=0369a1&rounded=true",
+                        "time" => "5h ago",
+                        "tag" => "ISSUES",
+                        "title" => "Can we talk about how bad the WiFi is during enrollment week?",
+                        "body" => "Every single semester. The moment enrollment opens, the portal crashes, the WiFi dies, and somehow it's always our fault for not enrolling on time. I have screenshots of the loading screen timing out 14 times in a row. At this point it feels intentional.",
+                        "votes" => 890,
+                        "comments_count" => 104,
+                        "first_comment" => "Filed a ticket last semester. They said it was 'under monitoring.' Still broken."
+                      ],
+                      [
+                        "author" => "Anonymous",
+                        "avatar" => "/Discourse/assets/images/anonymous.png",
+                        "time" => "1d ago",
+                        "tag" => "ISSUES",
+                        "title" => "Does anyone else feel completely burned out halfway through the semester?",
+                        "body" => "It's not even midterms yet and I already feel like I'm running on empty. Four major outputs due this week, a group project with unresponsive members, and I haven't slept more than 5 hours in days. Is this just the FEU experience or is something wrong with me?",
+                        "votes" => 674,
+                        "comments_count" => 58,
+                        "first_comment" => "You're not alone. I think half the campus feels this way and nobody talks about it."
+                      ],
+                    ];
+
+                    foreach ($posts as $post) {
+                    ?>
+                      <div class="card border-0 shadow mb-5 post-card overflow-hidden" data-dc="post-card">
+                        <div class="d-flex">
+                          <!-- Vote Column (Dashboard Style) -->
+                          <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
+                            <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-up-btn" title="Upvote">
+                              <i class="bi bi-hand-thumbs-up p-0"></i>
+                            </button>
+                            <span class="fs-7 fw-bold text-gray-600 vote-count-text"><?php echo $post['votes']; ?></span>
+                            <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-down-btn" title="Downvote">
+                              <i class="bi bi-hand-thumbs-down p-0"></i>
+                            </button>
                           </div>
 
-                          <div class="row g-4 mb-5">
-                            <!-- Announcement Card 1 -->
-                            <div class="col-6">
-                              <a href="/Discourse/pages/version/view-post.php" class="card border-0 shadow-sm rounded-3 h-100 text-decoration-none d-block" style="transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
-                                <div class="card-body p-5">
-                                  <h5 class="fw-bolder text-gray-900 fs-4 mb-2">Announcement!</h5>
-                                  <div class="d-flex align-items-center gap-3 mb-4">
-                                    <span class="text-muted fs-8">8 votes</span>
-                                    <span class="text-muted fs-8">·</span>
-                                    <span class="text-muted fs-8">100 Comments</span>
-                                  </div>
-                                  <span class="badge badge-light-warning rounded-pill px-4 py-2 fs-8 fw-bold">Announcements</span>
+                          <!-- Content Section -->
+                          <div class="d-flex flex-column py-5 flex-grow-1 bg-white text-start">
+                            <div class="row g-0 px-5">
+                              <!-- Row 1: Tag Badge & Report -->
+                              <div class="col-12 mb-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <?php
+                                  $commDetails = getCommunityIconDetails('FEU Life');
+                                  ?>
+                                  <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center gap-2 text-decoration-none">
+                                    <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
+                                      style="width: 24px; height: 24px;">
+                                      <i class="bi <?php echo $commDetails['icon']; ?> fs-8 <?php echo $commDetails['text_class']; ?>"></i>
+                                    </div>
+                                    <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/FEU Life</span>
+                                  </a>
+                                  <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
+                                    <i class="bi bi-flag me-1"></i> Report
+                                  </button>
                                 </div>
-                              </a>
+                              </div>
+
+                              <!-- Row 2: User avatar, name, time -->
+                              <div class="col-12 mb-2">
+                                <div class="d-flex gap-3 align-items-center">
+                                  <img src="<?php echo $post['avatar']; ?>" alt="<?php echo $post['author']; ?>" class="h-40px w-40px rounded-circle" />
+                                  <div class="d-flex flex-column">
+                                    <a href="/Discourse/pages/version/profile-other.php" class="fs-6 fw-bold text-gray-800 text-hover-primary"><?php echo $post['author']; ?></a>
+                                    <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i><?php echo $post['time']; ?></span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- Row 3: Title & Excerpt -->
+                              <div class="col-12 mb-2">
+                                <div class="d-flex flex-column gap-2 text-start">
+                                  <div>
+                                    <?php $postBadge = getCategoryBadgeStyle($post['tag']); ?>
+                                    <a href="/Discourse/pages/view/topic.php?t=<?php echo strtoupper($post['tag']); ?>" class="badge <?php echo $postBadge['class']; ?> rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none">
+                                      <i class="bi <?php echo $postBadge['icon']; ?> <?php echo $postBadge['icon_color']; ?> me-1"></i><?php echo strtoupper($post['tag']); ?>
+                                    </a>
+                                  </div>
+                                  <h3 class="fw-bold fs-5 mb-0">
+                                    <a href="/Discourse/pages/version/view-post.php" class="text-gray-800 text-hover-primary dc-post-title-link">
+                                      <?php echo $post['title']; ?>
+                                    </a>
+                                  </h3>
+                                  <div class="dc-body-wrap">
+                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo $post['body']; ?></span>
+                                    <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <!-- Announcement Card 2 -->
-                            <div class="col-6">
-                              <a href="/Discourse/pages/version/view-post.php" class="card border-0 shadow-sm rounded-3 h-100 text-decoration-none d-block" style="transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
-                                <div class="card-body p-5">
-                                  <h5 class="fw-bolder text-gray-900 fs-4 mb-2">How to enroll using solar with the help...</h5>
-                                  <div class="d-flex align-items-center gap-3 mb-4">
-                                    <span class="text-muted fs-8">7 votes</span>
-                                    <span class="text-muted fs-8">·</span>
-                                    <span class="text-muted fs-8">5 Comments</span>
+
+                            <!-- Actions Row -->
+                            <div class="row">
+                              <div class="d-flex justify-content-start align-items-center w-100 px-5">
+                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <span class="comment-count-btn-text"><?php echo $post['comments_count']; ?> Comment</span></button>
+                                <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
+                              </div>
+                            </div>
+
+                            <!-- Inline Quick Comment Drawer (Dashboard style) -->
+                            <div class="dc-quick-comment-drawer border-top border-gray-200 mt-4 pt-4 px-5 w-100" style="display: none; background-color: #fcfdfc;">
+                              <div class="dc-quick-comments-list mb-4 d-flex flex-column gap-3" style="max-height: 180px; overflow-y: auto;">
+                                <div class="d-flex align-items-start gap-2 fs-7">
+                                  <img src="https://ui-avatars.com/api/?name=Sofia+Karim&background=f3f4f6&color=d97706&rounded=true" class="h-25px w-25px rounded-circle" alt="Sofia Karim">
+                                  <div class="bg-light p-2 rounded-3 flex-grow-1 text-start">
+                                    <div class="d-flex justify-content-between">
+                                      <span class="fw-bold text-gray-800">Sofia Karim</span>
+                                      <span class="text-muted fs-9">2d ago</span>
+                                    </div>
+                                    <p class="text-gray-700 m-0 mt-1"><?php echo $post['first_comment']; ?></p>
                                   </div>
-                                  <span class="badge badge-light-warning rounded-pill px-4 py-2 fs-8 fw-bold">Announcements</span>
                                 </div>
-                              </a>
+                              </div>
+                              <form class="dc-quick-comment-form">
+                                <div class="d-flex align-items-center gap-2">
+                                  <img src="/Discourse/assets/images/catalina.webp" class="h-30px w-30px rounded-circle" alt="User avatar" />
+                                  <input type="text" class="form-control form-control-sm rounded-pill px-4 fs-7 bg-white border border-gray-300" placeholder="Write a quick comment..." required style="height: 35px;" />
+                                  <button type="submit" class="btn btn-sm btn-success rounded-pill px-4 fw-bold" style="background:#0b301f; color:#fff; border: none; height: 35px;">Post</button>
+                                </div>
+                              </form>
                             </div>
                           </div>
-
-                          <!-- Separator -->
-                          <hr class="border-gray-200 my-4">
                         </div>
-
-                        <!-- Search and New Post Row -->
-                        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-3 mb-5">
-                            <div class="position-relative flex-grow-1">
-                                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-gray-500 pe-none fs-6"></i>
-                                <input type="text" class="form-control bg-white rounded-pill ps-12 fs-6 text-gray-700 search-input-v2 shadow-sm" placeholder="Search discussions, topics, people...">
-                            </div>
-                            <a href="/Discourse/pages/view/create-post.php" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
-                                <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
-                            </a>
-                        </div>
-                        
-                        <!-- Filters Row -->
-                        <div class="d-flex align-items-center justify-content-between border-bottom border-2 border-gray-200 mb-5">
-                            <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold mb-0" id="discoursePostTabs" role="tablist">
-                                <li class="nav-item">
-                                    <button class="nav-link active px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" href="#hot"><i class="bi bi-fire me-1"></i> HOT</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" href="#new"><i class="bi bi-lightning-charge me-1"></i> NEW</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" href="#top"><i class="bi bi-trophy me-1"></i> TOP</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" href="#rising"><i class="bi bi-graph-up-arrow me-1"></i> RISING</button>
-                                </li>
-                            </ul>
-                            <div class="dropdown">
-                              <button class="btn btn-sm btn-light rounded-pill border border-gray-300 text-gray-700 fs-7 px-4 py-2 dropdown-toggle" type="button" id="topicsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                All Topics
-                              </button>
-                              <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 fs-7 min-w-150px" aria-labelledby="topicsDropdown">
-                                <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Technology</a></li>
-                                <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Academics</a></li>
-                                <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Lifestyle</a></li>
-                              </ul>
-                            </div>
-                        </div>
-                        
-                        <!-- Feed -->
-                        <?php
-                        $posts = [
-                            [
-                                "author" => "Sofia Karim",
-                                "avatar" => "https://ui-avatars.com/api/?name=Sofia+Karim&background=f3f4f6&color=d97706&rounded=true",
-                                "time" => "2w ago",
-                                "tag" => "FEUTech",
-                                "title" => "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                                "body" => "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas...",
-                                "votes" => 90,
-                                "comments_count" => 1,
-                                "first_comment" => "This discussion thread is super helpful! Thanks for posting."
-                            ],
-                            [
-                                "author" => "Marco Torres",
-                                "avatar" => "https://ui-avatars.com/api/?name=Marco+Torres&background=e0f2fe&color=0369a1&rounded=true",
-                                "time" => "4h ago",
-                                "tag" => "FEULife",
-                                "title" => "How to handle thesis group members who don't contribute?",
-                                "body" => "It's defense week and one of our members hasn't updated their part in over a month. We've reached out multiple times but keep getting left on read. Should we remove their name or just talk to the advisor?",
-                                "votes" => 45,
-                                "comments_count" => 1,
-                                "first_comment" => "Definitely talk to your advisor. Document everything so you have proof of your attempts to contact them."
-                            ],
-                            [
-                                "author" => "Catalina Smith",
-                                "avatar" => "/Discourse/assets/images/catalina.webp",
-                                "time" => "1d ago",
-                                "tag" => "FEUTech",
-                                "title" => "FEU Tech library study rooms — worth booking or just use the hallway?",
-                                "body" => "Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the whiteboard is excellent. Hallway is always too noisy for group discussions.",
-                                "votes" => 124,
-                                "comments_count" => 1,
-                                "first_comment" => "Booking a room is definitely worth it if you can secure one! Whiteboards make study sessions much easier."
-                            ]
-                        ];
-
-                        foreach($posts as $post) {
-                        ?>
-                        <div class="card border-0 shadow mb-5 post-card overflow-hidden" data-dc="post-card">
-                            <div class="d-flex">
-                                <!-- Vote Column (Dashboard Style) -->
-                                <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
-                                    <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-up-btn" title="Upvote">
-                                        <i class="bi bi-hand-thumbs-up p-0"></i>
-                                    </button>
-                                    <span class="fs-7 fw-bold text-gray-600 vote-count-text"><?php echo $post['votes']; ?></span>
-                                    <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-down-btn" title="Downvote">
-                                        <i class="bi bi-hand-thumbs-down p-0"></i>
-                                    </button>
-                                </div>
-                                
-                                <!-- Content Section -->
-                                <div class="d-flex flex-column py-5 flex-grow-1 bg-white text-start">
-                                    <div class="row g-0 px-5">
-                                        <!-- Row 1: Tag Badge & Report -->
-                                        <div class="col-12 mb-2">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <?php 
-                                                $commDetails = getCommunityIconDetails('FEU Life'); 
-                                                ?>
-                                                <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center gap-2 text-decoration-none">
-                                                    <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
-                                                         style="width: 24px; height: 24px;">
-                                                        <i class="bi <?php echo $commDetails['icon']; ?> fs-8 <?php echo $commDetails['text_class']; ?>"></i>
-                                                    </div>
-                                                    <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/FEU Life</span>
-                                                </a>
-                                                <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
-                                                    <i class="bi bi-flag me-1"></i> Report
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Row 2: User avatar, name, time -->
-                                        <div class="col-12 mb-2">
-                                            <div class="d-flex gap-3 align-items-center">
-                                                <img src="<?php echo $post['avatar']; ?>" alt="<?php echo $post['author']; ?>" class="h-40px w-40px rounded-circle" />
-                                                <div class="d-flex flex-column">
-                                                    <a href="/Discourse/pages/version/profile-other.php" class="fs-6 fw-bold text-gray-800 text-hover-primary"><?php echo $post['author']; ?></a>
-                                                    <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i><?php echo $post['time']; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Row 3: Title & Excerpt -->
-                                        <div class="col-12 mb-2">
-                                            <div class="d-flex flex-column gap-2 text-start">
-                                                <div>
-                                                    <?php $postBadge = getCategoryBadgeStyle($post['tag']); ?>
-                                                    <a href="/Discourse/pages/version/topic.php?t=<?php echo strtoupper($post['tag']); ?>" class="badge <?php echo $postBadge['class']; ?> rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none">
-                                                        <i class="bi <?php echo $postBadge['icon']; ?> <?php echo $postBadge['icon_color']; ?> me-1"></i><?php echo strtoupper($post['tag']); ?>
-                                                    </a>
-                                                </div>
-                                                <h3 class="fw-bold fs-5 mb-0">
-                                                    <a href="/Discourse/pages/version/view-post.php" class="text-gray-800 text-hover-primary dc-post-title-link">
-                                                        <?php echo $post['title']; ?>
-                                                    </a>
-                                                </h3>
-                                                <div class="dc-body-wrap">
-                                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo $post['body']; ?></span>
-                                                    <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Actions Row -->
-                                    <div class="row">
-                                        <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                                            <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <span class="comment-count-btn-text"><?php echo $post['comments_count']; ?> Comment</span></button>
-                                            <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                            <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Inline Quick Comment Drawer (Dashboard style) -->
-                                    <div class="dc-quick-comment-drawer border-top border-gray-200 mt-4 pt-4 px-5 w-100" style="display: none; background-color: #fcfdfc;">
-                                        <div class="dc-quick-comments-list mb-4 d-flex flex-column gap-3" style="max-height: 180px; overflow-y: auto;">
-                                            <div class="d-flex align-items-start gap-2 fs-7">
-                                                <img src="https://ui-avatars.com/api/?name=Sofia+Karim&background=f3f4f6&color=d97706&rounded=true" class="h-25px w-25px rounded-circle" alt="Sofia Karim">
-                                                <div class="bg-light p-2 rounded-3 flex-grow-1 text-start">
-                                                    <div class="d-flex justify-content-between">
-                                                        <span class="fw-bold text-gray-800">Sofia Karim</span>
-                                                        <span class="text-muted fs-9">2d ago</span>
-                                                    </div>
-                                                    <p class="text-gray-700 m-0 mt-1"><?php echo $post['first_comment']; ?></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <form class="dc-quick-comment-form">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img src="/Discourse/assets/images/catalina.webp" class="h-30px w-30px rounded-circle" alt="User avatar" />
-                                                <input type="text" class="form-control form-control-sm rounded-pill px-4 fs-7 bg-white border border-gray-300" placeholder="Write a quick comment..." required style="height: 35px;" />
-                                                <button type="submit" class="btn btn-sm btn-success rounded-pill px-4 fw-bold" style="background:#0b301f; color:#fff; border: none; height: 35px;">Post</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <?php } ?>
+                      </div>
+                    <?php } ?>
 
                   </div>
 
@@ -429,13 +434,13 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                             "Protect privacy. Do not share personal information of other members without consent.",
                           ];
                           foreach ($rules as $i => $rule): ?>
-                          <div class="d-flex align-items-start gap-3">
-                            <div class="d-flex align-items-center justify-content-center rounded-circle fw-bold fs-7 flex-shrink-0"
-                                 style="width:28px;height:28px;min-width:28px;background-color:#d1fae5;color:#065f46;border:2px solid #a7f3d0;">
-                              <?php echo $i + 1; ?>
+                            <div class="d-flex align-items-start gap-3">
+                              <div class="d-flex align-items-center justify-content-center rounded-circle fw-bold fs-7 flex-shrink-0"
+                                style="width:28px;height:28px;min-width:28px;background-color:#d1fae5;color:#065f46;border:2px solid #a7f3d0;">
+                                <?php echo $i + 1; ?>
+                              </div>
+                              <p class="fs-7 text-gray-700 mb-0 lh-base"><?php echo $rule; ?></p>
                             </div>
-                            <p class="fs-7 text-gray-700 mb-0 lh-base"><?php echo $rule; ?></p>
-                          </div>
                           <?php endforeach; ?>
 
                         </div>
@@ -455,20 +460,20 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                             ["name" => "John Doe",     "role" => "Associate", "avatar" => "https://ui-avatars.com/api/?name=John+Doe&background=fce7f3&color=be185d&rounded=true",    "posts" => 2,  "badge_bg" => "#fce7f3", "badge_color" => "#9d174d"],
                           ];
                           foreach ($contributors as $c): ?>
-                          <div class="d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-3">
-                              <img src="<?php echo $c['avatar']; ?>" alt="<?php echo $c['name']; ?>"
-                                   class="rounded-circle" style="width:42px;height:42px;object-fit:cover;border:2px solid #e5e7eb;">
-                              <div class="d-flex flex-column">
-                                <span class="fs-7 fw-bold text-gray-800"><?php echo $c['name']; ?></span>
-                                <span class="fs-9 text-muted"><?php echo $c['role']; ?></span>
+                            <div class="d-flex align-items-center justify-content-between">
+                              <div class="d-flex align-items-center gap-3">
+                                <img src="<?php echo $c['avatar']; ?>" alt="<?php echo $c['name']; ?>"
+                                  class="rounded-circle" style="width:42px;height:42px;object-fit:cover;border:2px solid #e5e7eb;">
+                                <div class="d-flex flex-column">
+                                  <span class="fs-7 fw-bold text-gray-800"><?php echo $c['name']; ?></span>
+                                  <span class="fs-9 text-muted"><?php echo $c['role']; ?></span>
+                                </div>
                               </div>
+                              <span class="rounded-pill px-3 py-1 fs-8 fw-bold"
+                                style="background-color:<?php echo $c['badge_bg']; ?>;color:<?php echo $c['badge_color']; ?>;">
+                                <?php echo $c['posts']; ?> Posts
+                              </span>
                             </div>
-                            <span class="rounded-pill px-3 py-1 fs-8 fw-bold"
-                                  style="background-color:<?php echo $c['badge_bg']; ?>;color:<?php echo $c['badge_color']; ?>;">
-                              <?php echo $c['posts']; ?> Posts
-                            </span>
-                          </div>
                           <?php endforeach; ?>
 
                         </div>
@@ -483,7 +488,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
 
                           <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none" style="transition:background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                             <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0"
-                                 style="width:42px;height:42px;background-color:#d1fae5;">
+                              style="width:42px;height:42px;background-color:#d1fae5;">
                               <i class="bi bi-cpu" style="color:#065f46;font-size:1.1rem;"></i>
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
@@ -495,7 +500,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
 
                           <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none" style="transition:background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                             <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0"
-                                 style="width:42px;height:42px;background-color:#fef9c3;">
+                              style="width:42px;height:42px;background-color:#fef9c3;">
                               <i class="bi bi-building-fill" style="color:#713f12;font-size:1.1rem;"></i>
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
@@ -507,7 +512,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
 
                           <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none" style="transition:background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                             <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0"
-                                 style="width:42px;height:42px;background-color:#dbeafe;">
+                              style="width:42px;height:42px;background-color:#dbeafe;">
                               <i class="bi bi-mortarboard-fill" style="color:#1e3a8a;font-size:1.1rem;"></i>
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
@@ -544,92 +549,92 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
 
   <script>
     $(document).ready(function() {
-        // 1. Voting Logic
-        $(document).on('click', '.vote-btn-v2', function(e) {
-            e.preventDefault();
-            const btn = $(this);
-            const isUpvote = btn.hasClass('vote-up-btn');
-            const container = btn.closest('.post-card');
-            const scoreSpan = container.find('.vote-count-text');
-            const otherBtn = isUpvote ? container.find('.vote-down-btn') : container.find('.vote-up-btn');
-            
-            let currentScore = parseInt(scoreSpan.text()) || 0;
+      // 1. Voting Logic
+      $(document).on('click', '.vote-btn-v2', function(e) {
+        e.preventDefault();
+        const btn = $(this);
+        const isUpvote = btn.hasClass('vote-up-btn');
+        const container = btn.closest('.post-card');
+        const scoreSpan = container.find('.vote-count-text');
+        const otherBtn = isUpvote ? container.find('.vote-down-btn') : container.find('.vote-up-btn');
 
-            if (btn.hasClass('active-vote-up') || btn.hasClass('active-vote-down')) {
-                btn.removeClass('active-vote-up active-vote-down');
-                btn.find('i').attr('class', isUpvote ? 'bi bi-hand-thumbs-up p-0' : 'bi bi-hand-thumbs-down p-0');
-                scoreSpan.text(currentScore - (isUpvote ? 1 : -1));
-            } else {
-                if (otherBtn.hasClass('active-vote-up') || otherBtn.hasClass('active-vote-down')) {
-                    otherBtn.removeClass('active-vote-up active-vote-down');
-                    otherBtn.find('i').attr('class', isUpvote ? 'bi bi-hand-thumbs-down p-0' : 'bi bi-hand-thumbs-up p-0');
-                    currentScore += (isUpvote ? 1 : -1);
-                }
-                
-                if (isUpvote) {
-                    btn.addClass('active-vote-up');
-                    btn.find('i').attr('class', 'bi bi-hand-thumbs-up-fill p-0');
-                    scoreSpan.text(currentScore + 1);
-                } else {
-                    btn.addClass('active-vote-down');
-                    btn.find('i').attr('class', 'bi bi-hand-thumbs-down-fill p-0');
-                    scoreSpan.text(currentScore - 1);
-                }
-            }
+        let currentScore = parseInt(scoreSpan.text()) || 0;
+
+        if (btn.hasClass('active-vote-up') || btn.hasClass('active-vote-down')) {
+          btn.removeClass('active-vote-up active-vote-down');
+          btn.find('i').attr('class', isUpvote ? 'bi bi-hand-thumbs-up p-0' : 'bi bi-hand-thumbs-down p-0');
+          scoreSpan.text(currentScore - (isUpvote ? 1 : -1));
+        } else {
+          if (otherBtn.hasClass('active-vote-up') || otherBtn.hasClass('active-vote-down')) {
+            otherBtn.removeClass('active-vote-up active-vote-down');
+            otherBtn.find('i').attr('class', isUpvote ? 'bi bi-hand-thumbs-down p-0' : 'bi bi-hand-thumbs-up p-0');
+            currentScore += (isUpvote ? 1 : -1);
+          }
+
+          if (isUpvote) {
+            btn.addClass('active-vote-up');
+            btn.find('i').attr('class', 'bi bi-hand-thumbs-up-fill p-0');
+            scoreSpan.text(currentScore + 1);
+          } else {
+            btn.addClass('active-vote-down');
+            btn.find('i').attr('class', 'bi bi-hand-thumbs-down-fill p-0');
+            scoreSpan.text(currentScore - 1);
+          }
+        }
+      });
+
+      // 2. Real-time Search Filtering
+      $('.search-input-v2').on('keyup', function() {
+        const searchTerm = $(this).val().toLowerCase();
+        $('.post-card').each(function() {
+          const title = $(this).find('.dc-post-title-link').text().toLowerCase();
+          const content = $(this).find('.dc-body-clamp').text().toLowerCase();
+
+          if (title.includes(searchTerm) || content.includes(searchTerm)) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
         });
+      });
 
-        // 2. Real-time Search Filtering
-        $('.search-input-v2').on('keyup', function() {
-            const searchTerm = $(this).val().toLowerCase();
-            $('.post-card').each(function() {
-                const title = $(this).find('.dc-post-title-link').text().toLowerCase();
-                const content = $(this).find('.dc-body-clamp').text().toLowerCase();
-                
-                if (title.includes(searchTerm) || content.includes(searchTerm)) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
+      // 3. Filter Tabs (Visual Only)
+      $('.nav-line-tabs .nav-link').on('click', function() {
+        $('.nav-line-tabs .nav-link').removeClass('active');
+        $(this).addClass('active');
+      });
 
-        // 3. Filter Tabs (Visual Only)
-        $('.nav-line-tabs .nav-link').on('click', function() {
-            $('.nav-line-tabs .nav-link').removeClass('active');
-            $(this).addClass('active');
-        });
+      // 4. Quick Comment Toggle
+      $(document).on('click', '.dc-post-comment', function(e) {
+        e.preventDefault();
+        const card = $(this).closest('[data-dc="post-card"]');
+        const drawer = card.find('.dc-quick-comment-drawer');
+        drawer.slideToggle(200);
+        drawer.find('input').focus();
+      });
 
-        // 4. Quick Comment Toggle
-        $(document).on('click', '.dc-post-comment', function(e) {
-            e.preventDefault();
-            const card = $(this).closest('[data-dc="post-card"]');
-            const drawer = card.find('.dc-quick-comment-drawer');
-            drawer.slideToggle(200);
-            drawer.find('input').focus();
-        });
+      // 5. Quick Comment Submit
+      $(document).on('submit', '.dc-quick-comment-form', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const input = form.find('input');
+        const commentText = input.val().trim();
+        if (!commentText) return;
 
-        // 5. Quick Comment Submit
-        $(document).on('submit', '.dc-quick-comment-form', function(e) {
-            e.preventDefault();
-            const form = $(this);
-            const input = form.find('input');
-            const commentText = input.val().trim();
-            if (!commentText) return;
+        const card = form.closest('[data-dc="post-card"]');
+        const commentsList = card.find('.dc-quick-comments-list');
+        const commentCountSpan = card.find('.comment-count-btn-text');
 
-            const card = form.closest('[data-dc="post-card"]');
-            const commentsList = card.find('.dc-quick-comments-list');
-            const commentCountSpan = card.find('.comment-count-btn-text');
+        function escapeHtml(text) {
+          return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
 
-            function escapeHtml(text) {
-              return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-            }
-
-            const newCommentHtml = `
+        const newCommentHtml = `
                 <div class="d-flex align-items-start gap-2 fs-7 animate__animated animate__fadeIn">
                     <img src="/Discourse/assets/images/catalina.webp" class="h-25px w-25px rounded-circle" alt="User avatar">
                     <div class="bg-light p-2 rounded-3 flex-grow-1 text-start">
@@ -642,28 +647,31 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                 </div>
             `;
 
-            commentsList.append(newCommentHtml);
-            commentsList.scrollTop(commentsList[0].scrollHeight);
-            input.val('');
+        commentsList.append(newCommentHtml);
+        commentsList.scrollTop(commentsList[0].scrollHeight);
+        input.val('');
 
-            // Increment comment count
-            let currentCount = parseInt(commentCountSpan.text()) || 0;
-            currentCount++;
-            commentCountSpan.text(currentCount + (currentCount === 1 ? ' Comment' : ' Comments'));
+        // Increment comment count
+        let currentCount = parseInt(commentCountSpan.text()) || 0;
+        currentCount++;
+        commentCountSpan.text(currentCount + (currentCount === 1 ? ' Comment' : ' Comments'));
 
-            // Show Toast
-            showFeedToast('Comment posted!');
-        });
+        // Show Toast
+        showFeedToast('Comment posted!');
+      });
 
-        // Toast function
-        const feedToast = $('#dc-feed-toast');
-        function showFeedToast(msg) {
-            if (!feedToast.length) return;
-            feedToast.find('span').text(msg);
-            feedToast.fadeIn(200);
-            clearTimeout(window._dcFeedToast);
-            window._dcFeedToast = setTimeout(function () { feedToast.fadeOut(200); }, 2200);
-        }
+      // Toast function
+      const feedToast = $('#dc-feed-toast');
+
+      function showFeedToast(msg) {
+        if (!feedToast.length) return;
+        feedToast.find('span').text(msg);
+        feedToast.fadeIn(200);
+        clearTimeout(window._dcFeedToast);
+        window._dcFeedToast = setTimeout(function() {
+          feedToast.fadeOut(200);
+        }, 2200);
+      }
     });
 
     // See More Toggle
