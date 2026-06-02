@@ -11,7 +11,7 @@ $other_account = GET_ACCOUNT_DETAILS($other_id);
 
 $META_TITLE = htmlspecialchars($other_account['display_name']) . " - Discourse Profile";
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
-$user_name = strtoupper($other_account['display_name']);
+$profile_user_name = strtoupper($other_account['display_name']);
 ?>
 
 <!DOCTYPE html>
@@ -78,7 +78,7 @@ $user_name = strtoupper($other_account['display_name']);
                           <div class="flex-grow-1 d-flex justify-content-between align-items-sm-center flex-column flex-sm-row pb-2 gap-4">
                             <div>
                               <h2 class="fw-bolder text-dark fs-1 mb-1 d-flex align-items-center">
-                                <?php echo $user_name; ?> 
+                                <?php echo $profile_user_name; ?> 
                                 <i class="ki-duotone ki-verify text-success fs-4 ms-2" title="Verified Student"><span class="path1"></span><span class="path2"></span></i>
                               </h2>
                               <div class="d-flex align-items-center flex-wrap gap-2 text-muted fw-semibold fs-6">
