@@ -284,46 +284,6 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                           <hr class="border-gray-200 my-4">
                         </div>
 
-                        <!-- Search and New Post Row -->
-                        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-3 mb-5">
-                            <div class="position-relative flex-grow-1">
-                                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-gray-500 pe-none fs-6"></i>
-                                <input type="text" class="form-control bg-white rounded-pill ps-12 fs-6 text-gray-700 search-input-v2 shadow-sm" placeholder="Search discussions, topics, people...">
-                            </div>
-                            <a href="/Discourse/pages/view/create-post.php" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
-                                <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
-                            </a>
-                        </div>
-                        
-                        <!-- Filters Row -->
-                        <div class="d-flex align-items-center justify-content-between border-bottom border-2 border-gray-200 mb-5">
-                            <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold mb-0" id="discoursePostTabs" role="tablist">
-                                <li class="nav-item">
-                                    <button class="nav-link active px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" data-bs-target="#hot"><i class="bi bi-fire me-1"></i> HOT</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" data-bs-target="#new"><i class="bi bi-lightning-charge me-1"></i> NEW</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" data-bs-target="#top"><i class="bi bi-trophy me-1"></i> TOP</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" data-bs-target="#rising"><i class="bi bi-graph-up-arrow me-1"></i> RISING</button>
-                                </li>
-                            </ul>
-                            <div class="dropdown">
-                              <button class="btn btn-sm btn-light rounded-pill border border-gray-300 text-gray-700 fs-7 px-4 py-2 dropdown-toggle" type="button" id="topicsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                All Topics
-                              </button>
-                              <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 fs-7 min-w-150px" aria-labelledby="topicsDropdown">
-                                <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Technology</a></li>
-                                <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Academics</a></li>
-                                <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7" href="#">Lifestyle</a></li>
-                              </ul>
-                            </div>
-                        </div>
-                        
-                        <!-- Feed -->
                         <?php
                         $community_posts = [];
                         if ($EDITH) {
@@ -478,7 +438,91 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                                 ]
                             ];
                         }
+
+                        // Extract unique topics for this community from its posts
+                        $available_topics = [];
+                        foreach ($community_posts as $post) {
+                            if (!empty($post['topic'])) {
+                                $available_topics[] = strtoupper(trim($post['topic']));
+                            }
+                        }
+                        $available_topics = array_unique($available_topics);
+                        asort($available_topics);
+
+                        // Save total count of posts before filtering
+                        $total_posts_count = count($community_posts);
+
+                        // Filter posts by selected topic if set
+                        $selected_topic = '';
+                        if (isset($_GET['topic'])) {
+                            $selected_topic = strtoupper(trim($_GET['topic']));
+                        } elseif (isset($_GET['t'])) {
+                            $selected_topic = strtoupper(trim($_GET['t']));
+                        }
+
+                        if ($selected_topic !== '') {
+                            $filtered_posts = [];
+                            foreach ($community_posts as $post) {
+                                if (isset($post['topic']) && strtoupper(trim($post['topic'])) === $selected_topic) {
+                                    $filtered_posts[] = $post;
+                                }
+                            }
+                            $community_posts = $filtered_posts;
+                        }
+                        ?>
+
+                        <!-- Search and New Post Row -->
+                        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-3 mb-5">
+                            <div class="position-relative flex-grow-1">
+                                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-gray-500 pe-none fs-6"></i>
+                                <input type="text" class="form-control bg-white rounded-pill ps-12 fs-6 text-gray-700 search-input-v2 shadow-sm" placeholder="Search discussions, topics, people...">
+                            </div>
+                            <a href="/Discourse/pages/view/create-post.php" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
+                                <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
+                            </a>
+                        </div>
                         
+                        <!-- Filters Row -->
+                        <div class="d-flex align-items-center justify-content-between border-bottom border-2 border-gray-200 mb-5">
+                            <ul class="nav nav-line-tabs nav-line-tabs-2x border-transparent fs-6 fw-bold mb-0" id="discoursePostTabs" role="tablist">
+                                <li class="nav-item">
+                                    <button class="nav-link active px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" data-bs-target="#hot"><i class="bi bi-fire me-1"></i> HOT</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" data-bs-target="#new"><i class="bi bi-lightning-charge me-1"></i> NEW</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" data-bs-target="#top"><i class="bi bi-trophy me-1"></i> TOP</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link px-3 py-2 px-sm-4 py-sm-3 fs-7 fs-sm-6" data-bs-toggle="tab" data-bs-target="#rising"><i class="bi bi-graph-up-arrow me-1"></i> RISING</button>
+                                </li>
+                            </ul>
+                            <div class="dropdown">
+                              <button class="btn btn-sm btn-light rounded-pill border border-gray-300 text-gray-700 fs-7 px-4 py-2 dropdown-toggle" type="button" id="topicsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php echo ($selected_topic !== '') ? htmlspecialchars(ucfirst(strtolower($selected_topic))) : 'All Topics'; ?>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 fs-7 min-w-150px" aria-labelledby="topicsDropdown">
+                                <li>
+                                  <a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7 <?php echo ($selected_topic === '') ? 'active fw-bold' : ''; ?>" 
+                                     href="/Discourse/pages/version/community.php?c=<?php echo urlencode($community_name); ?>">
+                                    All Topics
+                                  </a>
+                                </li>
+                                <?php foreach ($available_topics as $top): ?>
+                                <li>
+                                  <a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7 <?php echo ($selected_topic === $top) ? 'active fw-bold' : ''; ?>" 
+                                     href="/Discourse/pages/version/community.php?c=<?php echo urlencode($community_name); ?>&topic=<?php echo urlencode($top); ?>">
+                                    <?php echo htmlspecialchars(ucfirst(strtolower($top))); ?>
+                                  </a>
+                                </li>
+                                <?php endforeach; ?>
+                              </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Feed -->
+                        <?php
                         // Generate sorted variants
                         $comm_posts_hot = sort_discourse_posts($community_posts, 'hot');
                         $comm_posts_new = sort_discourse_posts($community_posts, 'new');
@@ -705,8 +749,8 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                               <span class="fs-7 fw-bold text-gray-800 text-uppercase" style="letter-spacing:0.06em;">Posts</span>
                             </div>
                             <div class="d-flex flex-column text-end">
-                              <span class="fs-5 fw-bolder text-gray-800">1,245</span>
-                              <span class="fs-9 text-muted">Across 12 Topics</span>
+                              <span class="fs-5 fw-bolder text-gray-800"><?php echo number_format($total_posts_count); ?></span>
+                              <span class="fs-9 text-muted">Across <?php echo count($available_topics); ?> <?php echo (count($available_topics) === 1) ? 'Topic' : 'Topics'; ?></span>
                             </div>
                           </div>
 
