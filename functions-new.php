@@ -85,18 +85,40 @@ if (!function_exists('DIRECT_ACCESS_BLOCKED')) {
 if (!function_exists('GET_ACCOUNT_DETAILS')) {
     function GET_ACCOUNT_DETAILS($id) {
       global $EDITH;
-      if (!$EDITH) {
-          return [
-              'identification' => 'T202210202',
-              'display_name' => 'Catalina Smith',
-              'role' => 'student',
-              'avatar_md' => '/Discourse/assets/images/catalina.webp',
-              'email' => 'catalina@example.com'
-          ];
+      
+      // If we have a database connection, query it
+      if ($EDITH) {
+          $stmt = $EDITH->prepare("SELECT * FROM accounts WHERE identification = ?");
+          if ($stmt) {
+              $stmt->bind_param("s", $id);
+              $stmt->execute();
+              $result = $stmt->get_result()->fetch_assoc();
+              $stmt->close();
+              if ($result) {
+                  return $result;
+              }
+          }
       }
       
-      $stmt = $EDITH->prepare("SELECT * FROM accounts WHERE identification = ?");
-      if (!$stmt) {
+      // Fallback/Mock data (used when database is offline or user not found in DB)
+      $id_clean = trim($id);
+      if ($id_clean === 'T202210344') {
+          return [
+              'identification' => 'T202210344',
+              'display_name' => 'Sofia Karim',
+              'role' => 'student',
+              'avatar_md' => '/Discourse/assets/images/anonymous.png',
+              'email' => 'sofia@example.com'
+          ];
+      } elseif ($id_clean === 'T202102837') {
+          return [
+              'identification' => 'T202102837',
+              'display_name' => 'Marco Torres',
+              'role' => 'student',
+              'avatar_md' => '/Discourse/assets/images/catalina.webp',
+              'email' => 'marco@example.com'
+          ];
+      } elseif ($id_clean === 'T202210202') {
           return [
               'identification' => 'T202210202',
               'display_name' => 'Catalina Smith',
@@ -104,18 +126,15 @@ if (!function_exists('GET_ACCOUNT_DETAILS')) {
               'avatar_md' => '/Discourse/assets/images/catalina.webp',
               'email' => 'catalina@example.com'
           ];
+      } else {
+          return [
+              'identification' => $id_clean,
+              'display_name' => 'User ' . $id_clean,
+              'role' => 'student',
+              'avatar_md' => '/Discourse/assets/images/anonymous.png',
+              'email' => ''
+          ];
       }
-      $stmt->bind_param("s", $id);
-      $stmt->execute();
-      $result = $stmt->get_result()->fetch_assoc();
-      $stmt->close();
-      return $result ?: [
-          'identification' => $id,
-          'display_name' => 'User ' . $id,
-          'role' => 'student',
-          'avatar_md' => '/Discourse/assets/images/catalina.webp',
-          'email' => ''
-      ];
     }
 }
 
