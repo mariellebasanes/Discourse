@@ -487,6 +487,7 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                         
                         if (!function_exists('renderCommunityPostCard')) {
                             function renderCommunityPostCard($post, $ACCOUNT) {
+                                global $identification;
                                 $commDetails = getCommunityIconDetails($post['community']);
                                 $isAnon = (isset($post['is_anonymous']) && $post['is_anonymous'] == 1);
                                 $avatar = $isAnon ? '/Discourse/assets/images/anonymous.png' : (!empty($post['avatar_md']) ? $post['avatar_md'] : '/Discourse/assets/images/anonymous.png');

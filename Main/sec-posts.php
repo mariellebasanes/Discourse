@@ -368,6 +368,7 @@ $posts_rising = sort_discourse_posts($feed_posts, 'rising');
 
 if (!function_exists('renderPostCardMarkup')) {
     function renderPostCardMarkup($post, $ACCOUNT) {
+        global $identification;
         $commDetails = getCommunityIconDetails($post['community']);
         $isAnon = (isset($post['is_anonymous']) && $post['is_anonymous'] == 1);
         $avatar = $isAnon ? '/Discourse/assets/images/anonymous.png' : (!empty($post['avatar_md']) ? $post['avatar_md'] : '/Discourse/assets/images/anonymous.png');
