@@ -207,3 +207,17 @@ INSERT IGNORE INTO `community_members` (`community_title`, `identification`) VAL
 ('FEU TECH DEV', 'T202210202'),
 ('Study Group', 'T202210202');
 
+
+-- 11. Saved Posts Table
+CREATE TABLE IF NOT EXISTS `saved_posts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `post_id` int(11) NOT NULL,
+  `identification` varchar(20) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_post_save` (`post_id`, `identification`),
+  CONSTRAINT `fk_saved_posts_post` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_saved_posts_user` FOREIGN KEY (`identification`) REFERENCES `accounts` (`identification`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+

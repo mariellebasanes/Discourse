@@ -375,7 +375,7 @@ if (!function_exists('renderPostCardMarkup')) {
         $authorLink = $isAnon ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . $post['author_id'];
         ?>
         <!-- ── Post Card ── -->
-        <div class="card border-0 shadow mb-5" data-dc="post-card">
+        <div class="card border-0 shadow mb-5" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>">
           <div class="d-flex">
     
             <!-- Vote Column -->
@@ -460,7 +460,15 @@ if (!function_exists('renderPostCardMarkup')) {
                 <div class="d-flex justify-content-start align-items-center w-100 px-5">
                   <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comment_count']; ?> Comment<?php echo $post['comment_count'] == 1 ? '' : 's'; ?></button>
                   <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                  <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
+                  <?php 
+                  $is_saved = IS_POST_SAVED($post['id'], $identification);
+                  ?>
+                  <button class="btn btn-sm dc-post-save" 
+                          data-on="<?php echo $is_saved ? '1' : '0'; ?>"
+                          style="<?php echo $is_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                      <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
+                      <?php echo $is_saved ? 'Saved' : 'Save'; ?>
+                  </button>
                 </div>
               </div>
     

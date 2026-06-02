@@ -35,6 +35,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
   <script src="/Discourse/assets/js/jquery.js"></script>
 
   <link href="/Discourse/assets/css/discourse-css/profile.css" rel="stylesheet" type="text/css" />
+  <link href="/Discourse/assets/css/sec-posts.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
@@ -119,17 +120,18 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 
                     <!-- Tabs -->
                     <div class="d-flex align-items-center gap-6 mb-6 border-bottom border-gray-200 pb-0 overflow-auto flex-nowrap">
-                      <a class="profile-tab fw-bolder fs-6 text-muted active py-3 text-nowrap" data-tab="overview">Overview</a>
-                      <a class="profile-tab fw-bolder fs-6 text-muted py-3 text-nowrap" data-tab="posts">Posts</a>
-                      <a class="profile-tab fw-bolder fs-6 text-muted py-3 text-nowrap" data-tab="comments">Comments</a>
-                      <a class="profile-tab fw-bolder fs-6 text-muted py-3 text-nowrap" data-tab="upvoted">Upvoted</a>
-                      <a class="profile-tab fw-bolder fs-6 text-muted py-3 text-nowrap" data-tab="downvoted">Downvoted</a>
+                      <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'overview' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="overview">Overview</a>
+                      <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'posts' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="posts">Posts</a>
+                      <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'comments' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="comments">Comments</a>
+                      <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'upvoted' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="upvoted">Upvoted</a>
+                      <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'downvoted' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="downvoted">Downvoted</a>
+                      <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'saved' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="saved">Saved</a>
                     </div>
 
                     <!-- Tab Content -->
 
                     <!-- Overview Tab -->
-                    <div class="tab-pane active" id="tab-overview">
+                    <div class="tab-pane <?php echo $active_tab === 'overview' ? 'active' : ''; ?>" id="tab-overview">
                       <?php
                       $activities = [
                         [
@@ -209,7 +211,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     </div>
 
                     <!-- Posts Tab -->
-                    <div class="tab-pane" id="tab-posts">
+                    <div class="tab-pane <?php echo $active_tab === 'posts' ? 'active' : ''; ?>" id="tab-posts">
                       <?php
                       $posts = [
                         [
@@ -276,7 +278,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     </div>
 
                     <!-- Comments Tab -->
-                    <div class="tab-pane" id="tab-comments">
+                    <div class="tab-pane <?php echo $active_tab === 'comments' ? 'active' : ''; ?>" id="tab-comments">
                       <?php
                       $comments = [
                         ["community" => "Enrollment", "post" => "When does late enrollment end?", "time" => "4 days ago",
@@ -339,7 +341,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     </div>
 
                     <!-- Upvoted Tab -->
-                    <div class="tab-pane" id="tab-upvoted">
+                    <div class="tab-pane <?php echo $active_tab === 'upvoted' ? 'active' : ''; ?>" id="tab-upvoted">
                       <?php
                       $upvoted = [
                         ["community" => "FEU-LIFE", "user" => "John Doe", "title" => "Is the cafeteria open during weekends?", "time" => "2 hrs ago",
@@ -397,7 +399,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     </div>
 
                     <!-- Downvoted Tab -->
-                    <div class="tab-pane" id="tab-downvoted">
+                    <div class="tab-pane <?php echo $active_tab === 'downvoted' ? 'active' : ''; ?>" id="tab-downvoted">
                       <?php
                       $downvoted = [
                         ["community" => "FEU-LIFE", "user" => "Anon123", "title" => "Unpopular opinion: online classes are better", "time" => "3 days ago",
@@ -450,6 +452,156 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                       </div>
                       <?php } ?>
+                    </div>
+                    
+                    <!-- Saved Tab -->
+                    <div class="tab-pane <?php echo $active_tab === 'saved' ? 'active' : ''; ?>" id="tab-saved">
+                      <?php
+                      $saved_posts_list = [];
+                      if ($EDITH) {
+                          $stmt_s = $EDITH->prepare("SELECT p.*, a.display_name, a.avatar_md, a.role as author_role
+                                                     FROM saved_posts sp
+                                                     JOIN posts p ON sp.post_id = p.id
+                                                     JOIN accounts a ON p.author_id = a.identification
+                                                     WHERE sp.identification = ?
+                                                     ORDER BY sp.created_at DESC");
+                          if ($stmt_s) {
+                              $stmt_s->bind_param("s", $identification);
+                              $stmt_s->execute();
+                              $res_s = $stmt_s->get_result();
+                              while ($row = $res_s->fetch_assoc()) {
+                                  // Load comment count
+                                  $stmt_cc = $EDITH->prepare("SELECT COUNT(*) as cc FROM comments WHERE post_id = ?");
+                                  $stmt_cc->bind_param("i", $row['id']);
+                                  $stmt_cc->execute();
+                                  $cc_res = $stmt_cc->get_result()->fetch_assoc();
+                                  $row['comment_count'] = $cc_res['cc'] ?? 0;
+                                  $stmt_cc->close();
+
+                                  // Load comments list
+                                  $row['comments'] = [];
+                                  $stmt_c = $EDITH->prepare("SELECT c.*, a.avatar_md 
+                                                            FROM comments c
+                                                            JOIN accounts a ON c.author_id = a.identification
+                                                            WHERE c.post_id = ? AND c.parent_id IS NULL
+                                                            ORDER BY c.created_at ASC");
+                                  if ($stmt_c) {
+                                      $stmt_c->bind_param("i", $row['id']);
+                                      $stmt_c->execute();
+                                      $res_c = $stmt_c->get_result();
+                                      while ($c_row = $res_c->fetch_assoc()) {
+                                          $row['comments'][] = $c_row;
+                                      }
+                                      $stmt_c->close();
+                                  }
+
+                                  $saved_posts_list[] = $row;
+                              }
+                              $stmt_s->close();
+                          }
+                      }
+
+                      if (empty($saved_posts_list)) {
+                      ?>
+                          <div class="text-center py-10">
+                              <i class="bi bi-bookmark fs-1 text-muted d-block mb-3"></i>
+                              <h4 class="fw-bold text-gray-700">No saved posts yet</h4>
+                              <p class="text-muted fs-7">Tap the bookmark button on any post to save it here.</p>
+                          </div>
+                      <?php
+                      } else {
+                          foreach ($saved_posts_list as $post) {
+                              $commDetails = getCommunityIconDetails($post['community']);
+                              $isAnon = (isset($post['is_anonymous']) && $post['is_anonymous'] == 1);
+                              $avatar = $isAnon ? '/Discourse/assets/images/anonymous.png' : (!empty($post['avatar_md']) ? $post['avatar_md'] : '/Discourse/assets/images/anonymous.png');
+                              $authorName = $isAnon ? 'Anonymous' : ($post['display_name'] ?? 'User');
+                              $authorLink = $isAnon ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . $post['author_id'];
+                              ?>
+                              <div class="card border border-gray-300 shadow-none mb-5 post-card overflow-hidden" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>">
+                                  <div class="d-flex">
+                                      <!-- Vote Column (Dashboard Style) -->
+                                      <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
+                                          <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-up-btn" title="Upvote">
+                                              <i class="bi bi-hand-thumbs-up p-0"></i>
+                                          </button>
+                                          <span class="fs-7 fw-bold text-gray-600 vote-count-text"><?php echo $post['upvotes']; ?></span>
+                                          <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-down-btn" title="Downvote">
+                                              <i class="bi bi-hand-thumbs-down p-0"></i>
+                                          </button>
+                                      </div>
+                                      
+                                      <!-- Content Section -->
+                                      <div class="d-flex flex-column py-5 flex-grow-1 bg-white text-start">
+                                          <div class="row g-0 px-5">
+                                              <!-- Row 1: Tag Badge & Report -->
+                                              <div class="col-12 mb-2">
+                                                  <div class="d-flex justify-content-between align-items-center">
+                                                      <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($post['community']); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
+                                                          <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
+                                                               style="width: 24px; height: 24px;">
+                                                              <i class="bi <?php echo $commDetails['icon']; ?> fs-8 <?php echo $commDetails['text_class']; ?>"></i>
+                                                          </div>
+                                                          <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/<?php echo htmlspecialchars($post['community']); ?></span>
+                                                      </a>
+                                                      <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
+                                                          <i class="bi bi-flag me-1"></i> Report
+                                                      </button>
+                                                  </div>
+                                              </div>
+                                              
+                                              <!-- Row 2: User avatar, name, time -->
+                                              <div class="col-12 mb-2">
+                                                  <div class="d-flex gap-3 align-items-center">
+                                                      <img src="<?php echo $avatar; ?>" alt="<?php echo htmlspecialchars($authorName); ?>" class="h-40px w-40px rounded-circle" />
+                                                      <div class="d-flex flex-column">
+                                                          <a href="<?php echo $authorLink; ?>" class="fs-6 fw-bold text-gray-800 text-hover-primary"><?php echo htmlspecialchars($authorName); ?></a>
+                                                          <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i><?php echo get_relative_time($post['created_at']); ?></span>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              
+                                              <!-- Row 3: Title & Excerpt -->
+                                              <div class="col-12 mb-2">
+                                                  <div class="d-flex flex-column gap-2 text-start">
+                                                      <div>
+                                                          <?php echo renderCategoryBadge($post['topic']); ?>
+                                                      </div>
+                                                      <h3 class="fw-bold fs-5 mb-0">
+                                                          <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary dc-post-title-link">
+                                                              <?php echo htmlspecialchars($post['title']); ?>
+                                                          </a>
+                                                      </h3>
+                                                      <div class="dc-body-wrap">
+                                                          <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo strip_tags($post['body']); ?></span>
+                                                          <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          
+                                          <!-- Actions Row -->
+                                          <div class="row">
+                                              <div class="d-flex justify-content-start align-items-center w-100 px-5">
+                                                  <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <span class="comment-count-btn-text"><?php echo $post['comment_count']; ?> Comment<?php echo $post['comment_count'] == 1 ? '' : 's'; ?></span></button>
+                                                  <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                                  <?php 
+                                                  $is_saved = IS_POST_SAVED($post['id'], $identification);
+                                                  ?>
+                                                  <button class="btn btn-sm dc-post-save" 
+                                                          data-on="<?php echo $is_saved ? '1' : '0'; ?>"
+                                                          style="<?php echo $is_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                                                      <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
+                                                      <?php echo $is_saved ? 'Saved' : 'Save'; ?>
+                                                  </button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <?php
+                          }
+                      }
+                      ?>
                     </div>
 
                   </div>
@@ -532,6 +684,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
       });
     });
   </script>
+  <script src="/Discourse/assets/js/sec-posts.js"></script>
 </body>
 
 </html>

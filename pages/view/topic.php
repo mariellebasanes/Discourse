@@ -61,7 +61,54 @@ $defaultPosts = [
     ['author' => 'Sam Dela Cruz',  'avatar' => 'https://ui-avatars.com/api/?name=Sam+Dela+Cruz&background=d1fae5&color=065f46&rounded=true',  'time' => '3d ago',  'community' => 'FEU Life',  'title' => 'Hot take: ' . ucfirst(strtolower($topic)) . ' is more important than most people realize', 'body' => 'Unpopular opinion incoming. I think a lot of students underestimate how much this topic will shape their careers and daily lives. Happy to argue my case in the comments.', 'votes' => 88, 'comments_count' => 19, 'first_comment' => 'Not unpopular at all — I\'ve been saying this for years. Glad someone finally put it into words.'],
 ];
 
-$posts = isset($topicPosts[$topic]) ? $topicPosts[$topic] : $defaultPosts;
+$posts = [];
+if ($EDITH) {
+    $stmt_p = $EDITH->prepare("SELECT p.*, a.display_name, a.avatar_md, a.role as author_role
+                               FROM posts p
+                               JOIN accounts a ON p.author_id = a.identification
+                               WHERE LOWER(p.topic) = LOWER(?)
+                               ORDER BY p.created_at DESC");
+    if ($stmt_p) {
+        $stmt_p->bind_param("s", $topic);
+        $stmt_p->execute();
+        $res_p = $stmt_p->get_result();
+        while ($row = $res_p->fetch_assoc()) {
+            // Load comment count
+            $stmt_cc = $EDITH->prepare("SELECT COUNT(*) as cc FROM comments WHERE post_id = ?");
+            $stmt_cc->bind_param("i", $row['id']);
+            $stmt_cc->execute();
+            $cc_res = $stmt_cc->get_result()->fetch_assoc();
+            $row['comments_count'] = $cc_res['cc'] ?? 0;
+            $stmt_cc->close();
+
+            // Load first comment
+            $row['first_comment'] = '';
+            $stmt_fc = $EDITH->prepare("SELECT body FROM comments WHERE post_id = ? ORDER BY created_at ASC LIMIT 1");
+            $stmt_fc->bind_param("i", $row['id']);
+            $stmt_fc->execute();
+            $fc_res = $stmt_fc->get_result()->fetch_assoc();
+            $row['first_comment'] = $fc_res['body'] ?? '';
+            $stmt_fc->close();
+
+            $row['avatar'] = !empty($row['avatar_md']) ? $row['avatar_md'] : 'https://ui-avatars.com/api/?name=' . urlencode($row['display_name']) . '&background=f3f4f6&color=d97706&rounded=true';
+            $row['author'] = $row['display_name'] ?? 'User';
+            $row['time'] = get_relative_time($row['created_at']);
+            $row['votes'] = $row['upvotes'] - $row['downvotes'];
+
+            $posts[] = $row;
+        }
+        $stmt_p->close();
+    }
+}
+
+if (empty($posts)) {
+    $samplePosts = isset($topicPosts[$topic]) ? $topicPosts[$topic] : $defaultPosts;
+    $idx = 9000;
+    foreach ($samplePosts as $sp) {
+        $sp['id'] = $idx++;
+        $posts[] = $sp;
+    }
+}
 
 // ── Post count label ─────────────────────────────────────────────────────────
 $postCountLabels = [
@@ -244,7 +291,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                         <!-- Post Feed -->
                                         <div id="topicPostFeed">
                                             <?php foreach ($posts as $post): ?>
-                                                <div class="card border-0 shadow mb-5 post-card overflow-hidden" data-dc="post-card">
+                                                <div class="card border-0 shadow mb-5 post-card overflow-hidden" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>">
                                                     <div class="d-flex">
 
                                                         <!-- Vote Column -->
@@ -320,7 +367,15 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                                         <span class="comment-count-btn-text"><?php echo $post['comments_count']; ?> Comment<?php echo $post['comments_count'] !== 1 ? 's' : ''; ?></span>
                                                                     </button>
                                                                     <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                                                    <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
+                                                                    <?php 
+                                                                    $is_saved = IS_POST_SAVED($post['id'], $identification);
+                                                                    ?>
+                                                                    <button class="btn btn-sm dc-post-save" 
+                                                                            data-on="<?php echo $is_saved ? '1' : '0'; ?>"
+                                                                            style="<?php echo $is_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                                                                        <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
+                                                                        <?php echo $is_saved ? 'Saved' : 'Save'; ?>
+                                                                    </button>
                                                                 </div>
                                                             </div>
 
@@ -523,6 +578,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
     <script src="/Discourse/assets/js/dashboard.js"></script>
     <script src="/Discourse/assets/js/sec-sidebar.js"></script>
     <script src="/Discourse/assets/js/sec-modals.js"></script>
+    <script src="/Discourse/assets/js/sec-posts.js"></script>
 
     <script>
         $(document).ready(function() {

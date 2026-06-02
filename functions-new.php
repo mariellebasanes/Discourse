@@ -421,3 +421,27 @@ if (!function_exists('IS_COMMUNITY_MEMBER')) {
     }
 }
 
+if (!function_exists('IS_POST_SAVED')) {
+    function IS_POST_SAVED($post_id, $identification) {
+        global $EDITH;
+        if (!$EDITH) {
+            // Fallback: check session
+            if (isset($_SESSION['saved_posts']) && is_array($_SESSION['saved_posts'])) {
+                return in_array($post_id, $_SESSION['saved_posts']);
+            }
+            return false;
+        }
+        $stmt = $EDITH->prepare("SELECT 1 FROM saved_posts WHERE post_id = ? AND identification = ?");
+        if ($stmt) {
+            $stmt->bind_param("is", $post_id, $identification);
+            $stmt->execute();
+            $stmt->store_result();
+            $is_saved = ($stmt->num_rows > 0);
+            $stmt->close();
+            return $is_saved;
+        }
+        return false;
+    }
+}
+
+

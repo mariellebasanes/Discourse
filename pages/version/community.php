@@ -493,7 +493,7 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                                 $authorName = $isAnon ? 'Anonymous' : ($post['display_name'] ?? 'User');
                                 $authorLink = $isAnon ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . $post['author_id'];
                                 ?>
-                                <div class="card border-0 shadow mb-5 post-card overflow-hidden" data-dc="post-card">
+                                <div class="card border-0 shadow mb-5 post-card overflow-hidden" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>">
                                     <div class="d-flex">
                                         <!-- Vote Column (Dashboard Style) -->
                                         <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
@@ -577,7 +577,15 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                                                 <div class="d-flex justify-content-start align-items-center w-100 px-5">
                                                     <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <span class="comment-count-btn-text"><?php echo $post['comment_count']; ?> Comment<?php echo $post['comment_count'] == 1 ? '' : 's'; ?></span></button>
                                                     <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                                    <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
+                                                    <?php 
+                                                    $is_saved = IS_POST_SAVED($post['id'], $identification);
+                                                    ?>
+                                                    <button class="btn btn-sm dc-post-save" 
+                                                            data-on="<?php echo $is_saved ? '1' : '0'; ?>"
+                                                            style="<?php echo $is_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                                                        <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
+                                                        <?php echo $is_saved ? 'Saved' : 'Save'; ?>
+                                                    </button>
                                                 </div>
                                             </div>
                         
@@ -844,6 +852,7 @@ $META_TITLE = $display_community_name . " - Discourse Community";
   <script src="/Discourse/assets/js/dashboard.js"></script>
   <script src="/Discourse/assets/js/sec-sidebar.js"></script>
   <script src="/Discourse/assets/js/sec-modals.js"></script>
+  <script src="/Discourse/assets/js/sec-posts.js"></script>
 
   <script>
     $(document).ready(function() {

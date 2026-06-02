@@ -63,7 +63,7 @@ $user_avatar = '/LAF/assets/images/catalina.webp';
       <a href="/Discourse/pages/version/profile.php?tab=posts" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-journal-text text-muted fs-6"></i> My Posts</a>
       <a href="/Discourse/pages/version/profile.php?tab=comments" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-chat-left-text-fill text-muted fs-6"></i> My Comments</a>
       <a href="/Discourse/pages/version/profile.php?tab=upvoted" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-hand-thumbs-up-fill text-muted fs-6"></i> Liked Posts</a>
-      <a href="/Discourse/pages/version/profile.php" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-bookmark-fill text-muted fs-6"></i> Saved Posts</a>
+      <a href="/Discourse/pages/version/profile.php?tab=saved" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-bookmark-fill text-muted fs-6"></i> Saved Posts</a>
       <a href="/Discourse/pages/version/community-home-page.php" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-people-fill text-muted fs-6"></i> My Communities</a>
     </div>
 
