@@ -162,7 +162,7 @@ $META_TITLE = "Discourse - FEU Communities";
                                 ?>
                                 <button class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 dc-list-join-btn" 
                                         data-comm-title="<?php echo htmlspecialchars($comm_title); ?>" 
-                                        style="background-color: <?php echo $is_joined ? '#6c757d' : '#1A8B44'; ?>; color: white; border: none;">
+                                        style="background-color: <?php echo $is_joined ? '#fbc501' : '#1A8B44'; ?>; color: white; border: none;">
                                     <i class="fas <?php echo $is_joined ? 'fa-check' : 'fa-plus'; ?> text-white fs-8"></i> 
                                     <span class="join-btn-text"><?php echo $is_joined ? 'JOINED' : 'JOIN COMMUNITY'; ?></span>
                                 </button>
@@ -379,7 +379,7 @@ $META_TITLE = "Discourse - FEU Communities";
                                      </div>
                                      <button class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 dc-list-join-btn" 
                                              data-comm-title="${comm.title}" 
-                                             style="background-color: #6c757d; color: white; border: none;">
+                                             style="background-color: #fbc501; color: white; border: none;">
                                          <i class="fas fa-check text-white fs-8"></i> 
                                          <span class="join-btn-text">JOINED</span>
                                      </button>
@@ -428,7 +428,7 @@ $META_TITLE = "Discourse - FEU Communities";
                         const textSpan = btn.find('.join-btn-text');
                         const icon = btn.find('i');
                         if (res.joined) {
-                            btn.css('background-color', '#6c757d');
+                            btn.css('background-color', '#fbc501');
                             textSpan.text('JOINED');
                             icon.removeClass('fa-plus').addClass('fa-check');
                         } else {

@@ -222,7 +222,7 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                         ?>
                         <button class="btn fw-bolder text-white px-8 py-3 d-flex align-items-center gap-2 rounded-pill dc-join-btn" 
                                 data-comm-title="<?php echo htmlspecialchars($community_info['title']); ?>"
-                                style="<?php echo $is_joined ? 'background-color: #6c757d; box-shadow: none;' : 'background-color:#fbc501; box-shadow:0 4px 14px rgba(245,166,35,0.3);'; ?>">
+                                style="<?php echo $is_joined ? 'background-color: transparent; border: 1px solid #ffffff; box-shadow: none;' : 'background-color:#fbc501; box-shadow:0 4px 14px rgba(245,166,35,0.3); border: none;'; ?>">
                           <?php if ($is_joined) { ?>
                             <i class="bi bi-check-lg text-white fs-6"></i> JOINED
                           <?php } else { ?>
@@ -1005,12 +1005,18 @@ $META_TITLE = $display_community_name . " - Discourse Community";
                     if (res.success) {
                         if (res.joined) {
                             btn.html('<i class="bi bi-check-lg text-white fs-6"></i> JOINED');
-                            btn.css('background-color', '#6c757d');
-                            btn.css('box-shadow', 'none');
+                            btn.css({
+                                'background-color': 'transparent',
+                                'border': '1px solid #ffffff',
+                                'box-shadow': 'none'
+                            });
                         } else {
                             btn.html('<i class="bi bi-plus-lg text-white fs-6"></i> JOIN COMMUNITY');
-                            btn.css('background-color', '#fbc501');
-                            btn.css('box-shadow', '0 4px 14px rgba(245,166,35,0.3)');
+                            btn.css({
+                                'background-color': '#fbc501',
+                                'border': 'none',
+                                'box-shadow': '0 4px 14px rgba(245,166,35,0.3)'
+                            });
                         }
                         if (res.members_count !== null) {
                             $('.dc-members-count-val').text(res.members_count.toLocaleString());
