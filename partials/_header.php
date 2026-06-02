@@ -167,3 +167,11 @@ if (!function_exists('getCategoryBadgeStyle')) {
     </div>
   </div>
 </div>
+
+<script>
+  window.currentUser = {
+    identification: <?php echo json_encode($identification); ?>,
+    displayName: <?php echo json_encode($ACCOUNT['display_name'] ?? 'Guest'); ?>,
+    avatar: <?php echo json_encode($ACCOUNT['avatar_md'] ?? '/Discourse/assets/images/anonymous.png'); ?>
+  };
+</script>

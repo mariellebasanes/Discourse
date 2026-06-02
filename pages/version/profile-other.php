@@ -1,7 +1,13 @@
 <?php
-$META_TITLE = "Sofia Karim - Discourse Profile";
+define('MBG', TRUE);
+include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+
+$other_id = isset($_GET['id']) ? trim($_GET['id']) : 'T202210344'; // Sofia Karim
+$other_account = GET_ACCOUNT_DETAILS($other_id);
+
+$META_TITLE = htmlspecialchars($other_account['display_name']) . " - Discourse Profile";
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
-$user_name = "SOFIA KARIM";
+$user_name = strtoupper($other_account['display_name']);
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +67,7 @@ $user_name = "SOFIA KARIM";
                         <div class="d-flex flex-sm-row flex-column align-items-sm-end mb-6" style="margin-top: -50px;">
                           <div class="me-5 mb-3 mb-sm-0 flex-shrink-0">
                             <div class="w-120px h-120px w-lg-150px h-lg-150px rounded-3 border border-4 border-white shadow-sm d-flex align-items-center justify-content-center avatar-circle bg-white">
-                              <img src="https://ui-avatars.com/api/?name=Sofia+Karim&background=f3f4f6&color=d97706&rounded=true" alt="Profile" style="object-fit: cover;">
+                              <img src="<?php echo htmlspecialchars(getUserAvatar($other_id)); ?>" alt="Profile" style="object-fit: cover;">
                             </div>
                           </div>
                           <!-- Info -->
@@ -157,7 +163,7 @@ $user_name = "SOFIA KARIM";
                             </div>
                             <div class="flex-grow-1">
                               <div class="d-flex align-items-center">
-                                <span class="fw-bolder text-dark fs-6 me-1">Sofia Karim</span>
+                                <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars($other_account['display_name']); ?></span>
                                 <span class="text-muted fs-7"><?php echo $act['action']; ?></span>
                                 <?php if (!empty($act['action_target'])) { ?>
                                 <span class="fw-bolder text-primary fs-7 ms-1"><?php echo $act['action_target']; ?></span>
@@ -290,7 +296,7 @@ $user_name = "SOFIA KARIM";
                             </div>
                             <div class="flex-grow-1">
                               <div class="d-flex align-items-center">
-                                <span class="fw-bolder text-dark fs-6 me-1">Sofia Karim</span>
+                                <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars($other_account['display_name']); ?></span>
                                 <span class="text-muted fs-7">Commented on a post</span>
                               </div>
                               <span class="text-muted fs-8"><?php echo $c['time']; ?></span>
@@ -352,7 +358,7 @@ $user_name = "SOFIA KARIM";
                             </div>
                             <div class="flex-grow-1">
                               <div class="d-flex align-items-center">
-                                <span class="fw-bolder text-dark fs-6 me-1">Sofia Karim</span>
+                                <span class="fw-bolder text-dark fs-6 me-1"><?php echo htmlspecialchars($other_account['display_name']); ?></span>
                                 <span class="text-muted fs-7">Upvoted a post</span>
                               </div>
                               <span class="text-muted fs-8"><?php echo $u['time']; ?></span>

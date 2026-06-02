@@ -1,4 +1,161 @@
 <?php
+session_name('mbg');
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// ── MySQL Database Connection (XAMPP) ──
+$DB_HOST = '127.0.0.1';
+$DB_USER = 'root';
+$DB_PASS = '';
+$DB_NAME = 'discourse';
+
+// Establish connection with silent fallback if database is not running/created yet
+$EDITH = null;
+try {
+    $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+    if (!$conn->connect_error) {
+        $conn->set_charset('utf8mb4');
+        $EDITH = $conn;
+    }
+} catch (Exception $e) {
+    // Database connection failed, fallback gracefully
+}
+
+// Compatibility variables
+$DB_SERVER   = $DB_HOST;
+$DB_USERNAME = $DB_USER;
+$DB_PASSWORD = $DB_PASS;
+$DB_NAME_EDITH  = $DB_NAME;
+
+// Define Identification Global (simulating logged in user or using session)
+if (!isset($_SESSION['identification'])) {
+    $_SESSION['identification'] = 'T202210202'; // Default: Catalina Smith
+}
+$identification = $_SESSION['identification'];
+
+// Helper Class for Sanitization (legacy compatibility)
+class Sanitizer {
+  public static function url($url) {
+    return filter_var($url, FILTER_SANITIZE_URL);
+  }
+}
+
+// Clean sanitization function for SQL input
+if (!function_exists('sanitize')) {
+    function sanitize($data) {
+        global $EDITH;
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key] = sanitize($value);
+            }
+            return $data;
+        }
+        if (is_string($data)) {
+            $data = trim($data);
+            if ($EDITH) {
+                return $EDITH->real_escape_string($data);
+            } else {
+                return addslashes($data);
+            }
+        }
+        return $data;
+    }
+}
+
+// Core Auth & Access Functions
+if (!function_exists('IS_LOGGED_IN')) {
+    function IS_LOGGED_IN($uri) {
+      if (!isset($_SESSION['identification'])) {
+        header("Location: /Discourse/index.php");
+        exit();
+      }
+    }
+}
+
+if (!function_exists('DIRECT_ACCESS_BLOCKED')) {
+    function DIRECT_ACCESS_BLOCKED() {
+      if (!defined('MBG')) {
+        die("Direct access blocked.");
+      }
+    }
+}
+
+// Get account details by identification
+if (!function_exists('GET_ACCOUNT_DETAILS')) {
+    function GET_ACCOUNT_DETAILS($id) {
+      global $EDITH;
+      if (!$EDITH) {
+          return [
+              'identification' => 'T202210202',
+              'display_name' => 'Catalina Smith',
+              'role' => 'student',
+              'avatar_md' => '/Discourse/assets/images/catalina.webp',
+              'email' => 'catalina@example.com'
+          ];
+      }
+      
+      $stmt = $EDITH->prepare("SELECT * FROM accounts WHERE identification = ?");
+      if (!$stmt) {
+          return [
+              'identification' => 'T202210202',
+              'display_name' => 'Catalina Smith',
+              'role' => 'student',
+              'avatar_md' => '/Discourse/assets/images/catalina.webp',
+              'email' => 'catalina@example.com'
+          ];
+      }
+      $stmt->bind_param("s", $id);
+      $stmt->execute();
+      $result = $stmt->get_result()->fetch_assoc();
+      $stmt->close();
+      return $result ?: [
+          'identification' => $id,
+          'display_name' => 'User ' . $id,
+          'role' => 'student',
+          'avatar_md' => '/Discourse/assets/images/catalina.webp',
+          'email' => ''
+      ];
+    }
+}
+
+// Fetch Account Info for current logged in user
+$ACCOUNT = GET_ACCOUNT_DETAILS($identification);
+
+if (!function_exists('DISPLAY_NAME')) {
+    function DISPLAY_NAME($account) {
+      return $account['display_name'] ?? 'User';
+    }
+}
+
+if (!function_exists('getUserClassification')) {
+    function getUserClassification($id) {
+      $account = GET_ACCOUNT_DETAILS($id);
+      if ($account && $account['role'] === 'admin') {
+          return 'Associate';
+      }
+      return 'Student';
+    }
+}
+
+if (!function_exists('respondWithError')) {
+    function respondWithError($message) {
+      header('Content-Type: application/json');
+      echo json_encode(['status' => 'error', 'message' => $message]);
+      exit();
+    }
+}
+
+if (!function_exists('getUserAvatar')) {
+    function getUserAvatar($id, $size = "MD") {
+      $account = GET_ACCOUNT_DETAILS($id);
+      return !empty($account['avatar_md']) ? $account['avatar_md'] : '/Discourse/assets/images/anonymous.png';
+    }
+}
+
+// Asset Base Path
+$BASE_PATH = "/Discourse";
+
 function HEAD_ESSENTIALS()
 {
   global $META_TITLE;
@@ -95,3 +252,164 @@ function HEAD_ESSENTIALS()
 </script>
 ' . $maintenance;
 }
+
+if (!function_exists('sort_discourse_posts')) {
+    function sort_discourse_posts($posts, $criteria) {
+        $sorted = $posts;
+        if ($criteria === 'new') {
+            usort($sorted, function($a, $b) {
+                return strtotime($b['created_at'] ?? 'now') - strtotime($a['created_at'] ?? 'now');
+            });
+        } elseif ($criteria === 'top') {
+            usort($sorted, function($a, $b) {
+                $score_a = ($a['upvotes'] ?? 0) - ($a['downvotes'] ?? 0);
+                $score_b = ($b['upvotes'] ?? 0) - ($b['downvotes'] ?? 0);
+                return $score_b - $score_a;
+            });
+        } elseif ($criteria === 'rising') {
+            usort($sorted, function($a, $b) {
+                $now = time();
+                $age_a = max(1, ($now - strtotime($a['created_at'] ?? 'now')) / 3600);
+                $age_b = max(1, ($now - strtotime($b['created_at'] ?? 'now')) / 3600);
+                $score_a = (($a['comment_count'] ?? 0) * 3 + ($a['upvotes'] ?? 0)) / pow($age_a + 2, 1.2);
+                $score_b = (($b['comment_count'] ?? 0) * 3 + ($b['upvotes'] ?? 0)) / pow($age_b + 2, 1.2);
+                if ($score_a == $score_b) return 0;
+                return ($score_b > $score_a) ? 1 : -1;
+            });
+        } else { // 'hot'
+            usort($sorted, function($a, $b) {
+                $now = time();
+                $age_a = max(1, ($now - strtotime($a['created_at'] ?? 'now')) / 3600);
+                $age_b = max(1, ($now - strtotime($b['created_at'] ?? 'now')) / 3600);
+                $score_a = (($a['upvotes'] ?? 0) - ($a['downvotes'] ?? 0) + ($a['comment_count'] ?? 0) * 2) / pow($age_a + 2, 1.5);
+                $score_b = (($b['upvotes'] ?? 0) - ($b['downvotes'] ?? 0) + ($b['comment_count'] ?? 0) * 2) / pow($age_b + 2, 1.5);
+                if ($score_a == $score_b) return 0;
+                return ($score_b > $score_a) ? 1 : -1;
+            });
+        }
+        return $sorted;
+    }
+}
+
+if (!function_exists('get_relative_time')) {
+    function get_relative_time($datetime) {
+        $time = strtotime($datetime);
+        if (!$time) return '1d ago';
+        $now = time();
+        $diff = $now - $time;
+        if ($diff < 60) {
+            return 'Just now';
+        }
+        $diff = round($diff / 60);
+        if ($diff < 60) {
+            return $diff . 'm ago';
+        }
+        $diff = round($diff / 60);
+        if ($diff < 24) {
+            return $diff . 'h ago';
+        }
+        $diff = round($diff / 24);
+        if ($diff < 30) {
+            return $diff . 'd ago';
+        }
+        return date('F j, Y', $time);
+    }
+}
+
+if (!function_exists('renderCategoryBadge')) {
+    function renderCategoryBadge($category) {
+        $cat = strtoupper(trim($category));
+        $badgeClass = 'badge-light-primary';
+        
+        switch ($cat) {
+            case 'TECHNOLOGY':
+                $badgeClass = 'badge-light-primary';
+                break;
+            case 'CULTURE':
+                $badgeClass = 'badge-light-danger';
+                break;
+            case 'GAMING':
+                $badgeClass = 'badge-light-warning';
+                break;
+            case 'FEU':
+                $badgeClass = 'badge-light-warning';
+                break;
+            case 'IDEAS':
+                $badgeClass = 'badge-light-info';
+                break;
+            case 'CREATIVE':
+                $badgeClass = 'badge-light-primary';
+                break;
+            case 'SCIENCE':
+                $badgeClass = 'badge-light-info';
+                break;
+            case 'NEWS':
+                $badgeClass = 'badge-light-danger';
+                break;
+            case 'AI':
+                $badgeClass = 'badge-light-success';
+                break;
+            case 'ACADEMICS':
+                $badgeClass = 'badge-light-warning';
+                break;
+            case 'LIFESTYLE':
+                $badgeClass = 'badge-light-info';
+                break;
+            case 'ENTERTAINMENT':
+                $badgeClass = 'badge-light-primary';
+                break;
+            case 'MUSIC':
+                $badgeClass = 'badge-light-danger';
+                break;
+            case 'POLITICS':
+                $badgeClass = 'badge-light-dark';
+                break;
+            case 'ISSUES':
+                $badgeClass = 'badge-light-danger';
+                break;
+            case 'SPORTS':
+                $badgeClass = 'badge-light-warning';
+                break;
+            default:
+                // Try case-insensitive substring matches
+                if (stripos($cat, 'TECH') !== false) {
+                    $badgeClass = 'badge-light-primary';
+                } elseif (stripos($cat, 'ACAD') !== false) {
+                    $badgeClass = 'badge-light-warning';
+                } elseif (stripos($cat, 'SPORT') !== false) {
+                    $badgeClass = 'badge-light-warning';
+                } elseif (stripos($cat, 'LIFE') !== false) {
+                    $badgeClass = 'badge-light-info';
+                } else {
+                    $badgeClass = 'badge-light-success';
+                }
+                break;
+        }
+        
+        return '<span class="badge ' . $badgeClass . ' rounded-pill px-3 py-2 fs-8 fw-bold">' . htmlspecialchars($category) . '</span>';
+    }
+}
+
+if (!function_exists('IS_COMMUNITY_MEMBER')) {
+    function IS_COMMUNITY_MEMBER($community_title, $identification) {
+        global $EDITH;
+        if (!$EDITH) {
+            // Fallback: check session
+            if (isset($_SESSION['joined_communities']) && is_array($_SESSION['joined_communities'])) {
+                return in_array($community_title, $_SESSION['joined_communities']);
+            }
+            return false;
+        }
+        $stmt = $EDITH->prepare("SELECT 1 FROM community_members WHERE community_title = ? AND identification = ?");
+        if ($stmt) {
+            $stmt->bind_param("ss", $community_title, $identification);
+            $stmt->execute();
+            $stmt->store_result();
+            $is_member = ($stmt->num_rows > 0);
+            $stmt->close();
+            return $is_member;
+        }
+        return false;
+    }
+}
+
