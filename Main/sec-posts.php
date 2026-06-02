@@ -556,7 +556,7 @@ if (!function_exists('renderPostCardMarkup')) {
   </div>
 
   <!-- ── Feed Toast (Share / Save feedback) ─────────────────── -->
-  <div id="dc-feed-toast" class="d-flex align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
+  <div id="dc-feed-toast" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:1090;" class="align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
     <i class="bi bi-check-circle-fill text-success"></i><span></span>
   </div>
 

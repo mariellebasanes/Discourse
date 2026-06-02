@@ -78,9 +78,9 @@
     function showFeedToast(msg) {
       if (!feedToast) return;
       feedToast.querySelector('span').textContent = msg;
-      feedToast.classList.add('show');
+      feedToast.style.display = 'flex';
       clearTimeout(window._dcFeedToast);
-      window._dcFeedToast = setTimeout(function () { feedToast.classList.remove('show'); }, 2200);
+      window._dcFeedToast = setTimeout(function () { feedToast.style.display = 'none'; }, 2200);
     }
 
     // Comment — toggle quick comment drawer
