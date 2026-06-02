@@ -995,9 +995,9 @@ $META_TITLE = $display_community_name . " - Discourse Community";
         function showFeedToast(msg) {
             if (!feedToast.length) return;
             feedToast.find('span').text(msg);
-            feedToast.fadeIn(200);
+            feedToast.addClass('show');
             clearTimeout(window._dcFeedToast);
-            window._dcFeedToast = setTimeout(function () { feedToast.fadeOut(200); }, 2200);
+            window._dcFeedToast = setTimeout(function () { feedToast.removeClass('show'); }, 2200);
         }
 
         // Join Community button toggle on detail page
@@ -1070,7 +1070,7 @@ $META_TITLE = $display_community_name . " - Discourse Community";
   </script>
 
   <!-- Feed Toast (Feedback) -->
-  <div id="dc-feed-toast" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:1090;" class="d-flex align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
+  <div id="dc-feed-toast" class="d-flex align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
     <i class="bi bi-check-circle-fill text-success fs-6"></i><span></span>
   </div>
 </body>

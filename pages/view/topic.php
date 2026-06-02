@@ -682,9 +682,9 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                 const t = $('#dc-feed-toast');
                 if (!t.length) return;
                 t.find('span').text(msg);
-                t.fadeIn(200);
+                t.addClass('show');
                 clearTimeout(window._dcToast);
-                window._dcToast = setTimeout(() => t.fadeOut(200), 2200);
+                window._dcToast = setTimeout(() => t.removeClass('show'), 2200);
             }
 
         });
@@ -711,7 +711,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
     </script>
 
     <!-- Toast -->
-    <div id="dc-feed-toast" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:1090;"
+    <div id="dc-feed-toast"
         class="d-flex align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
         <i class="bi bi-check-circle-fill text-success fs-6"></i><span></span>
     </div>
