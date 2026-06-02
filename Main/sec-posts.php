@@ -428,12 +428,10 @@ if (!function_exists('renderPostCardMarkup')) {
                 <!-- Row 3: Title + Excerpt -->
                 <div class="col-12 mb-2">
                   <div class="d-flex flex-column gap-2 text-start">
-                    <div>
+                    <div class="d-flex flex-wrap align-items-center gap-1">
                       <?php
-                        $badge = getCategoryBadgeStyle($post['topic']);
-                        echo '<a href="/Discourse/pages/view/topic.php?t=' . urlencode(strtoupper($post['topic'])) . '" class="badge ' . $badge['class'] . ' rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none">'
-                           . '<i class="bi ' . $badge['icon'] . ' ' . $badge['icon_color'] . ' me-1"></i>'
-                           . htmlspecialchars(strtoupper($post['topic'])) . '</a>';
+                        echo renderTopicBadge($post['topic']);
+                        echo renderHashtagBadges($post['tags'] ?? '');
                       ?>
                     </div>
                     <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">

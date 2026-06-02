@@ -280,7 +280,10 @@ if (!function_exists('profile_relative_time')) {
                             <span class="fw-bold text-dark fs-8"><?php echo htmlspecialchars($post['community']); ?></span>
                             <span class="text-muted fs-9">· <?php echo profile_relative_time($post['created_at']); ?></span>
                           </div>
-                          <div class="mb-2"><?php echo renderCategoryBadge($post['topic'] ?? 'GENERAL'); ?></div>
+                          <div class="mb-2 d-flex flex-wrap align-items-center gap-1">
+                            <?php echo renderTopicBadge($post['topic'] ?? 'GENERAL'); ?>
+                            <?php echo renderHashtagBadges($post['tags'] ?? ''); ?>
+                          </div>
                           <h4 class="fw-bolder fs-4 mb-2">
                             <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-dark text-hover-primary"><?php echo htmlspecialchars($post['title']); ?></a>
                           </h4>

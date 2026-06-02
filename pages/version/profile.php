@@ -284,8 +284,9 @@ if (!function_exists('profile_relative_time')) {
                             <span class="fw-bold text-dark fs-8"><?php echo $post['community']; ?></span>
                             <span class="text-muted fs-9">· <?php echo $post['time']; ?></span>
                           </div>
-                           <div class="mb-2">
-                             <?php echo renderCategoryBadge($post['tag']); ?>
+                           <div class="mb-2 d-flex flex-wrap align-items-center gap-1">
+                             <?php echo renderTopicBadge($post['tag']); ?>
+                             <?php echo renderHashtagBadges($post['tags'] ?? ''); ?>
                            </div>
                           <h4 class="fw-bolder fs-4 mb-2">
                             <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-dark text-hover-primary"><?php echo htmlspecialchars($post['title']); ?></a>
@@ -506,8 +507,9 @@ if (!function_exists('profile_relative_time')) {
                                               <!-- Row 3: Title & Excerpt -->
                                               <div class="col-12 mb-2">
                                                   <div class="d-flex flex-column gap-2 text-start">
-                                                      <div>
-                                                          <?php echo renderCategoryBadge($post['topic']); ?>
+                                                      <div class="d-flex flex-wrap align-items-center gap-1">
+                                                          <?php echo renderTopicBadge($post['topic']); ?>
+                                                          <?php echo renderHashtagBadges($post['tags'] ?? ''); ?>
                                                       </div>
                                                       <h3 class="fw-bold fs-5 mb-0">
                                                           <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary dc-post-title-link">

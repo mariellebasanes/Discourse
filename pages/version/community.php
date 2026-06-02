@@ -362,6 +362,7 @@ if ($EDITH) {
                             "avatar"         => $isAnon ? '/Discourse/assets/images/anonymous.png' : ($r['avatar_md'] ?? '/Discourse/assets/images/anonymous.png'),
                             "time"           => get_relative_time($r['created_at']),
                             "tag"            => $r['topic'] ?? 'GENERAL',
+                            "tags"           => $r['tags'] ?? '',
                             "title"          => $r['title'],
                             "body"           => $r['body'],
                             "votes"          => $r['upvotes'] ?? 0,
@@ -434,10 +435,10 @@ if ($EDITH) {
                               <div class="col-12 mb-2">
                                 <div class="d-flex flex-column gap-2 text-start">
                                   <div>
-                                    <?php $postBadge = getCategoryBadgeStyle($post['tag']); ?>
-                                    <a href="/Discourse/pages/view/topic.php?t=<?php echo strtoupper($post['tag']); ?>" class="badge <?php echo $postBadge['class']; ?> rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none">
-                                      <i class="bi <?php echo $postBadge['icon']; ?> <?php echo $postBadge['icon_color']; ?> me-1"></i><?php echo strtoupper($post['tag']); ?>
-                                    </a>
+                                    <div class="d-flex flex-wrap align-items-center gap-1">
+                                      <?php echo renderTopicBadge($post['tag']); ?>
+                                      <?php echo renderHashtagBadges($post['tags'] ?? ''); ?>
+                                    </div>
                                   </div>
                                   <h3 class="fw-bold fs-5 mb-0">
                                     <a href="/Discourse/pages/version/view-post.php<?php echo $post['id'] ? '?id=' . $post['id'] : ''; ?>" class="text-gray-800 text-hover-primary dc-post-title-link">
