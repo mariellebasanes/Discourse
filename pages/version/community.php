@@ -185,7 +185,7 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                                 <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-gray-500 pe-none fs-6"></i>
                                 <input type="text" class="form-control bg-white rounded-pill ps-12 fs-6 text-gray-700 search-input-v2 shadow-sm" placeholder="Search discussions, topics, people...">
                             </div>
-                            <a href="/Discourse/pages/version/create-post.php" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
+                            <a href="/Discourse/pages/view/create-post.php" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
                                 <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
                             </a>
                         </div>
@@ -278,15 +278,14 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                                         <div class="col-12 mb-2">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <?php 
-                                                $commDetails = getCommunityIconDetails('FEU LIFE'); 
+                                                $commDetails = getCommunityIconDetails('FEU Life'); 
                                                 ?>
                                                 <a href="/Discourse/pages/version/community.php" class="d-flex align-items-center gap-2 text-decoration-none">
-                                                    <div class="d-flex align-items-center justify-content-center rounded-2"
-                                                         style="width: 24px; height: 24px; background-color: <?php echo $commDetails['bg_hex']; ?>;">
-                                                        <i class="bi <?php echo $commDetails['icon']; ?> fs-8"
-                                                           style="color: <?php echo $commDetails['color_hex']; ?>;"></i>
+                                                    <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
+                                                         style="width: 24px; height: 24px;">
+                                                        <i class="bi <?php echo $commDetails['icon']; ?> fs-8 <?php echo $commDetails['text_class']; ?>"></i>
                                                     </div>
-                                                    <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/FEU LIFE</span>
+                                                    <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/FEU Life</span>
                                                 </a>
                                                 <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                                                     <i class="bi bi-flag me-1"></i> Report
@@ -309,7 +308,10 @@ $META_TITLE = "FEU LIFE - Discourse Community (Alvaran)";
                                         <div class="col-12 mb-2">
                                             <div class="d-flex flex-column gap-2 text-start">
                                                 <div>
-                                                    <span class="badge rounded px-3 py-1 fs-8 fw-bold text-white" style="<?php echo getCategoryBadgeStyle($post['tag']); ?>"><?php echo strtoupper($post['tag']); ?></span>
+                                                    <?php $postBadge = getCategoryBadgeStyle($post['tag']); ?>
+                                                    <a href="/Discourse/pages/version/topic.php?t=<?php echo strtoupper($post['tag']); ?>" class="badge <?php echo $postBadge['class']; ?> rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none">
+                                                        <i class="bi <?php echo $postBadge['icon']; ?> <?php echo $postBadge['icon_color']; ?> me-1"></i><?php echo strtoupper($post['tag']); ?>
+                                                    </a>
                                                 </div>
                                                 <h3 class="fw-bold fs-5 mb-0">
                                                     <a href="/Discourse/pages/version/view-post.php" class="text-gray-800 text-hover-primary dc-post-title-link">

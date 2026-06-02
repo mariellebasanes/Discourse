@@ -1,93 +1,106 @@
 <?php
 if (!function_exists('getCommunityIconDetails')) {
-    function getCommunityIconDetails($name, $category = null) {
-        $name_lower = strtolower($name);
-        $cat_lower = $category ? strtolower($category) : '';
+  function getCommunityIconDetails($name, $category = null)
+  {
+    $name_lower = strtolower($name);
 
-        // Each entry: icon, bg hex (light tint), icon color hex (dark saturated shade)
-        // Default fallback — FEU Tech / CPU / general
-        $icon       = "bi-cpu";
-        $bg_hex     = "#d1fae5"; // light emerald
-        $color_hex  = "#065f46"; // deep emerald
+    // Default: FEU Tech — matches sidebar: bg-light-success text-success, bi-cpu
+    $icon       = "bi-cpu";
+    $bg_class   = "bg-light-success";
+    $text_class = "text-success";
 
-        if (strpos($name_lower, 'life') !== false) {
-            $icon      = "bi-heart-fill";
-            $bg_hex    = "#fce7f3"; // light rose/pink
-            $color_hex = "#9d174d"; // deep rose
-
-        } elseif (strpos($name_lower, 'fresh') !== false || strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false) {
-            $icon      = "bi-people-fill";
-            $bg_hex    = "#dbeafe"; // light blue
-            $color_hex = "#1e3a8a"; // deep blue
-
-        } elseif (strpos($name_lower, 'food') !== false || strpos($name_lower, 'trip') !== false) {
-            $icon      = "bi-cup-hot-fill";
-            $bg_hex    = "#fef3c7"; // light amber
-            $color_hex = "#92400e"; // deep amber/brown
-
-        } elseif (strpos($name_lower, 'cosplay') !== false || strpos($name_lower, 'artist') !== false || strpos($name_lower, 'culture') !== false || strpos($name_lower, 'hub') !== false) {
-            $icon      = "bi-palette-fill";
-            $bg_hex    = "#e0f2fe"; // light cyan
-            $color_hex = "#0c4a6e"; // deep cyan/navy
-
-        } elseif (strpos($name_lower, 'enroll') !== false || strpos($name_lower, 'thesis') !== false || strpos($name_lower, 'advice') !== false) {
-            $icon      = "bi-journal-bookmark-fill";
-            $bg_hex    = "#ede9fe"; // light violet
-            $color_hex = "#4c1d95"; // deep violet
-
-        } elseif (strpos($name_lower, 'innovat') !== false) {
-            $icon      = "bi-lightbulb-fill";
-            $bg_hex    = "#fff7ed"; // light orange
-            $color_hex = "#7c2d12"; // deep burnt orange
-
-        } elseif ($cat_lower === "feu alabang") {
-            $icon      = "bi-building-fill";
-            $bg_hex    = "#fef9c3"; // light yellow
-            $color_hex = "#713f12"; // deep yellow-brown
-
-        } elseif ($cat_lower === "feu diliman") {
-            $icon      = "bi-mortarboard-fill";
-            $bg_hex    = "#dbeafe"; // light blue
-            $color_hex = "#1e3a8a"; // deep blue
-        }
-
-        return [
-            'icon'       => $icon,
-            'bg_hex'     => $bg_hex,
-            'color_hex'  => $color_hex,
-            // Keep legacy keys for backward compatibility
-            'bg_class'   => '',
-            'text_class' => ''
-        ];
+    if (strpos($name_lower, 'life') !== false) {
+      // FEU Life — matches sidebar: bg-light-danger text-danger, bi-heart-fill
+      $icon       = "bi-heart-fill";
+      $bg_class   = "bg-light-danger";
+      $text_class = "text-danger";
+    } elseif (strpos($name_lower, 'culture') !== false || strpos($name_lower, 'hub') !== false) {
+      // CultureHub — matches sidebar: bg-light-primary text-primary, bi-music-note-beamed
+      $icon       = "bi-music-note-beamed";
+      $bg_class   = "bg-light-primary";
+      $text_class = "text-primary";
+    } elseif (strpos($name_lower, 'fresh') !== false || strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false) {
+      $icon       = "bi-people-fill";
+      $bg_class   = "bg-light-info";
+      $text_class = "text-info";
+    } elseif (strpos($name_lower, 'food') !== false || strpos($name_lower, 'trip') !== false) {
+      $icon       = "bi-cup-hot-fill";
+      $bg_class   = "bg-light-warning";
+      $text_class = "text-warning";
+    } elseif (strpos($name_lower, 'cosplay') !== false || strpos($name_lower, 'artist') !== false) {
+      $icon       = "bi-palette-fill";
+      $bg_class   = "bg-light-primary";
+      $text_class = "text-primary";
+    } elseif (strpos($name_lower, 'enroll') !== false || strpos($name_lower, 'thesis') !== false || strpos($name_lower, 'advice') !== false) {
+      $icon       = "bi-journal-bookmark-fill";
+      $bg_class   = "bg-light-warning";
+      $text_class = "text-warning";
+    } elseif (strpos($name_lower, 'innovat') !== false) {
+      $icon       = "bi-lightbulb-fill";
+      $bg_class   = "bg-light-warning";
+      $text_class = "text-warning";
+    } elseif (strpos($name_lower, 'alabang') !== false) {
+      $icon       = "bi-building-fill";
+      $bg_class   = "bg-light-warning";
+      $text_class = "text-warning";
+    } elseif (strpos($name_lower, 'diliman') !== false) {
+      $icon       = "bi-mortarboard-fill";
+      $bg_class   = "bg-light-info";
+      $text_class = "text-info";
     }
+
+    return [
+      'icon'       => $icon,
+      'bg_class'   => $bg_class,
+      'text_class' => $text_class,
+      // keep hex keys as empty so old code doesn't break
+      'bg_hex'     => '',
+      'color_hex'  => '',
+    ];
+  }
 }
 
 if (!function_exists('getCategoryBadgeStyle')) {
-    function getCategoryBadgeStyle($category) {
-        $cat = strtoupper(trim($category));
-        switch ($cat) {
-            case 'NEWS':
-                return 'background-color: #8b5cf6; color: #ffffff;'; // Purple
-            case 'TECHNOLOGY':
-            case 'AI':
-                return 'background-color: #10b981; color: #ffffff;'; // Emerald/Teal
-            case 'CULTURE':
-            case 'CREATIVE':
-            case 'MUSIC':
-                return 'background-color: #ec4899; color: #ffffff;'; // Pink
-            case 'GAMING':
-            case 'SPORTS':
-                return 'background-color: #f97316; color: #ffffff;'; // Orange
-            case 'FEU':
-            case 'ACADEMICS':
-                return 'background-color: #eab308; color: #ffffff;'; // Gold/Yellow
-            case 'IDEAS':
-            case 'LIFESTYLE':
-                return 'background-color: #06b6d4; color: #ffffff;'; // Cyan
-            default:
-                return 'background-color: #6b7280; color: #ffffff;'; // Gray
-        }
+  function getCategoryBadgeStyle($category)
+  {
+    $cat = strtoupper(trim($category));
+    switch ($cat) {
+      case 'TECHNOLOGY':
+        return ['class' => 'badge-light-primary',  'icon' => 'bi-cpu',               'icon_color' => 'text-primary'];
+      case 'CULTURE':
+        return ['class' => 'badge-light-danger',   'icon' => 'bi-palette',           'icon_color' => 'text-danger'];
+      case 'GAMING':
+        return ['class' => 'badge-light-warning',  'icon' => 'bi-controller',        'icon_color' => 'text-warning'];
+      case 'FEU':
+        return ['class' => 'badge-light-warning',  'icon' => 'bi-building',          'icon_color' => 'text-warning'];
+      case 'IDEAS':
+        return ['class' => 'badge-light-info',     'icon' => 'bi-lightbulb',         'icon_color' => 'text-info'];
+      case 'CREATIVE':
+        return ['class' => 'badge-light-primary',  'icon' => 'bi-stars',             'icon_color' => 'text-primary'];
+      case 'SCIENCE':
+        return ['class' => 'badge-light-info',     'icon' => 'bi-droplet-half',      'icon_color' => 'text-info'];
+      case 'NEWS':
+        return ['class' => 'badge-light-danger',   'icon' => 'bi-newspaper',         'icon_color' => 'text-danger'];
+      case 'AI':
+        return ['class' => 'badge-light-success',  'icon' => 'bi-robot',             'icon_color' => 'text-success'];
+      case 'ACADEMICS':
+        return ['class' => 'badge-light-warning',  'icon' => 'bi-book',              'icon_color' => 'text-warning'];
+      case 'LIFESTYLE':
+        return ['class' => 'badge-light-info',     'icon' => 'bi-emoji-smile',       'icon_color' => 'text-info'];
+      case 'ENTERTAINMENT':
+        return ['class' => 'badge-light-primary',  'icon' => 'bi-film',              'icon_color' => 'text-primary'];
+      case 'MUSIC':
+        return ['class' => 'badge-light-danger',   'icon' => 'bi-music-note',        'icon_color' => 'text-danger'];
+      case 'POLITICS':
+        return ['class' => 'badge-light-dark',     'icon' => 'bi-megaphone',         'icon_color' => 'text-dark'];
+      case 'ISSUES':
+        return ['class' => 'badge-light-danger',   'icon' => 'bi-exclamation-circle', 'icon_color' => 'text-danger'];
+      case 'SPORTS':
+        return ['class' => 'badge-light-warning',  'icon' => 'bi-trophy',            'icon_color' => 'text-warning'];
+      default:
+        return ['class' => 'badge-light-secondary', 'icon' => 'bi-tag',               'icon_color' => 'text-secondary'];
     }
+  }
 }
 ?>
 <div id="kt_app_header" class="app-header bg-white" data-kt-sticky="true"
@@ -130,27 +143,27 @@ if (!function_exists('getCategoryBadgeStyle')) {
           }
           ?>
         </div>
-      <!-- 2. Profile Pic — Clickable Dropdown -->
-      <div class="app-navbar-item ms-1 ms-md-3" style="position:relative;">
-        <?php
-        $dropdown_partial = __DIR__ . '/_profile-dropdown.php';
-        if (file_exists($dropdown_partial)) {
-          include($dropdown_partial);
-        } else {
-          echo '<img src="/LAF/assets/images/catalina.webp" class="rounded-circle" style="width:40px;height:40px;" alt="user">';
-        }
-        ?>
-      </div>
+        <!-- 2. Profile Pic — Clickable Dropdown -->
+        <div class="app-navbar-item ms-1 ms-md-3" style="position:relative;">
+          <?php
+          $dropdown_partial = __DIR__ . '/_profile-dropdown.php';
+          if (file_exists($dropdown_partial)) {
+            include($dropdown_partial);
+          } else {
+            echo '<img src="/LAF/assets/images/catalina.webp" class="rounded-circle" style="width:40px;height:40px;" alt="user">';
+          }
+          ?>
+        </div>
 
-      <!-- Optional/Hidden Widgets -->
-      <div class="d-none">
-        <?php
-        include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-login.php');
-        include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-hamburger.php');
-        ?>
-      </div>
+        <!-- Optional/Hidden Widgets -->
+        <div class="d-none">
+          <?php
+          include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-login.php');
+          include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-hamburger.php');
+          ?>
+        </div>
 
+      </div>
     </div>
   </div>
-</div>
 </div>

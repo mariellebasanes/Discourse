@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include(dirname(dirname(__DIR__)) . '/functions-new.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/functions-new.php');
 
 $META_TITLE = "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
 $META_DESC  = "A post from FEU Tech Discourse community.";
@@ -22,12 +22,12 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
     data-kt-app-header-fixed-mobile="true"
     class="app-default">
 
-    <?php include(dirname(dirname(__DIR__)) . '/partials/_page-loader.php'); ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_page-loader.php'); ?>
 
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
-            <?php include(dirname(dirname(__DIR__)) . '/partials/_header.php'); ?>
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_header.php'); ?>
 
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -350,15 +350,15 @@ $META_DESC  = "A post from FEU Tech Discourse community.";
                         </main>
                     </div>
 
-                    <?php include(dirname(dirname(__DIR__)) . '/partials/_footer.php'); ?>
+                    <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_footer.php'); ?>
 
                 </div>
             </div>
         </div>
     </div>
 
-    <?php include(dirname(dirname(__DIR__)) . '/partials/_scrolltop.php'); ?>
-    <?php include(dirname(dirname(__DIR__)) . '/partials/_discourse-modals.php'); ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_scrolltop.php'); ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/Discourse/partials/_discourse-modals.php'); ?>
     
 
   <script src="/Discourse/assets/js/dashboard.js"></script>
