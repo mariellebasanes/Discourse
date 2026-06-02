@@ -1,4 +1,5 @@
 <?php
+include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
 
 // ── Topic config ────────────────────────────────────────────────────────────
 // In production, get this from $_GET['topic'] and validate it.
@@ -395,31 +396,32 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                 </div>
                                                 <div class="d-flex flex-wrap gap-2">
                                                     <?php
-                                                    $topicBadgeMap = [
-                                                        'TECHNOLOGY'    => ['class' => 'badge-light-primary',   'icon' => 'bi-cpu'],
-                                                        'CULTURE'       => ['class' => 'badge-light-danger',    'icon' => 'bi-palette'],
-                                                        'GAMING'        => ['class' => 'badge-light-warning',   'icon' => 'bi-controller'],
-                                                        'FEU'           => ['class' => 'badge-light-warning',   'icon' => 'bi-building'],
-                                                        'IDEAS'         => ['class' => 'badge-light-info',      'icon' => 'bi-lightbulb'],
-                                                        'CREATIVE'      => ['class' => 'badge-light-primary',   'icon' => 'bi-stars'],
-                                                        'SCIENCE'       => ['class' => 'badge-light-info',      'icon' => 'bi-droplet-half'],
-                                                        'NEWS'          => ['class' => 'badge-light-danger',    'icon' => 'bi-newspaper'],
-                                                        'AI'            => ['class' => 'badge-light-success',   'icon' => 'bi-robot'],
-                                                        'ACADEMICS'     => ['class' => 'badge-light-warning',   'icon' => 'bi-book'],
-                                                        'LIFESTYLE'     => ['class' => 'badge-light-info',      'icon' => 'bi-emoji-smile'],
-                                                        'ENTERTAINMENT' => ['class' => 'badge-light-primary',   'icon' => 'bi-film'],
-                                                        'MUSIC'         => ['class' => 'badge-light-danger',    'icon' => 'bi-music-note'],
-                                                        'POLITICS'      => ['class' => 'badge-light-dark',      'icon' => 'bi-megaphone'],
-                                                        'ISSUES'        => ['class' => 'badge-light-danger',    'icon' => 'bi-exclamation-circle'],
-                                                        'SPORTS'        => ['class' => 'badge-light-warning',   'icon' => 'bi-trophy'],
+                                                    $sidebarTopics = [
+                                                        'TECHNOLOGY',
+                                                        'CULTURE',
+                                                        'GAMING',
+                                                        'FEU',
+                                                        'IDEAS',
+                                                        'CREATIVE',
+                                                        'SCIENCE',
+                                                        'NEWS',
+                                                        'AI',
+                                                        'ACADEMICS',
+                                                        'LIFESTYLE',
+                                                        'ENTERTAINMENT',
+                                                        'MUSIC',
+                                                        'POLITICS',
+                                                        'ISSUES',
+                                                        'SPORTS'
                                                     ];
-                                                    foreach ($topicBadgeMap as $t => $b):
+                                                    foreach ($sidebarTopics as $t):
                                                         $isActive = ($t === $topic);
+                                                        $b = getCategoryBadgeStyle($t);
                                                     ?>
                                                         <a href="/Discourse/pages/view/topic.php?t=<?php echo $t; ?>"
                                                             class="badge <?php echo $b['class']; ?> rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold <?php echo $isActive ? 'dc-topic-tag-active' : ''; ?>"
                                                             style="<?php echo $isActive ? 'outline:2px solid currentColor;outline-offset:1px;' : ''; ?>">
-                                                            <i class="bi <?php echo $b['icon']; ?> me-1"></i><?php echo $t; ?>
+                                                            <i class="bi <?php echo $b['icon']; ?> <?php echo $b['icon_color']; ?> me-1"></i><?php echo $t; ?>
                                                         </a>
                                                     <?php endforeach; ?>
                                                 </div>
