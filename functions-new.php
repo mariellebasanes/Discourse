@@ -316,77 +316,66 @@ if (!function_exists('get_relative_time')) {
     }
 }
 
+if (!function_exists('getCategoryBadgeStyle')) {
+  function getCategoryBadgeStyle($category)
+  {
+    $cat = strtoupper(trim($category));
+    switch ($cat) {
+      case 'TECHNOLOGY':
+        return ['class' => 'badge-light-primary',  'icon' => 'bi-cpu',               'icon_color' => 'text-primary'];
+      case 'CULTURE':
+        return ['class' => 'badge-light-danger',   'icon' => 'bi-palette',           'icon_color' => 'text-danger'];
+      case 'GAMING':
+        return ['class' => 'badge-light-warning',  'icon' => 'bi-controller',        'icon_color' => 'text-warning'];
+      case 'FEU':
+        return ['class' => 'badge-light-warning',  'icon' => 'bi-building',          'icon_color' => 'text-warning'];
+      case 'IDEAS':
+        return ['class' => 'badge-light-info',     'icon' => 'bi-lightbulb',         'icon_color' => 'text-info'];
+      case 'CREATIVE':
+        return ['class' => 'badge-light-primary',  'icon' => 'bi-stars',             'icon_color' => 'text-primary'];
+      case 'SCIENCE':
+        return ['class' => 'badge-light-info',     'icon' => 'bi-droplet-half',      'icon_color' => 'text-info'];
+      case 'NEWS':
+        return ['class' => 'badge-light-danger',   'icon' => 'bi-newspaper',         'icon_color' => 'text-danger'];
+      case 'AI':
+        return ['class' => 'badge-light-success',  'icon' => 'bi-robot',             'icon_color' => 'text-success'];
+      case 'ACADEMICS':
+        return ['class' => 'badge-light-warning',  'icon' => 'bi-book',              'icon_color' => 'text-warning'];
+      case 'LIFESTYLE':
+        return ['class' => 'badge-light-info',     'icon' => 'bi-emoji-smile',       'icon_color' => 'text-info'];
+      case 'ENTERTAINMENT':
+        return ['class' => 'badge-light-primary',  'icon' => 'bi-film',              'icon_color' => 'text-primary'];
+      case 'MUSIC':
+        return ['class' => 'badge-light-danger',   'icon' => 'bi-music-note',        'icon_color' => 'text-danger'];
+      case 'POLITICS':
+        return ['class' => 'badge-light-dark',     'icon' => 'bi-megaphone',         'icon_color' => 'text-dark'];
+      case 'ISSUES':
+        return ['class' => 'badge-light-danger',   'icon' => 'bi-exclamation-circle', 'icon_color' => 'text-danger'];
+      case 'SPORTS':
+        return ['class' => 'badge-light-warning',  'icon' => 'bi-trophy',            'icon_color' => 'text-warning'];
+      default:
+        // Try case-insensitive substring matches
+        if (stripos($cat, 'TECH') !== false) {
+          return ['class' => 'badge-light-primary',  'icon' => 'bi-cpu',               'icon_color' => 'text-primary'];
+        } elseif (stripos($cat, 'ACAD') !== false) {
+          return ['class' => 'badge-light-warning',  'icon' => 'bi-book',              'icon_color' => 'text-warning'];
+        } elseif (stripos($cat, 'SPORT') !== false) {
+          return ['class' => 'badge-light-warning',  'icon' => 'bi-trophy',            'icon_color' => 'text-warning'];
+        } elseif (stripos($cat, 'LIFE') !== false) {
+          return ['class' => 'badge-light-info',     'icon' => 'bi-emoji-smile',       'icon_color' => 'text-info'];
+        } else {
+          return ['class' => 'badge-light-secondary', 'icon' => 'bi-tag',               'icon_color' => 'text-secondary'];
+        }
+    }
+  }
+}
+
 if (!function_exists('renderCategoryBadge')) {
     function renderCategoryBadge($category) {
-        $cat = strtoupper(trim($category));
-        $badgeClass = 'badge-light-primary';
-        
-        switch ($cat) {
-            case 'TECHNOLOGY':
-                $badgeClass = 'badge-light-primary';
-                break;
-            case 'CULTURE':
-                $badgeClass = 'badge-light-danger';
-                break;
-            case 'GAMING':
-                $badgeClass = 'badge-light-warning';
-                break;
-            case 'FEU':
-                $badgeClass = 'badge-light-warning';
-                break;
-            case 'IDEAS':
-                $badgeClass = 'badge-light-info';
-                break;
-            case 'CREATIVE':
-                $badgeClass = 'badge-light-primary';
-                break;
-            case 'SCIENCE':
-                $badgeClass = 'badge-light-info';
-                break;
-            case 'NEWS':
-                $badgeClass = 'badge-light-danger';
-                break;
-            case 'AI':
-                $badgeClass = 'badge-light-success';
-                break;
-            case 'ACADEMICS':
-                $badgeClass = 'badge-light-warning';
-                break;
-            case 'LIFESTYLE':
-                $badgeClass = 'badge-light-info';
-                break;
-            case 'ENTERTAINMENT':
-                $badgeClass = 'badge-light-primary';
-                break;
-            case 'MUSIC':
-                $badgeClass = 'badge-light-danger';
-                break;
-            case 'POLITICS':
-                $badgeClass = 'badge-light-dark';
-                break;
-            case 'ISSUES':
-                $badgeClass = 'badge-light-danger';
-                break;
-            case 'SPORTS':
-                $badgeClass = 'badge-light-warning';
-                break;
-            default:
-                // Try case-insensitive substring matches
-                if (stripos($cat, 'TECH') !== false) {
-                    $badgeClass = 'badge-light-primary';
-                } elseif (stripos($cat, 'ACAD') !== false) {
-                    $badgeClass = 'badge-light-warning';
-                } elseif (stripos($cat, 'SPORT') !== false) {
-                    $badgeClass = 'badge-light-warning';
-                } elseif (stripos($cat, 'LIFE') !== false) {
-                    $badgeClass = 'badge-light-info';
-                } else {
-                    $badgeClass = 'badge-light-success';
-                }
-                break;
-        }
-        
-        return '<span class="badge ' . $badgeClass . ' rounded-pill px-3 py-2 fs-8 fw-bold">' . htmlspecialchars($category) . '</span>';
+        $badge = getCategoryBadgeStyle($category);
+        return '<span class="badge ' . $badge['class'] . ' rounded-pill px-3 py-2 fs-8 fw-bold">' .
+               '<i class="bi ' . $badge['icon'] . ' ' . $badge['icon_color'] . ' me-1"></i>' .
+               htmlspecialchars($category) . '</span>';
     }
 }
 

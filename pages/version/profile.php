@@ -2,6 +2,11 @@
 define('MBG', TRUE);
 include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
 
+if (isset($_GET['id']) && trim($_GET['id']) !== $identification) {
+    header("Location: /Discourse/pages/version/profile-other.php?id=" . urlencode(trim($_GET['id'])));
+    exit;
+}
+
 $META_TITLE = htmlspecialchars($ACCOUNT['display_name']) . " - Discourse Profile";
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 ?>
@@ -237,9 +242,9 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             <span class="fw-bold text-dark fs-8"><?php echo $post['community']; ?></span>
                             <span class="text-muted fs-9">· <?php echo $post['time']; ?></span>
                           </div>
-                          <div class="mb-2">
-                            <span class="badge badge-<?php echo $post['tag_color']; ?> fw-bold tag-badge px-3 py-1"><?php echo $post['tag']; ?></span>
-                          </div>
+                           <div class="mb-2">
+                             <?php echo renderCategoryBadge($post['tag']); ?>
+                           </div>
                           <h4 class="fw-bolder fs-4 mb-2">
                             <a href="/Discourse/pages/version/view-post.php<?php echo !empty($post['image']) ? '?img=1' : ''; ?>" class="text-dark text-hover-primary"><?php echo $post['title']; ?></a>
                           </h4>

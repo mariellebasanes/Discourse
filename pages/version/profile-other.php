@@ -3,6 +3,10 @@ define('MBG', TRUE);
 include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
 
 $other_id = isset($_GET['id']) ? trim($_GET['id']) : 'T202210344'; // Sofia Karim
+if ($other_id === $identification) {
+    header("Location: /Discourse/pages/version/profile.php");
+    exit;
+}
 $other_account = GET_ACCOUNT_DETAILS($other_id);
 
 $META_TITLE = htmlspecialchars($other_account['display_name']) . " - Discourse Profile";
@@ -242,7 +246,7 @@ $user_name = strtoupper($other_account['display_name']);
                             <span class="text-muted fs-9">· <?php echo $post['time']; ?></span>
                           </div>
                           <div class="mb-2">
-                            <span class="badge badge-<?php echo $post['tag_color']; ?> fw-bold tag-badge px-3 py-1"><?php echo $post['tag']; ?></span>
+                             <?php echo renderCategoryBadge($post['tag']); ?>
                           </div>
                           <h4 class="fw-bolder fs-4 mb-2">
                             <a href="/Discourse/pages/version/view-post.php<?php echo !empty($post['image']) ? '?img=1' : ''; ?>" class="text-dark text-hover-primary"><?php echo $post['title']; ?></a>
