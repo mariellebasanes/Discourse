@@ -27,7 +27,7 @@ $comments  = [];
 if ($EDITH && $post_id > 0) {
     $stmt = $EDITH->prepare("SELECT p.*, a.display_name, a.avatar_md, a.role as author_role
                              FROM posts p
-                             JOIN accounts a ON p.author_id = a.identification
+                             LEFT JOIN accounts a ON p.author_id = a.identification
                              WHERE p.id = ?");
     if ($stmt) {
         $stmt->bind_param("i", $post_id);
@@ -85,9 +85,14 @@ if ($post) {
     $showSample      = false;
     $postTitle       = $post['title'];
     $postDesc        = $post['body'];
-    $authorName      = $isAnon ? 'Anonymous' : ($post['display_name'] ?? 'User');
+    
+    $authorAccount   = GET_ACCOUNT_DETAILS($post['author_id']);
+    $dbDisplayName   = $post['display_name'] ?? $authorAccount['display_name'] ?? 'User';
+    $dbAvatar        = $post['avatar_md'] ?? $authorAccount['avatar_md'] ?? '';
+    
+    $authorName      = $isAnon ? 'Anonymous' : $dbDisplayName;
     $authorInitials  = $isAnon ? 'A' : implode('', array_map(fn($w) => $w[0] ?? '', explode(' ', $authorName)));
-    $authorAvatar    = $isAnon ? '/Discourse/assets/images/anonymous.png' : ($post['avatar_md'] ?? '');
+    $authorAvatar    = $isAnon ? '/Discourse/assets/images/anonymous.png' : $dbAvatar;
     $authorProfileLink = $isAnon ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . $post['author_id'];
     $bannerMeta      = $post['community'] . ' • Posted by ' . $authorName . ' • ' . get_relative_time($post['created_at']);
     $tag             = !empty($post['tags']) ? $post['tags'] : $post['topic'];
@@ -275,26 +280,6 @@ if (!$db_post_loaded && $showImage) {
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
-        }
-
-        .posting-as-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 10px;
-            font-weight: 600;
-            color: #6b7280;
-            background: #f3f4f6;
-            border-radius: 99px;
-            padding: 3px 10px;
-            border: 1px solid #e5e7eb;
-            transition: all 0.2s;
-        }
-
-        .posting-as-badge.anon-mode {
-            background: #fff7ed;
-            border-color: #fed7aa;
-            color: #c2410c;
         }
 
         .btn-save.saved {
@@ -600,10 +585,6 @@ if (!$db_post_loaded && $showImage) {
                                                             </button>
                                                         </div>
                                                         <div class="comment-input-controls">
-                                                            <span class="posting-as-badge" id="posting-as-badge">
-                                                                <i class="bi bi-person-fill" style="font-size:10px;"></i>
-                                                                Posting as <strong id="posting-as-name"><?php echo $authorName; ?></strong>
-                                                            </span>
                                                             <label class="anon-toggle-wrapper" id="anon-toggle-wrapper" for="anon-toggle-checkbox">
                                                                 <i class="bi bi-incognito anon-icon"></i>
                                                                 <span class="anon-label">Post anonymously</span>
@@ -809,17 +790,12 @@ if (!$db_post_loaded && $showImage) {
             $('#anon-toggle-checkbox').on('change', function() {
                 isAnonymous = $(this).is(':checked');
                 const wrapper = $('#anon-toggle-wrapper');
-                const badge = $('#posting-as-badge');
                 const avatar = $('#commenter-initials');
                 if (isAnonymous) {
                     wrapper.addClass('is-anon');
-                    badge.addClass('anon-mode');
-                    badge.html('<i class="bi bi-incognito" style="font-size:10px;"></i> Posting as <strong>Anonymous</strong>');
                     avatar.text('A').css('background', '#ea580c');
                 } else {
                     wrapper.removeClass('is-anon');
-                    badge.removeClass('anon-mode');
-                    badge.html('<i class="bi bi-person-fill" style="font-size:10px;"></i> Posting as <strong>' + realName + '</strong>');
                     avatar.text(realInitials).css('background', '');
                 }
             });
@@ -894,7 +870,7 @@ if (!$db_post_loaded && $showImage) {
             });
 
             // ── Reply System ────────────────────────────────────────────
-            function buildCommentHtml(displayName, displayInitials, avatarBg, text, anonBadgeHtml, replyingTo) {
+            function buildCommentHtml(displayName, displayInitials, avatarBg, text, replyingTo) {
                 const replyTag = replyingTo
                     ? `<span class="text-muted fs-9 me-1">replying to</span><span class="fw-bold text-success fs-9">@${replyingTo}</span>`
                     : '';
@@ -906,7 +882,6 @@ if (!$db_post_loaded && $showImage) {
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
                             <span class="fw-bolder text-dark fs-7">${displayName}</span>
-                            ${anonBadgeHtml}
                             ${replyTag}
                             <span class="text-muted fs-9">Just now</span>
                         </div>
@@ -952,7 +927,6 @@ if (!$db_post_loaded && $showImage) {
                 </div>`;
             }
 
-            // Live anon toggle inside inline composer — update avatar + label
             $(document).on('change', '.reply-anon-checkbox', function() {
                 const composer  = $(this).closest('.inline-composer');
                 const wrapper   = $(this).closest('.reply-anon-toggle');
@@ -1086,7 +1060,7 @@ if (!$db_post_loaded && $showImage) {
                 const anonBadgeHtml = isAnonymous
                     ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>`
                     : '';
-                const newBlockHtml = `<div class="mb-4">${buildCommentHtml(displayName, displayInitials, avatarBg, text, anonBadgeHtml, null)}<div class="reply-thread-area ps-5 mt-2"></div><div class="reply-composer ps-5 mt-1" style="display:none;"></div></div>`;
+                const newBlockHtml = `<div class="mb-4">${buildCommentHtml(displayName, displayInitials, avatarBg, text, null)}<div class="reply-thread-area ps-5 mt-2"></div><div class="reply-composer ps-5 mt-1" style="display:none;"></div></div>`;
                 $('#comments-container').append(newBlockHtml);
                 input.val('');
                 commentCount++;

@@ -101,3 +101,10 @@
   text-decoration: underline !important;
 }
 
+/* ── Post action icons monochromatic ───────────────────── */
+.dc-post-save i,
+.dc-post-highlight i,
+.dc-post-comment i,
+.dc-post-share i {
+  color: currentColor !important;
+}
