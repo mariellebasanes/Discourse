@@ -448,7 +448,7 @@ if (!$db_post_loaded && $showImage) {
                                                             </button>
                                                             <?php } ?>
                                                         <?php } ?>
-                                                        <button class="btn btn-sm btn-light-muted vote-btn text-danger d-flex align-items-center gap-1 px-3 py-2 rounded-pill"
+                                                        <button class="btn btn-sm btn-light-muted vote-btn text-danger dc-post-report d-flex align-items-center gap-1 px-3 py-2 rounded-pill"
                                                             data-bs-toggle="modal" data-bs-target="#modalReportPost">
                                                             <i class="bi bi-flag fs-7 text-danger"></i> <span class="fw-bold fs-8">Report</span>
                                                         </button>

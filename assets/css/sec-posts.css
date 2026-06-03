@@ -95,16 +95,11 @@
   text-decoration: none !important;
   display: inline-block;
   margin-top: 2px;
-}
-
-.dc-see-more-link:hover {
-  text-decoration: underline !important;
-}
-
 /* ── Post action icons monochromatic ───────────────────── */
 .dc-post-save i,
 .dc-post-highlight i,
 .dc-post-comment i,
-.dc-post-share i {
+.dc-post-share i,
+.dc-post-report i {
   color: currentColor !important;
 }

@@ -309,7 +309,7 @@ if (!function_exists('profile_relative_time')) {
                                     </div>
                                     <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/<?php echo htmlspecialchars($post['community'] ?? ''); ?></span>
                                   </a>
-                                  <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
+                                  <button class="btn btn-sm dc-post-report" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                                     <i class="bi bi-flag me-1"></i> Report
                                   </button>
                                 </div>
