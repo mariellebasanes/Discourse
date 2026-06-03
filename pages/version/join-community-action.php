@@ -32,6 +32,19 @@ if ($EDITH) {
     }
 
     if ($is_member) {
+        // Check if user is the admin of the community
+        $stmt_admin = $EDITH->prepare("SELECT admin_id FROM communities WHERE title = ?");
+        if ($stmt_admin) {
+            $stmt_admin->bind_param("s", $community_title);
+            $stmt_admin->execute();
+            $res_admin = $stmt_admin->get_result()->fetch_assoc();
+            $stmt_admin->close();
+            if ($res_admin && $res_admin['admin_id'] === $user_id) {
+                echo json_encode(['success' => false, 'message' => 'You cannot leave this community because you are the admin. Please assign a new admin first or delete the community under Settings.']);
+                exit;
+            }
+        }
+
         // Leave community
         $stmt = $EDITH->prepare("DELETE FROM community_members WHERE community_title = ? AND identification = ?");
         if ($stmt) {

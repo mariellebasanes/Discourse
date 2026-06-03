@@ -337,7 +337,7 @@ if (!function_exists('profile_relative_time')) {
                                   </a>
                                   <?php if (!empty($post['body'])): ?>
                                   <div class="dc-body-wrap">
-                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo htmlspecialchars(mb_substr(strip_tags($post['body']), 0, 200)) . (mb_strlen(strip_tags($post['body'])) > 200 ? '...' : ''); ?></span>
+                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo linkHashtags(htmlspecialchars(mb_substr(strip_tags($post['body']), 0, 200))) . (mb_strlen(strip_tags($post['body'])) > 200 ? '...' : ''); ?></span>
                                     <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                   </div>
                                   <?php endif; ?>
@@ -356,7 +356,10 @@ if (!function_exists('profile_relative_time')) {
                               <div class="d-flex justify-content-start align-items-center w-100 px-5">
                                 <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $po_commentCount; ?> Comment<?php echo $po_commentCount == 1 ? '' : 's'; ?></button>
                                 <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
+                                 <?php $po_saved = IS_POST_SAVED($post['id'], $identification); ?>
+                                 <button class="btn btn-sm dc-post-save" data-on="<?php echo $po_saved ? '1' : '0'; ?>" style="<?php echo $po_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
+                                     <i class="bi <?php echo $po_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i> <?php echo $po_saved ? 'Saved' : 'Save'; ?>
+                                 </button>
                               </div>
                             </div>
 
@@ -517,6 +520,7 @@ if (!function_exists('profile_relative_time')) {
       });
     });
   </script>
+  <script src="/Discourse/assets/js/sec-posts.js"></script>
 </body>
 
 </html>

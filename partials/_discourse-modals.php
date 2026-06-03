@@ -73,58 +73,78 @@
 <!-- ══════════════════════════════════════════════════════════
      2. PROFILE DROPDOWN
 ══════════════════════════════════════════════════════════ -->
+<?php
+$m_name   = $ACCOUNT['display_name'] ?? 'User';
+$m_id     = $identification ?? '';
+$m_avatar = !empty($ACCOUNT['avatar_md']) ? $ACCOUNT['avatar_md'] : '/Discourse/assets/images/anonymous.png';
+$m_role   = $ACCOUNT['role'] ?? 'Student';
+
+$m_karma    = 0;
+$m_posts    = 0;
+$m_comments = 0;
+$m_saved    = 0;
+if ($EDITH && $m_id) {
+    $eid = $EDITH->real_escape_string($m_id);
+    $r = $EDITH->query("SELECT COALESCE(SUM(upvotes),0) as k FROM posts WHERE author_id='$eid'");
+    $m_karma = $r ? (int)$r->fetch_assoc()['k'] : 0;
+    $r = $EDITH->query("SELECT COUNT(*) as c FROM posts WHERE author_id='$eid' AND is_anonymous=0");
+    $m_posts = $r ? (int)$r->fetch_assoc()['c'] : 0;
+    $r = $EDITH->query("SELECT COUNT(*) as c FROM comments WHERE author_id='$eid'");
+    $m_comments = $r ? (int)$r->fetch_assoc()['c'] : 0;
+    $r = $EDITH->query("SELECT COUNT(*) as c FROM saved_posts WHERE identification='$eid'");
+    $m_saved = $r ? (int)$r->fetch_assoc()['c'] : 0;
+}
+$m_karma_fmt = $m_karma >= 1000 ? round($m_karma/1000, 1).'k' : $m_karma;
+?>
 <div class="dropdown-menu p-0 discourse-profile-dropdown" id="discourseProfileDropdown" aria-labelledby="discourseProfileAvatar">
 
 
   <div class="discourse-profile-top d-flex align-items-center gap-3 p-4">
-    <img src="assets/images/catalina.webp" alt="Catalina Smith"
-      class="discourse-profile-avatar-lg rounded-circle flex-shrink-0" />
+    <img src="<?php echo htmlspecialchars($m_avatar); ?>" alt="<?php echo htmlspecialchars($m_name); ?>"
+      class="discourse-profile-avatar-lg rounded-circle flex-shrink-0" style="width: 52px; height: 52px; object-fit: cover;" />
     <div class="d-flex flex-column gap-1 flex-grow-1 overflow-hidden">
-      <span class="fs-6 fw-bolder text-white lh-sm">Catalina Smith</span>
-      <span class="fs-8 text-white opacity-75 lh-sm">T202210292 · BS Information Technology</span>
+      <span class="fs-6 fw-bolder text-white lh-sm"><?php echo htmlspecialchars($m_name); ?></span>
+      <span class="fs-8 text-white opacity-75 lh-sm"><?php echo htmlspecialchars($m_id); ?> · <?php echo htmlspecialchars($m_role); ?></span>
       <span class="discourse-profile-verified">
-        <i class="bi bi-shield-check me-1"></i> Verified Student
+        <i class="bi bi-shield-check me-1"></i> Verified <?php echo htmlspecialchars($m_role); ?>
       </span>
     </div>
   </div>
 
   <div class="d-flex justify-content-around align-items-center py-3 border-bottom border-top">
     <div class="d-flex flex-column align-items-center">
-      <span class="fs-5 fw-bolder text-gray-800 lh-1">304</span>
+      <span class="fs-5 fw-bolder text-gray-800 lh-1"><?php echo $m_karma_fmt; ?></span>
       <span class="fs-8 fw-bold text-muted text-uppercase mt-1">Karma</span>
     </div>
     <div class="d-flex flex-column align-items-center">
-      <span class="fs-5 fw-bolder text-gray-800 lh-1">3</span>
+      <span class="fs-5 fw-bolder text-gray-800 lh-1"><?php echo $m_posts; ?></span>
       <span class="fs-8 fw-bold text-muted text-uppercase mt-1">Posts</span>
     </div>
     <div class="d-flex flex-column align-items-center">
-      <span class="fs-5 fw-bolder text-gray-800 lh-1">7</span>
+      <span class="fs-5 fw-bolder text-gray-800 lh-1"><?php echo $m_comments; ?></span>
       <span class="fs-8 fw-bold text-muted text-uppercase mt-1">Comments</span>
     </div>
     <div class="d-flex flex-column align-items-center">
-      <span class="fs-5 fw-bolder text-gray-800 lh-1">1</span>
+      <span class="fs-5 fw-bolder text-gray-800 lh-1"><?php echo $m_saved; ?></span>
       <span class="fs-8 fw-bold text-muted text-uppercase mt-1">Saved</span>
     </div>
   </div>
 
   <div class="px-2 py-2 border-bottom">
     <span class="d-block fs-8 fw-bolder text-muted text-uppercase px-3 py-1 ls-1">Account</span>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/pages/version/profile.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-person me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> View My Profile
     </a>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/pages/version/profile.php?tab=posts" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-file-text me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> My Posts
     </a>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/pages/version/profile.php?tab=comments" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-chat-left-text me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> My Comments
     </a>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
-      <i class="bi bi-hand-thumbs-up me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> Liked Posts
-    </a>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/pages/version/profile.php?tab=saved" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-bookmark me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> Saved Posts
     </a>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/pages/version/community-home-page.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-people me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> My Communities
     </a>
   </div>
@@ -132,23 +152,22 @@
   <!-- Settings Links -->
   <div class="px-2 py-2 border-bottom">
     <span class="d-block fs-8 fw-bolder text-muted text-uppercase px-3 py-1 ls-1">Settings</span>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/pages/version/profile.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-gear me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> Settings
     </a>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
-      <i class="bi bi-shield-lock me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> Privacy and Security
-    </a>
-    <a href="#profile" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-grid-3x3-gap me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> Paraverse Portal
     </a>
   </div>
 
   <!-- Log Out -->
   <div class="px-2 py-2">
-    <a href="#" class="d-flex align-items-center fs-7 fw-bold text-danger text-hover-danger text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/pages/version/logout.php" class="d-flex align-items-center fs-7 fw-bold text-danger text-hover-danger text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-box-arrow-right me-3 fs-6" style="width:16px;text-align:center;"></i> Log Out
     </a>
   </div>
+
+</div>
 
 </div>
 

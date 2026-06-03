@@ -349,7 +349,7 @@ if (!function_exists('profile_relative_time')) {
                                   </a>
                                   <?php if (!empty($post['body'])): ?>
                                   <div class="dc-body-wrap">
-                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo strip_tags($post['body']); ?></span>
+                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo linkHashtags(strip_tags($post['body'])); ?></span>
                                     <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                   </div>
                                   <?php endif; ?>
@@ -368,9 +368,9 @@ if (!function_exists('profile_relative_time')) {
                               <div class="d-flex justify-content-start align-items-center w-100 px-5">
                                 <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comments']; ?> Comment<?php echo $post['comments'] == 1 ? '' : 's'; ?></button>
                                 <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                <button class="btn btn-sm dc-post-save"
-                                        data-on="<?php echo $p_saved ? '1' : '0'; ?>"
-                                        style="<?php echo $p_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                                 <button class="btn btn-sm dc-post-save"
+                                         data-on="<?php echo $p_saved ? '1' : '0'; ?>"
+                                         style="<?php echo $p_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
                                   <i class="bi <?php echo $p_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                   <?php echo $p_saved ? 'Saved' : 'Save'; ?>
                                 </button>
@@ -596,7 +596,7 @@ if (!function_exists('profile_relative_time')) {
                                                           </a>
                                                       </h3>
                                                       <div class="dc-body-wrap">
-                                                          <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo strip_tags($post['body']); ?></span>
+                                                          <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo linkHashtags(strip_tags($post['body'])); ?></span>
                                                           <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                                       </div>
                                                   </div>
@@ -611,9 +611,9 @@ if (!function_exists('profile_relative_time')) {
                                                   <?php 
                                                   $is_saved = IS_POST_SAVED($post['id'], $identification);
                                                   ?>
-                                                  <button class="btn btn-sm dc-post-save" 
-                                                          data-on="<?php echo $is_saved ? '1' : '0'; ?>"
-                                                          style="<?php echo $is_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                                                   <button class="btn btn-sm dc-post-save" 
+                                                           data-on="<?php echo $is_saved ? '1' : '0'; ?>"
+                                                           style="<?php echo $is_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
                                                       <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                                       <?php echo $is_saved ? 'Saved' : 'Save'; ?>
                                                   </button>

@@ -20,6 +20,28 @@ if ($row && !empty($row['custom_topics'])) {
     $custom = array_filter(array_map('trim', explode(',', $row['custom_topics'])));
     echo json_encode(['topics' => array_values($custom), 'source' => 'custom']);
 } else {
-    echo json_encode(['topics' => $global_topics, 'source' => 'global']);
+    $seed_defaults = [
+        "FEU LIFE" => ["FEULife", "CampusLife", "Enrollment", "Events"],
+        "FEU ALABANG LIFE" => ["AlabangLife", "CampusLife", "Enrollment", "Events"],
+        "Freshies" => ["Freshies", "Advice", "General"],
+        "Enrollment" => ["Enrollment", "Diliman", "Requirements"],
+        "Cosplaying" => ["Cosplay", "Anime", "Gaming", "Events"],
+        "FEU TECH DEV" => ["Development", "Programming", "WebDev", "Projects"],
+        "Food Trip Around TECH" => ["Food", "Restaurants", "TechArea"],
+        "Thesis Advice" => ["Thesis", "Advice", "Research", "Defense"],
+        "Alabang Innovators" => ["Startups", "Innovation", "Tech"],
+        "Diliman Artists" => ["Art", "Creative", "Design"],
+        "Tech Support" => ["TechSupport", "IT", "Help"],
+        "Study Group" => ["Study", "Groups", "Academics"]
+    ];
+    $topics = ["GENERAL"];
+    $title_key = str_replace(' ', '', strtolower($community));
+    foreach ($seed_defaults as $s_title => $s_topics) {
+        if (str_replace(' ', '', strtolower($s_title)) === $title_key) {
+            $topics = $s_topics;
+            break;
+        }
+    }
+    echo json_encode(['topics' => $topics, 'source' => 'seed_or_general']);
 }
 exit;

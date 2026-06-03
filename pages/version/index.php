@@ -117,12 +117,14 @@ $META_TITLE = "Discourse - FEU Communities";
                         $comm_members = $community['members'];
                         $comm_posts = $community['posts'];
                     ?>
-                    <div class="col-md-4 col-lg-3 community-item" data-category="<?php echo htmlspecialchars($comm_cat); ?>">
+                    <div class="col-md-4 col-lg-3 community-item" data-category="<?php echo htmlspecialchars($comm_cat); ?>" data-is-admin="<?php echo ($community['admin_id'] === $identification) ? '1' : '0'; ?>">
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body p-6 text-center d-flex flex-column">
                                 <div class="mb-4 d-flex justify-content-center">
-                                    <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm <?php echo $community['bg_class'] ?? 'bg-light-success'; ?>">
-                                        <i class="bi <?php echo $community['icon'] ?? 'bi-people-fill'; ?> fs-2hx <?php echo $community['text_class'] ?? 'text-success'; ?>"></i>
+                                    <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="<?php echo !empty($community['logo_url']) ? 'background-image: url(\'' . htmlspecialchars($community['logo_url']) . '\'); background-size: cover; background-position: center;' : getLightColorStyle($community['theme_color']); ?>">
+                                        <?php if (empty($community['logo_url'])) { ?>
+                                        <i class="bi <?php echo htmlspecialchars($community['icon'] ?? 'bi-people-fill'); ?> fs-2hx"></i>
+                                        <?php } ?>
                                     </div>
                                 </div>
                                 <h3 class="fs-6 fw-bolder mb-2 text-dark">
@@ -191,17 +193,35 @@ $META_TITLE = "Discourse - FEU Communities";
                                                 <option value="FEU DILIMAN">FEU DILIMAN</option>
                                             </select>
                                         </div>
-                                        <div class="col-6">
-                                            <label class="fs-6 fw-bold mb-2 text-dark">Import profile</label>
-                                            <div class="form-control form-control-solid bg-light text-center text-muted py-3 fw-semibold" style="cursor: pointer;">
-                                                Upload image
-                                            </div>
+                                         <div class="col-6">
+                                             <label class="fs-6 fw-bold mb-2 text-dark">Import Profile</label>
+                                             <input type="file" id="comm-logo" name="logo" class="form-control form-control-solid bg-light" accept="image/*" />
+                                         </div>
+                                    </div>
+
+                                    <div class="row mb-6">
+                                        <div class="col-12">
+                                            <label class="fs-6 fw-bold mb-2 text-dark">Community Icon (if no image)</label>
+                                            <select id="comm-icon" class="form-select form-select-solid bg-light" required>
+                                                <option value="bi-people-fill" selected>People / General</option>
+                                                <option value="bi-heart-fill">Life / Health</option>
+                                                <option value="bi-cup-hot-fill">Food / Cafe</option>
+                                                <option value="bi-palette-fill">Art / Creative</option>
+                                                <option value="bi-journal-bookmark-fill">Academics / Library</option>
+                                                <option value="bi-lightbulb-fill">Startup / Ideas</option>
+                                                <option value="bi-building-fill">Campus / Buildings</option>
+                                                <option value="bi-cpu-fill">Dev / Tech</option>
+                                                <option value="bi-mortarboard-fill">Graduation</option>
+                                                <option value="bi-trophy-fill">Sports / Gaming</option>
+                                                <option value="bi-music-note-beamed">Music / Ent.</option>
+                                                <option value="bi-exclamation-circle">Support / Issues</option>
+                                            </select>
                                         </div>
                                     </div>
                                     
                                     <div class="fv-row mb-6">
                                         <label class="fs-6 fw-bold mb-2 text-dark">Theme Color</label>
-                                        <div class="d-flex align-items-center gap-3 theme-color-picker">
+                                        <div class="d-flex align-items-center gap-3 theme-color-picker flex-wrap">
                                             <div class="w-30px h-30px rounded-circle cursor-pointer border border-2 border-white shadow-sm theme-color-btn active" style="background-color: #1A8B44;" data-color="#1A8B44"></div>
                                             <div class="w-30px h-30px rounded-circle cursor-pointer border border-2 border-white shadow-sm theme-color-btn" style="background-color: #0b5ed7;" data-color="#0b5ed7"></div>
                                             <div class="w-30px h-30px rounded-circle cursor-pointer border border-2 border-white shadow-sm theme-color-btn" style="background-color: #6610f2;" data-color="#6610f2"></div>
@@ -209,6 +229,7 @@ $META_TITLE = "Discourse - FEU Communities";
                                             <div class="w-30px h-30px rounded-circle cursor-pointer border border-2 border-white shadow-sm theme-color-btn" style="background-color: #dc3545;" data-color="#dc3545"></div>
                                             <div class="w-30px h-30px rounded-circle cursor-pointer border border-2 border-white shadow-sm theme-color-btn" style="background-color: #6c757d;" data-color="#6c757d"></div>
                                             <div class="w-30px h-30px rounded-circle cursor-pointer border border-2 border-white shadow-sm theme-color-btn" style="background-color: #212529;" data-color="#212529"></div>
+                                            <input type="color" id="comm-theme-color-custom" class="form-control form-control-solid p-0 border-0 cursor-pointer rounded-circle" style="width: 30px; height: 30px;" value="#1A8B44" title="Choose custom color" />
                                         </div>
                                     </div>
                                     
@@ -243,15 +264,16 @@ $META_TITLE = "Discourse - FEU Communities";
     $(document).ready(function() {
         // 1. Handle theme color selection
         $('.theme-color-btn').on('click', function() {
-            // Remove active class from all buttons
             $('.theme-color-btn').removeClass('active');
-            // Add active class to clicked button
+            $('#comm-theme-color-custom').removeClass('active');
             $(this).addClass('active');
-            
-            // Get selected color
             const selectedColor = $(this).attr('data-color');
-            
-            // Apply color to modal header
+            $('.modal-theme-header').css('background-color', selectedColor);
+        });
+        $('#comm-theme-color-custom').on('input change', function() {
+            $('.theme-color-btn').removeClass('active');
+            $(this).addClass('active');
+            const selectedColor = $(this).val();
             $('.modal-theme-header').css('background-color', selectedColor);
         });
 
@@ -292,59 +314,66 @@ $META_TITLE = "Discourse - FEU Communities";
             const desc = $('#comm-desc').val();
             let cat = $('#comm-cat').val();
             if (!cat) cat = 'my-communities';
-            const activeColor = $('.theme-color-btn.active').attr('data-color') || '#1A8B44';
+            const activeColor = $('.theme-color-btn.active').length ? $('.theme-color-btn.active').attr('data-color') : ($('#comm-theme-color-custom').val() || '#1A8B44');
+            const selectedIcon = $('#comm-icon').val() || 'bi-people-fill';
+            
+            var formData = new FormData();
+            formData.append('name', name);
+            formData.append('desc', desc);
+            formData.append('School', cat);
+            formData.append('theme_color', activeColor);
+            formData.append('icon', selectedIcon);
+            
+            var logoFile = $('#comm-logo')[0].files[0];
+            if (logoFile) {
+                formData.append('logo', logoFile);
+            }
+            
+            function hexToRgba(hex, opacity) {
+                hex = hex.replace('#', '');
+                let r, g, b;
+                if (hex.length === 3) {
+                    r = parseInt(hex.charAt(0) + hex.charAt(0), 16);
+                    g = parseInt(hex.charAt(1) + hex.charAt(1), 16);
+                    b = parseInt(hex.charAt(2) + hex.charAt(2), 16);
+                } else {
+                    r = parseInt(hex.substring(0, 2), 16);
+                    g = parseInt(hex.substring(2, 4), 16);
+                    b = parseInt(hex.substring(4, 6), 16);
+                }
+                return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            }
             
             $.ajax({
                 url: '/Discourse/pages/version/create-community-action.php',
                 type: 'POST',
-                data: {
-                    name: name,
-                    desc: desc,
-                    category: cat,
-                    theme_color: activeColor
-                },
+                data: formData,
+                processData: false,
+                contentType: false,
                 dataType: 'json',
                 success: function(response) {
                     if (response.status === 'success') {
                         const comm = response.community;
                         
-                        // Icon configuration based on category or name
-                        let icon = comm.icon || 'bi-cpu';
-                        let bgClass = comm.bg_class || 'bg-light-success';
-                        let textClass = comm.text_class || 'text-success';
-                        
-                        // We need to resolve standard colors for the logo container
-                        // mapping to the colors returned by getCommunityIconDetails in PHP
-                        let iconStyles = '';
-                        if (icon === 'bi-heart-fill') {
-                            iconStyles = 'background-color: #fce7f3; color: #9d174d;';
-                        } else if (icon === 'bi-people-fill') {
-                            iconStyles = 'background-color: #dbeafe; color: #1e3a8a;';
-                        } else if (icon === 'bi-cup-hot-fill') {
-                            iconStyles = 'background-color: #fef3c7; color: #92400e;';
-                        } else if (icon === 'bi-palette-fill') {
-                            iconStyles = 'background-color: #e0f2fe; color: #0c4a6e;';
-                        } else if (icon === 'bi-journal-bookmark-fill') {
-                            iconStyles = 'background-color: #ede9fe; color: #4c1d95;';
-                        } else if (icon === 'bi-lightbulb-fill') {
-                            iconStyles = 'background-color: #fff7ed; color: #7c2d12;';
-                        } else if (icon === 'bi-building-fill') {
-                            iconStyles = 'background-color: #fef9c3; color: #713f12;';
-                        } else if (icon === 'bi-mortarboard-fill') {
-                            iconStyles = 'background-color: #dbeafe; color: #1e3a8a;';
+                        let logoStyles = '';
+                        let logoIconHtml = `<i class="bi ${comm.icon} fs-2hx" style="color: ${comm.theme_color} !important;"></i>`;
+                        if (comm.logo_url) {
+                            logoStyles = `background-image: url('${comm.logo_url}'); background-size: cover; background-position: center;`;
+                            logoIconHtml = '';
                         } else {
-                            iconStyles = 'background-color: #d1fae5; color: #065f46;';
+                            logoStyles = `background-color: ${hexToRgba(comm.theme_color, 0.1)} !important; color: ${comm.theme_color} !important;`;
                         }
 
-                        const newCard = `
-                        <div class="col-md-4 col-lg-3 community-item" data-category="${comm.category}" style="display: none;">
-                            <div class="card h-100 shadow-sm border-0">
-                                <div class="card-body p-6 text-center d-flex flex-column">
-                                    <div class="mb-4 d-flex justify-content-center">
-                                        <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="${iconStyles}">
-                                            <i class="bi ${icon} fs-2hx"></i>
-                                        </div>
-                                    </div>
+                         const newCard = `
+                         <div class="col-md-4 col-lg-3 community-item" data-category="${comm.category}" data-is-admin="1" style="display: none;">
+                             <div class="card h-100 shadow-sm border-0">
+                                 <div class="card-body p-6 text-center d-flex flex-column">
+                                     <div class="mb-4 d-flex justify-content-center">
+                                         <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="${logoStyles}">
+                                             ${logoIconHtml}
+                                         </div>
+                                     </div>  
+                                    
                                     <h3 class="fs-6 fw-bolder mb-2 text-dark">
                                         <a href="/Discourse/pages/version/community.php?c=${encodeURIComponent(comm.title)}" class="text-dark text-hover-success">${comm.title}</a>
                                     </h3>
@@ -403,6 +432,13 @@ $META_TITLE = "Discourse - FEU Communities";
             const commTitle = btn.attr('data-comm-title');
             const card = btn.closest('.community-item');
             const memberCountSpan = card.find('.comm-members-val');
+            
+            const isAdmin = card.attr('data-is-admin') === '1';
+            const isJoined = btn.find('.join-btn-text').text().trim() === 'JOINED';
+            if (isJoined && isAdmin) {
+                alert('You cannot leave this community because you are the admin. Please assign a new admin first.');
+                return;
+            }
 
             $.ajax({
                 url: '/Discourse/pages/version/join-community-action.php',

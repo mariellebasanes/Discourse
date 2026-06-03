@@ -9,13 +9,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $title = isset($_POST['title']) ? trim($_POST['title']) : '';
 $body = isset($_POST['body']) ? trim($_POST['body']) : '';
-$community = isset($_POST['community']) ? trim($_POST['community']) : 'FEUTech';
+$community = isset($_POST['community']) ? trim($_POST['community']) : '';
 $topic = isset($_POST['topic']) ? trim($_POST['topic']) : 'GENERAL';
 $tags = isset($_POST['tags']) ? trim($_POST['tags']) : '';
-$is_anonymous = isset($_POST['is_anonymous']) ? 1 : 0;
+$is_anonymous = (isset($_POST['is_anonymous']) && $_POST['is_anonymous'] == '1') ? 1 : 0;
+$redirect_back_url = isset($_POST['redirect_back']) ? $_POST['redirect_back'] : '/Discourse/pages/version/create-post.php';
 
-if (empty($title) || empty($topic)) {
-    header("Location: /Discourse/pages/view/create-post.php?error=missing_fields");
+if (empty($title) || empty($topic) || empty($body)) {
+    $redirect_back = $redirect_back_url . "?error=missing_fields";
+    if (!empty($community)) {
+        $redirect_back .= "&c=" . urlencode($community);
+    }
+    header("Location: " . $redirect_back);
     exit();
 }
 
@@ -56,18 +61,35 @@ function generateUniqueSlug($title) {
 $slug = generateUniqueSlug($title);
 $author_id = $identification; // From functions-new.php
 
+// Handle post image upload
+$image_url = null;
+if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $target_dir = dirname(dirname(__DIR__)) . '/assets/images/posts/';
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+    $file_ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+    $new_filename = uniqid('post_', true) . '.' . $file_ext;
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $target_dir . $new_filename)) {
+        $image_url = '/Discourse/assets/images/posts/' . $new_filename;
+    }
+}
+
 $inserted_id = null;
 
 if ($EDITH) {
     // Insert into Database
-    $stmt = $EDITH->prepare("INSERT INTO posts (title, body, author_id, community, topic, tags, slug, is_anonymous) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $EDITH->prepare("INSERT INTO posts (title, body, author_id, community, topic, tags, slug, is_anonymous, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt) {
-        $stmt->bind_param("sssssssi", $title, $body, $author_id, $community, $topic, $tags, $slug, $is_anonymous);
+        $stmt->bind_param("sssssssis", $title, $body, $author_id, $community, $topic, $tags, $slug, $is_anonymous, $image_url);
         if ($stmt->execute()) {
             $inserted_id = $stmt->insert_id;
-            // Increment community post count
-            $esc_comm = $EDITH->real_escape_string($community);
-            $EDITH->query("UPDATE communities SET posts = posts + 1 WHERE title = '$esc_comm'");
+            MIGRATE_POST_HASHTAGS($inserted_id, $tags);
+            if (!empty($community)) {
+                // Increment community post count
+                $esc_comm = $EDITH->real_escape_string($community);
+                $EDITH->query("UPDATE communities SET posts = posts + 1 WHERE title = '$esc_comm'");
+            }
         }
         $stmt->close();
     }
@@ -101,13 +123,27 @@ if (!$inserted_id) {
         'is_anonymous' => $is_anonymous,
         'is_poll' => 0,
         'created_at' => date('Y-m-d H:i:s'),
-        'comments' => []
+        'comments' => [],
+        'image_url' => $image_url
     ];
     
     // Prepend to mock posts
     array_unshift($_SESSION['mock_posts'], $new_mock_post);
 }
 
-// Redirect back to homepage
-header("Location: /Discourse/index.php");
+// Redirect back to homepage or community dashboard
+$redirect_url = "/Discourse/index.php";
+if (!empty($community)) {
+    $redirect_url = "/Discourse/pages/version/community.php?c=" . urlencode($community);
+}
+
+$status_param = $inserted_id ? "status=post_success" : "status=post_error";
+
+if (strpos($redirect_url, '?') !== false) {
+    $redirect_url .= "&" . $status_param;
+} else {
+    $redirect_url .= "?" . $status_param;
+}
+
+header("Location: " . $redirect_url);
 exit();

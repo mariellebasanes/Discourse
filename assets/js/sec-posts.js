@@ -203,7 +203,7 @@
           if (res.success) {
             var saved = res.saved;
             btn.dataset.on = saved ? '1' : '0';
-            btn.style.cssText = saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : '';
+            btn.style.cssText = saved ? 'background:rgba(251,197,1,.15) !important; color:#d97706 !important; border-color:rgba(251,197,1,.3) !important;' : '';
             btn.innerHTML = saved
               ? '<i class="bi bi-bookmark-fill me-1"></i> Saved'
               : '<i class="bi bi-bookmark me-1"></i> Save';
@@ -218,6 +218,16 @@
         }
       });
     });
+
+    // Check for URL status parameters on load
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('status') === 'success') {
+      showFeedToast('Post created successfully!');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (urlParams.get('status') === 'error') {
+      alert('Failed to create post. Please try again.');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   })();
 
   (function() {

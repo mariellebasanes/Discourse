@@ -17,6 +17,80 @@ try {
     if (!$conn->connect_error) {
         $conn->set_charset('utf8mb4');
         $EDITH = $conn;
+
+        // Auto-initialize normalized hashtag tables & indexes
+        $table_check = $EDITH->query("SHOW TABLES LIKE 'posts'");
+        if ($table_check && $table_check->num_rows > 0) {
+            $EDITH->query("CREATE TABLE IF NOT EXISTS `hashtags` (
+              `id` INT AUTO_INCREMENT PRIMARY KEY,
+              `name` VARCHAR(100) UNIQUE NOT NULL,
+              `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
+
+            $EDITH->query("CREATE TABLE IF NOT EXISTS `post_hashtags` (
+              `post_id` INT NOT NULL,
+              `hashtag_id` INT NOT NULL,
+              PRIMARY KEY (`post_id`, `hashtag_id`),
+              FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE,
+              FOREIGN KEY (`hashtag_id`) REFERENCES `hashtags` (`id`) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
+            
+            // Create indexes
+            $res = $EDITH->query("SHOW KEYS FROM `posts` WHERE Key_name = 'idx_posts_topic'");
+            if ($res && $res->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `posts` ADD INDEX `idx_posts_topic` (`topic`)");
+            }
+            $res = $EDITH->query("SHOW KEYS FROM `posts` WHERE Key_name = 'idx_posts_community'");
+            if ($res && $res->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `posts` ADD INDEX `idx_posts_community` (`community`)");
+            }
+            
+            // Automatic backfill migration
+            $res_count = $EDITH->query("SELECT COUNT(*) as cnt FROM `post_hashtags`");
+            if ($res_count) {
+                $row_count = $res_count->fetch_assoc();
+                if ($row_count['cnt'] == 0) {
+                    $posts_res = $EDITH->query("SELECT id, tags FROM posts WHERE tags IS NOT NULL AND tags != ''");
+                    if ($posts_res) {
+                        while ($post_row = $posts_res->fetch_assoc()) {
+                            $pid = $post_row['id'];
+                            $tags_raw = $post_row['tags'];
+                            $tags = preg_split('/[,•]+/', $tags_raw);
+                            foreach ($tags as $t) {
+                                $t = trim($t);
+                                if ($t === '') continue;
+                                $t_clean = strtolower($t);
+                                
+                                $stmt = $EDITH->prepare("INSERT IGNORE INTO hashtags (name) VALUES (?)");
+                                if ($stmt) {
+                                    $stmt->bind_param("s", $t_clean);
+                                    $stmt->execute();
+                                    $stmt->close();
+                                }
+                                
+                                $stmt = $EDITH->prepare("SELECT id FROM hashtags WHERE name = ?");
+                                if ($stmt) {
+                                    $stmt->bind_param("s", $t_clean);
+                                    $stmt->execute();
+                                    $hid_res = $stmt->get_result()->fetch_assoc();
+                                    $stmt->close();
+                                    
+                                    if ($hid_res) {
+                                        $hid = $hid_res['id'];
+                                        $stmt = $EDITH->prepare("INSERT IGNORE INTO post_hashtags (post_id, hashtag_id) VALUES (?, ?)");
+                                        if ($stmt) {
+                                            $stmt->bind_param("ii", $pid, $hid);
+                                            $stmt->execute();
+                                            $stmt->close();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 } catch (Exception $e) {
     // Database connection failed, fallback gracefully
@@ -30,7 +104,7 @@ $DB_NAME_EDITH  = $DB_NAME;
 
 // Define Identification Global (simulating logged in user or using session)
 if (!isset($_SESSION['identification'])) {
-    $_SESSION['identification'] = 'T202210202'; // Default: Catalina Smith
+    $_SESSION['identification'] = 'T202110117'; // Default: Marielle Basanes
 }
 $identification = $_SESSION['identification'];
 
@@ -174,6 +248,23 @@ if (!function_exists('getUserAvatar')) {
 
 // Asset Base Path
 $BASE_PATH = "/Discourse";
+
+if (!function_exists('getLightColorStyle')) {
+    function getLightColorStyle($hex) {
+        if (empty($hex)) $hex = '#1A8B44';
+        $hex = str_replace('#', '', $hex);
+        if (strlen($hex) == 3) {
+            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+        } else {
+            $r = hexdec(substr($hex, 0, 2) ?: '0');
+            $g = hexdec(substr($hex, 2, 2) ?: '0');
+            $b = hexdec(substr($hex, 4, 2) ?: '0');
+        }
+        return "background-color: rgba($r, $g, $b, 0.1) !important; color: #$hex !important;";
+    }
+}
 
 function HEAD_ESSENTIALS()
 {
@@ -393,7 +484,6 @@ if (!function_exists('renderCategoryBadge')) {
     function renderCategoryBadge($category) {
         $badge = getCategoryBadgeStyle($category);
         return '<span class="badge ' . $badge['class'] . ' rounded-pill px-3 py-2 fs-8 fw-bold">' .
-               '<i class="bi ' . $badge['icon'] . ' ' . $badge['icon_color'] . ' me-1"></i>' .
                htmlspecialchars($category) . '</span>';
     }
 }
@@ -454,7 +544,6 @@ if (!function_exists('renderTopicBadge')) {
         $label = strtoupper(trim($topic));
         $url   = '/Discourse/pages/view/topic.php?t=' . urlencode($label);
         return '<a href="' . $url . '" class="badge ' . $badge['class'] . ' rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none me-1">'
-             . '<i class="bi ' . $badge['icon'] . ' ' . $badge['icon_color'] . ' me-1"></i>'
              . htmlspecialchars($label)
              . '</a>';
     }
@@ -481,3 +570,60 @@ if (!function_exists('renderHashtagBadges')) {
         return $html;
     }
 }
+
+if (!function_exists('MIGRATE_POST_HASHTAGS')) {
+    function MIGRATE_POST_HASHTAGS($post_id, $tags_raw) {
+        global $EDITH;
+        if (!$EDITH || empty($tags_raw)) return;
+        $tags = preg_split('/[,•]+/', $tags_raw);
+        foreach ($tags as $t) {
+            $t = trim($t);
+            if ($t === '') continue;
+            $t_clean = strtolower($t);
+            
+            $stmt = $EDITH->prepare("INSERT IGNORE INTO hashtags (name) VALUES (?)");
+            if ($stmt) {
+                $stmt->bind_param("s", $t_clean);
+                $stmt->execute();
+                $stmt->close();
+            }
+            
+            $stmt = $EDITH->prepare("SELECT id FROM hashtags WHERE name = ?");
+            if ($stmt) {
+                $stmt->bind_param("s", $t_clean);
+                $stmt->execute();
+                $hid_res = $stmt->get_result()->fetch_assoc();
+                $stmt->close();
+                
+                if ($hid_res) {
+                    $hid = $hid_res['id'];
+                    $stmt = $EDITH->prepare("INSERT IGNORE INTO post_hashtags (post_id, hashtag_id) VALUES (?, ?)");
+                    if ($stmt) {
+                        $stmt->bind_param("ii", $post_id, $hid);
+                        $stmt->execute();
+                        $stmt->close();
+                    }
+                }
+            }
+        }
+    }
+}
+
+if (!function_exists('linkHashtags')) {
+    function linkHashtags($text) {
+        if (empty($text)) return '';
+        return preg_replace_callback(
+            '/(?<![a-zA-Z0-9&])#([a-zA-Z0-9_]+)/',
+            function($matches) {
+                $tag = $matches[1];
+                if (is_numeric($tag)) {
+                    return $matches[0];
+                }
+                $url = '/Discourse/pages/view/hashtag.php?tag=' . urlencode(strtolower($tag));
+                return '<a href="' . $url . '" class="text-primary text-decoration-none fw-semibold">#' . htmlspecialchars($tag) . '</a>';
+            },
+            $text
+        );
+    }
+}
+

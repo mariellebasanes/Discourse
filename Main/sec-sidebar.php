@@ -118,22 +118,43 @@
     <div class="d-flex flex-column gap-2">
 
       <?php
-      $sidebarCommunities = [
-        ['name' => 'FEU Tech',    'label' => 'FEUTech',    'members' => '2,541'],
-        ['name' => 'FEU Life',    'label' => 'FEULife',    'members' => '1,436'],
-        ['name' => 'CultureHub',  'label' => 'CultureHub', 'members' => '862'],
-      ];
+      $sidebarCommunities = [];
+      if ($EDITH) {
+          $res = $EDITH->query("SELECT title, members, logo_url, theme_color, icon, bg_class, text_class FROM communities ORDER BY members DESC, id DESC LIMIT 5");
+          if ($res) {
+              while ($row = $res->fetch_assoc()) {
+                  $sidebarCommunities[] = [
+                      'name' => $row['title'],
+                      'label' => $row['title'],
+                      'members' => number_format($row['members']),
+                      'logo_url' => $row['logo_url'],
+                      'theme_color' => $row['theme_color'],
+                      'icon' => $row['icon'],
+                      'bg_class' => $row['bg_class'],
+                      'text_class' => $row['text_class']
+                  ];
+              }
+          }
+      }
+      if (empty($sidebarCommunities)) {
+          $sidebarCommunities = [
+            ['name' => 'FEU LIFE',    'label' => 'FEU LIFE',    'members' => '5',   'logo_url' => null, 'theme_color' => '#d63384', 'icon' => 'bi-heart-fill', 'bg_class' => 'bg-light-danger', 'text_class' => 'text-danger'],
+            ['name' => 'Freshies',    'label' => 'Freshies',    'members' => '3',   'logo_url' => null, 'theme_color' => '#0b5ed7', 'icon' => 'bi-people-fill', 'bg_class' => 'bg-light-primary', 'text_class' => 'text-primary'],
+            ['name' => 'Study Group',  'label' => 'Study Group', 'members' => '4',   'logo_url' => null, 'theme_color' => '#1A8B44', 'icon' => 'bi-people-fill', 'bg_class' => 'bg-light-success', 'text_class' => 'text-success'],
+          ];
+      }
       foreach ($sidebarCommunities as $comm):
-        $c = getCommunityIconDetails($comm['name']);
       ?>
-        <a href="/Discourse/pages/version/community.php" class="discourse-community-item d-flex align-items-center gap-3 text-decoration-none p-2 rounded-2">
-          <div class="d-flex align-items-center justify-content-center <?php echo $c['bg_class']; ?> rounded-2 fs-5"
-            style="width:38px;height:38px;flex-shrink:0;">
-            <i class="bi <?php echo $c['icon']; ?> <?php echo $c['text_class']; ?>"></i>
+        <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($comm['name']); ?>" class="discourse-community-item d-flex align-items-center gap-3 text-decoration-none p-2 rounded-2">
+          <div class="d-flex align-items-center justify-content-center rounded-2 fs-5"
+            style="width:38px;height:38px;flex-shrink:0; <?php echo !empty($comm['logo_url']) ? 'background-image: url(\'' . htmlspecialchars($comm['logo_url']) . '\'); background-size: cover; background-position: center;' : getLightColorStyle($comm['theme_color']); ?>">
+            <?php if (empty($comm['logo_url'])) { ?>
+            <i class="bi <?php echo htmlspecialchars($comm['icon'] ?? 'bi-people-fill'); ?>"></i>
+            <?php } ?>
           </div>
           <div class="d-flex flex-column">
-            <span class="fs-6 fw-bold text-gray-800"><?php echo $comm['label']; ?></span>
-            <span class="fs-8 text-muted"><?php echo $comm['members']; ?> members</span>
+            <span class="fs-6 fw-bold text-gray-800"><?php echo htmlspecialchars($comm['label']); ?></span>
+            <span class="fs-8 text-muted"><?php echo htmlspecialchars($comm['members']); ?> members</span>
           </div>
         </a>
       <?php endforeach; ?>
@@ -184,11 +205,11 @@
 
     <p class="fs-8 fw-bold text-muted text-uppercase mb-2" style="letter-spacing:0.08em;">Trending Today</p>
     <div class="d-flex flex-wrap gap-2 mb-3">
-      <span class="badge badge-light rounded-pill border px-4 py-2 fs-8">#HASHTAG</span>
-      <span class="badge badge-light rounded-pill border px-4 py-2 fs-8">#WORLDPEACE</span>
-      <span class="badge badge-light rounded-pill border px-4 py-2 fs-8">#VALORANT</span>
-      <span class="badge badge-light rounded-pill border px-4 py-2 fs-8">#PETITION</span>
-      <span class="badge badge-light rounded-pill border px-4 py-2 fs-8">#POSTER</span>
+      <a href="/Discourse/pages/view/hashtag.php?tag=hashtag" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#HASHTAG</a>
+      <a href="/Discourse/pages/view/hashtag.php?tag=worldpeace" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#WORLDPEACE</a>
+      <a href="/Discourse/pages/view/hashtag.php?tag=valorant" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#VALORANT</a>
+      <a href="/Discourse/pages/view/hashtag.php?tag=petition" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#PETITION</a>
+      <a href="/Discourse/pages/view/hashtag.php?tag=poster" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#POSTER</a>
     </div>
 
     <p class="fs-8 fw-bold text-muted text-uppercase mb-2" style="letter-spacing:0.08em;">Posting Tips</p>

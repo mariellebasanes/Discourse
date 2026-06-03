@@ -396,24 +396,16 @@ if (!$db_post_loaded && $showImage) {
                                                 <h1 class="fw-bolder text-dark fs-2x mb-4"><?php echo $postTitle; ?></h1>
                                                 <div class="text-gray-800 fs-6 lh-lg mb-6">
                                                     <?php
-                                                    if ($showImage) {
+                                                    if ($post && !empty($post['image_url'])) {
+                                                        echo "<p class='mb-4'>" . linkHashtags($postDesc) . "</p>";
+                                                    } elseif ($showImage) {
                                                         $parts = explode("<br><br>", $postDesc);
-                                                        echo "<p class='mb-6'>" . $parts[0] . "</p>";
-                                                    ?>
-                                                        <div class="mb-6 rounded-2 overflow-hidden position-relative">
-                                                            <img src="https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=1200&auto=format&fit=crop"
-                                                                class="w-100 object-fit-cover" style="height:300px;filter:brightness(0.8) sepia(0.2) hue-rotate(90deg);" alt="Library">
-                                                            <div class="position-absolute bottom-0 start-0 p-3">
-                                                                <span class="text-white fs-9" style="text-shadow:1px 1px 2px rgba(0,0,0,0.8);">
-                                                                    <i class="ki-duotone ki-geolocation text-danger me-1"><span class="path1"></span><span class="path2"></span></i>
-                                                                    FEU Tech Main Library - Study Room 3B - 3rd Floor
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    <?php
-                                                        echo "<p class='mb-0'>" . $parts[1] . "</p>";
+                                                        echo "<p class='mb-6'>" . linkHashtags($parts[0]) . "</p>";
+                                                        if (isset($parts[1])) {
+                                                            echo "<p class='mb-0'>" . linkHashtags($parts[1]) . "</p>";
+                                                        }
                                                     } elseif ($showPoll) {
-                                                        echo "<p class='mb-4'>" . $postDesc . "</p>";
+                                                        echo "<p class='mb-4'>" . linkHashtags($postDesc) . "</p>";
                                                     ?>
                                                         <div class="d-flex flex-column gap-2 mb-4 discourse-poll-options" style="max-width:500px;">
                                                             <button class="discourse-poll-option" data-poll-id="finals-poll" data-option="0" style="--target-width:28%;">
@@ -436,7 +428,7 @@ if (!$db_post_loaded && $showImage) {
                                                         <span class="fs-8 text-muted d-block mb-4">442 votes · 3 days left</span>
                                                     <?php
                                                     } else {
-                                                        echo "<p>" . $postDesc . "</p>";
+                                                        echo "<p>" . linkHashtags($postDesc) . "</p>";
                                                     }
                                                     ?>
                                                 </div>
@@ -465,6 +457,11 @@ if (!$db_post_loaded && $showImage) {
                                                             <a href="/Discourse/pages/view/edit-post.php<?php echo $post ? '?id=' . $post['id'] : ''; ?>" class="btn btn-sm btn-light-primary d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
                                                                 <i class="bi bi-pencil-square fs-7 text-primary"></i> <span class="fw-bold fs-8">Edit Post</span>
                                                             </a>
+                                                            <?php if ($post) { ?>
+                                                            <button id="delete-post-btn" data-post-id="<?php echo $post['id']; ?>" class="btn btn-sm btn-light-danger d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
+                                                                <i class="bi bi-trash fs-7 text-danger"></i> <span class="fw-bold fs-8">Delete Post</span>
+                                                            </button>
+                                                            <?php } ?>
                                                         <?php } ?>
                                                         <button class="btn btn-sm btn-light-muted vote-btn text-danger d-flex align-items-center gap-1 px-3 py-2 rounded-pill"
                                                             data-bs-toggle="modal" data-bs-target="#modalReportPost">
@@ -483,10 +480,11 @@ if (!$db_post_loaded && $showImage) {
                                                             id="comment-count-badge" style="font-size:10px;"><?php echo $post ? count($comments) : ($showImage || $showPoll || $showAnon || $showSample ? '1' : '3'); ?></span>
                                                     </div>
 
-                                                    <?php if ($post && !empty($comments)) {
-                                                        foreach ($comments as $comment) {
-                                                            $cInitials = implode('', array_map(fn($w) => $w[0] ?? '', explode(' ', $comment['author_name'] ?? 'U')));
-                                                            $cAvatar = !empty($comment['avatar_md']) ? $comment['avatar_md'] : '';
+                                                    <?php if ($post) {
+                                                        if (!empty($comments)) {
+                                                            foreach ($comments as $comment) {
+                                                                $cInitials = implode('', array_map(fn($w) => $w[0] ?? '', explode(' ', $comment['author_name'] ?? 'U')));
+                                                                $cAvatar = !empty($comment['avatar_md']) ? $comment['avatar_md'] : '';
                                                     ?>
                                                     <div class="mb-4">
                                                         <div class="d-flex">
@@ -519,6 +517,9 @@ if (!$db_post_loaded && $showImage) {
                                                         <!-- Inline reply composer (hidden by default) -->
                                                         <div class="reply-composer ps-5 mt-2" id="composer-<?php echo $comment['id']; ?>" style="display:none;"></div>
                                                     </div>
+                                                    <?php } ?>
+                                                    <?php } else { ?>
+                                                        <div class="text-muted fs-7 py-4 text-center" id="no-comments-msg">No comments yet. Be the first to start the conversation!</div>
                                                     <?php } ?>
                                                     <?php } else { ?>
                                                     <!-- Comment Thread 1 -->
@@ -794,7 +795,6 @@ if (!$db_post_loaded && $showImage) {
     </div>
     <?php include(dirname(dirname(__DIR__)) . "/partials/_discourse-modals.php"); ?>
     <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
-    <script src="/Discourse/assets/plugins/global/plugins.bundle.js"></script>
     <script src="/Discourse/assets/js/sec-modals.js"></script>
 
     <script>
@@ -1101,6 +1101,33 @@ if (!$db_post_loaded && $showImage) {
                 container.find('.discourse-poll-option').removeClass('selected');
                 $(this).addClass('selected');
                 container.addClass('show-results');
+            });
+
+            // Delete post handler
+            $('#delete-post-btn').on('click', function() {
+                const postId = $(this).data('post-id');
+                if (confirm('Are you sure you want to permanently delete this post? This cannot be undone.')) {
+                    if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
+                    $.ajax({
+                        url: '/Discourse/pages/version/delete-post-action.php',
+                        method: 'POST',
+                        data: { id: postId },
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.status === 'success') {
+                                alert(res.message);
+                                window.location.href = '/Discourse/index.php';
+                            } else {
+                                if (typeof KTApp !== 'undefined') KTApp.hidePageLoading();
+                                alert(res.message || 'Failed to delete post.');
+                            }
+                        },
+                        error: function() {
+                            if (typeof KTApp !== 'undefined') KTApp.hidePageLoading();
+                            alert('Error communicating with database.');
+                        }
+                    });
+                }
             });
         });
     </script>

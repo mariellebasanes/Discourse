@@ -310,8 +310,33 @@
   }
 
   function confirmDelete() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var postId = urlParams.get('id');
+    if (!postId) {
+      alert('Cannot delete this post (invalid ID).');
+      return;
+    }
     if (confirm('Are you sure you want to permanently delete this post? This cannot be undone.')) {
       if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
+      $.ajax({
+        url: '/Discourse/pages/version/delete-post-action.php',
+        method: 'POST',
+        data: { id: postId },
+        dataType: 'json',
+        success: function(res) {
+          if (res.status === 'success') {
+            alert(res.message);
+            window.location.href = '/Discourse/index.php';
+          } else {
+            if (typeof KTApp !== 'undefined') KTApp.hidePageLoading();
+            alert(res.message || 'Failed to delete post.');
+          }
+        },
+        error: function() {
+          if (typeof KTApp !== 'undefined') KTApp.hidePageLoading();
+          alert('Error communicating with database.');
+        }
+      });
     }
   }
 

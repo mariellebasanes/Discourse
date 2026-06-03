@@ -379,12 +379,35 @@ if (!function_exists('renderPostCardMarkup')) {
         $authorName = $isAnon ? 'Anonymous' : ($post['display_name'] ?? 'User');
         $authorLink = $isAnon ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . $post['author_id'];
         ?>
+        <?php
+        $c_highlighted = (!empty($post['is_highlighted']));
+        $card_classes = 'card border-0 shadow mb-5';
+        if (!empty($post['is_announcement'])) {
+            $card_classes .= ' post-card-announcement border-start border-4 border-success';
+        } elseif ($c_highlighted) {
+            $card_classes .= ' post-card-highlighted border-start border-4 border-warning';
+        }
+        $card_style = '';
+        if (!empty($post['is_announcement'])) {
+            $card_style = 'background: #f4faf6;';
+        } elseif ($c_highlighted) {
+            $card_style = 'background: #fffdf5;';
+        }
+        ?>
         <!-- ── Post Card ── -->
-        <div class="card border-0 shadow mb-5" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>">
+        <div class="<?php echo $card_classes; ?>" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>" style="<?php echo $card_style; ?>">
           <div class="d-flex">
     
+            <?php
+            $vote_bg = '#e8ede9';
+            if (!empty($post['is_announcement'])) {
+                $vote_bg = '#e2f0e7';
+            } elseif ($c_highlighted) {
+                $vote_bg = '#fff8e1';
+            }
+            ?>
             <!-- Vote Column -->
-            <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
+            <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:<?php echo $vote_bg; ?>;">
               <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
                 <i class="bi bi-hand-thumbs-up p-0"></i>
               </button>
@@ -401,13 +424,24 @@ if (!function_exists('renderPostCardMarkup')) {
                 <!-- Row 1: Community badge + Report button -->
                 <div class="col-12 mb-2">
                   <div class="d-flex justify-content-between align-items-center">
-                    <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($post['community']); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
-                      <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
-                           style="width: 24px; height: 24px;">
-                        <i class="bi <?php echo $commDetails['icon']; ?> fs-8 <?php echo $commDetails['text_class']; ?>"></i>
-                      </div>
-                      <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/<?php echo htmlspecialchars($post['community']); ?></span>
-                    </a>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($post['community']); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
+                          <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
+                               style="width: 24px; height: 24px;">
+                            <i class="bi <?php echo $commDetails['icon']; ?> fs-8 <?php echo $commDetails['text_class']; ?>"></i>
+                          </div>
+                          <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/<?php echo htmlspecialchars($post['community']); ?></span>
+                        </a>
+                        <?php if (!empty($post['is_announcement'])) { ?>
+                        <span class="badge badge-light-success d-flex align-items-center gap-1 px-3 py-1 fw-bolder fs-8 rounded-pill">
+                          <i class="bi bi-megaphone-fill fs-9 text-success"></i> ANNOUNCEMENT
+                        </span>
+                        <?php } elseif ($c_highlighted) { ?>
+                        <span class="badge badge-light-warning d-flex align-items-center gap-1 px-3 py-1 fw-bolder fs-8 rounded-pill text-warning" style="background-color: rgba(255, 193, 7, 0.15); color: #b58105 !important;">
+                          <i class="bi bi-star-fill fs-9 text-warning"></i> HIGHLIGHTED
+                        </span>
+                        <?php } ?>
+                    </div>
                     <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                       <i class="bi bi-flag me-1"></i> Report
                     </button>
@@ -435,9 +469,14 @@ if (!function_exists('renderPostCardMarkup')) {
                       <?php echo htmlspecialchars($post['title']); ?>
                     </a>
                     <div class="dc-body-wrap">
-                      <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo strip_tags($post['body']); ?></span>
+                      <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo linkHashtags(strip_tags($post['body'])); ?></span>
                       <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                     </div>
+                    <?php if (!empty($post['image_url'])): ?>
+                    <div class="mt-4 mb-2">
+                        <img src="<?php echo htmlspecialchars($post['image_url']); ?>" alt="Post image" class="img-fluid rounded shadow-sm" style="max-height: 350px; width: auto; object-fit: cover;">
+                    </div>
+                    <?php endif; ?>
                     <?php $htags = renderHashtagBadges($post['tags'] ?? ''); if ($htags): ?>
                     <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
                       <?php echo $htags; ?>
@@ -475,7 +514,7 @@ if (!function_exists('renderPostCardMarkup')) {
                   ?>
                   <button class="btn btn-sm dc-post-save" 
                           data-on="<?php echo $is_saved ? '1' : '0'; ?>"
-                          style="<?php echo $is_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                          style="<?php echo $is_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
                       <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                       <?php echo $is_saved ? 'Saved' : 'Save'; ?>
                   </button>

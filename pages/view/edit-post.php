@@ -1,11 +1,40 @@
 <?php
 define('MBG', TRUE);
-include(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
 
-// IS_LOGGED_IN($_SERVER['REQUEST_URI']);
-// $SQL = "SELECT * FROM posts WHERE slug = ?";
+$post_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$post = null;
 
-$META_TITLE = "Edit Post";
+if ($post_id > 0) {
+    if ($EDITH) {
+        $stmt = $EDITH->prepare("SELECT * FROM posts WHERE id = ?");
+        if ($stmt) {
+            $stmt->bind_param("i", $post_id);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            if ($res && $res->num_rows > 0) {
+                $post = $res->fetch_assoc();
+            }
+            $stmt->close();
+        }
+    }
+    // Fallback: search in mock session posts
+    if (!$post && isset($_SESSION['mock_posts'])) {
+        foreach ($_SESSION['mock_posts'] as $mp) {
+            if ($mp['id'] == $post_id) {
+                $post = $mp;
+                break;
+            }
+        }
+    }
+}
+
+if (!$post) {
+    header("Location: /Discourse/index.php");
+    exit();
+}
+
+$META_TITLE = "Edit Post - " . htmlspecialchars($post['title']);
 $META_DESC  = "Edit your existing post.";
 ?>
 <head>
@@ -52,6 +81,10 @@ $META_DESC  = "Edit your existing post.";
 
               <div id="kt_app_content" class="flex-column-fluid">
                 <div class="app-container container-xxl">
+                  <form id="editPostForm" action="/Discourse/pages/version/edit-post-action.php" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                  <input type="hidden" name="body" id="body-hidden">
+                  <input type="hidden" name="remove_image" id="remove-image-hidden" value="0">
                   <div class="row g-5 align-items-start py-5">
 
                     <div class="col-lg-8">
@@ -77,45 +110,44 @@ $META_DESC  = "Edit your existing post.";
                             <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">
                               Title <span class="text-danger">*</span>
                             </label>
-                            <input type="text" class="form-control form-control-solid" id="edit_title"
-                              value="FEU Tech library study rooms — worth booking or just use the hallway?">
+                            <input type="text" class="form-control form-control-solid" id="edit_title" name="title"
+                              value="<?php echo htmlspecialchars($post['title']); ?>" required>
                           </div>
 
                           <div class="mb-5">
                             <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">
                               Body <span class="text-muted fw-normal fs-8" style="text-transform:none;letter-spacing:0;">— optional</span>
                             </label>
-
                             <div class="dc-toolbar" id="edit-toolbar">
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Bold" onclick="fmt('bold')"><b>B</b></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" title="Italic" onclick="fmt('italic')">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Bold" onclick="fmt('bold')"><b>B</b></button>
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Italic" onclick="fmt('italic')">
                                 <i style="font-style:italic;color:#3a5c45;">I</i>
                               </button> 
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Strikethrough" onclick="fmt('strikeThrough')"><s>S</s></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Superscript" onclick="fmt('superscript')">x<sup>2</sup></button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Paragraph" onclick="fmt('formatBlock','p')">¶T</button>
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Strikethrough" onclick="fmt('strikeThrough')"><s>S</s></button>
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Superscript" onclick="fmt('superscript')">x<sup>2</sup></button>
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Paragraph" onclick="fmt('formatBlock','p')">¶T</button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Link" onclick="openModal('modal-link')">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Link" onclick="openModal('modal-link')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Image" onclick="document.getElementById('replaceImageInput').click()">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Image" onclick="document.getElementById('replaceImageInput').click()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <rect x="3" y="3" width="18" height="18" rx="2" />
                                   <circle cx="8.5" cy="8.5" r="1.5" />
                                   <polyline points="21 15 16 10 5 21" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Embed Video" onclick="openModal('modal-video')">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Embed Video" onclick="openModal('modal-video')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <circle cx="12" cy="12" r="10" />
                                   <polygon points="10 8 16 12 10 16 10 8" />
                                 </svg>
                               </button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Ordered List" onclick="insertList('ol')">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Ordered List" onclick="insertList('ol')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <line x1="9" y1="6" x2="20" y2="6" />
                                   <line x1="9" y1="12" x2="20" y2="12" />
@@ -125,7 +157,7 @@ $META_DESC  = "Edit your existing post.";
                                   <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Unordered List" onclick="insertList('ul')">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Unordered List" onclick="insertList('ul')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <line x1="9" y1="6" x2="20" y2="6" />
                                   <line x1="9" y1="12" x2="20" y2="12" />
@@ -136,32 +168,32 @@ $META_DESC  = "Edit your existing post.";
                                 </svg>
                               </button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Inline Code" onclick="fmt('insertHTML','<code style=&quot;background:#f0faf5;border-radius:4px;padding:1px 5px;font-family:monospace;font-size:12px;color:#1a5c38;&quot;>code</code>')">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Inline Code" onclick="fmt('insertHTML','<code style=&quot;background:#f0faf5;border-radius:4px;padding:1px 5px;font-family:monospace;font-size:12px;color:#1a5c38;&quot;>code</code>')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <polyline points="16 18 22 12 16 6" />
                                   <polyline points="8 6 2 12 8 18" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Blockquote" onclick="fmt('formatBlock','blockquote')">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Blockquote" onclick="fmt('formatBlock','blockquote')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                   <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Code Block" onclick="insertCodeBlock()">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Code Block" onclick="insertCodeBlock()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <polyline points="16 18 22 12 16 6" />
                                   <polyline points="8 6 2 12 8 18" />
                                   <line x1="12" y1="3" x2="12" y2="21" stroke-width="1.5" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Spoiler" onclick="insertSpoiler()">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Spoiler" onclick="insertSpoiler()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
                                   <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
                                   <line x1="1" y1="1" x2="23" y2="23" />
                                 </svg>
                               </button>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Table" onclick="insertTable()">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Insert Table" onclick="insertTable()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <rect x="3" y="3" width="18" height="18" rx="2" />
                                   <line x1="3" y1="9" x2="21" y2="9" />
@@ -175,14 +207,15 @@ $META_DESC  = "Edit your existing post.";
 
                             <div id="edit_body_editor" class="dc-editor-area" contenteditable="true"
                               data-placeholder="Body text (optional)"
-                              style="height:300px !important;overflow-y:auto !important;">Finally tried booking one of the new study rooms in the library. Honest review: the booking system is clunky, the AC is questionable, but the soundproofing is actually great. Worth it for group study if you plan ahead.<br><br>Not ideal for solo cramming though — the chairs are surprisingly uncomfortable for long sessions.</div>
+                              style="height:300px !important;overflow-y:auto !important;border-bottom:1.5px solid #e4e6ef !important;border-radius:0 0 8px 8px !important;"><?php echo $post['body']; ?></div>
 
-                            <div class="dc-image-wrapper" id="imageWrapper" style="display:block;">
-                              <img src="https://www.feu.edu.ph/wp-content/uploads/2023/06/thumbnail__a3-1.jpg"
+                            <?php $has_img = !empty($post['image_url']); ?>
+                            <div class="dc-image-wrapper" id="imageWrapper" style="display: <?php echo $has_img ? 'block' : 'none'; ?>;">
+                              <img src="<?php echo htmlspecialchars($post['image_url'] ?? ''); ?>"
                                 alt="Attached image" class="dc-img-inserted" id="attachedImage"
                                 style="max-height:220px;width:100%;object-fit:cover;margin:0;">
                               <div class="dc-image-overlay">
-                                <button class="dc-image-action-btn dc-image-replace-btn"
+                                <button type="button" class="dc-image-action-btn dc-image-replace-btn"
                                   onclick="document.getElementById('replaceImageInput').click()" title="Replace image">
                                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -191,7 +224,7 @@ $META_DESC  = "Edit your existing post.";
                                   </svg>
                                   Replace
                                 </button>
-                                <button class="dc-image-action-btn dc-image-remove-btn" onclick="removeImage()" title="Remove image">
+                                <button type="button" class="dc-image-action-btn dc-image-remove-btn" onclick="removeImage()" title="Remove image">
                                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <polyline points="3 6 5 6 21 6" />
                                     <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
@@ -205,6 +238,7 @@ $META_DESC  = "Edit your existing post.";
                             </div>
 
                             <div class="dc-no-image-placeholder" id="noImagePlaceholder"
+                              style="display: <?php echo $has_img ? 'none' : 'block'; ?>;"
                               onclick="document.getElementById('replaceImageInput').click()">
                               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c8e6c9" stroke-width="1.5" style="display:block;margin:0 auto 6px;">
                                 <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -214,69 +248,7 @@ $META_DESC  = "Edit your existing post.";
                               Click to add an image
                             </div>
 
-                            <input type="file" id="replaceImageInput" accept="image/*" class="d-none" onchange="replaceImage(event)">
-
-                            <div class="dc-media-bar">
-                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1" onclick="document.getElementById('replaceImageInput').click()">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                                  <circle cx="8.5" cy="8.5" r="1.5" />
-                                  <polyline points="21 15 16 10 5 21" />
-                                </svg>
-                                Image
-                              </button>
-                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                  <circle cx="12" cy="12" r="10" />
-                                  <polygon points="10 8 16 12 10 16 10 8" />
-                                </svg>
-                                Video
-                              </button>
-                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1" onclick="insertList('ul')">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                  <line x1="9" y1="6" x2="20" y2="6" />
-                                  <line x1="9" y1="12" x2="20" y2="12" />
-                                  <line x1="9" y1="18" x2="20" y2="18" />
-                                  <circle cx="4" cy="6" r="1.5" fill="currentColor" />
-                                  <circle cx="4" cy="12" r="1.5" fill="currentColor" />
-                                  <circle cx="4" cy="18" r="1.5" fill="currentColor" />
-                                </svg>
-                                List
-                              </button>
-                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1" onclick="insertSpoiler()">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                                  <line x1="1" y1="1" x2="23" y2="23" />
-                                </svg>
-                                Spoiler
-                              </button>
-                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1" onclick="insertCodeBlock()">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                  <polyline points="16 18 22 12 16 6" />
-                                  <polyline points="8 6 2 12 8 18" />
-                                </svg>
-                                Code
-                              </button>
-                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1" onclick="insertTable()">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                                  <line x1="3" y1="9" x2="21" y2="9" />
-                                  <line x1="3" y1="15" x2="21" y2="15" />
-                                  <line x1="9" y1="3" x2="9" y2="21" />
-                                  <line x1="15" y1="3" x2="15" y2="21" />
-                                </svg>
-                                Table
-                              </button>
-                              <button class="btn btn-sm btn-light text-gray-600 d-inline-flex align-items-center gap-1">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                  <line x1="18" y1="20" x2="18" y2="10" />
-                                  <line x1="12" y1="20" x2="12" y2="4" />
-                                  <line x1="6" y1="20" x2="6" y2="14" />
-                                </svg>
-                                Poll
-                              </button>
-                            </div>
+                            <input type="file" id="replaceImageInput" name="image" accept="image/*" class="d-none" onchange="replaceImage(event)">
                           </div>
                           <div class="mt-5">
                             <div class="p-1">
@@ -371,6 +343,7 @@ $META_DESC  = "Edit your existing post.";
 
                     </div>
                   </div>
+                  </form>
                 </div>
               </div>
 
@@ -436,4 +409,76 @@ $META_DESC  = "Edit your existing post.";
   
   <script>window.DC_EDITOR_ID = 'edit_body_editor';</script>
   <script src="/Discourse/assets/js/dc-editor.js"></script>
+  <script>
+  window.savePost = function() {
+      var titleInput = document.getElementById('edit_title');
+      if (!titleInput || !titleInput.value.trim()) {
+          alert('Please enter a post title.');
+          if (titleInput) titleInput.focus();
+          return;
+      }
+      
+      // Sync editor contents to hidden textarea
+      var editor = document.getElementById('edit_body_editor');
+      var bodyHidden = document.getElementById('body-hidden');
+      if (editor && bodyHidden) {
+          bodyHidden.value = editor.innerHTML;
+      }
+      
+      if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
+      document.getElementById('editPostForm').submit();
+  };
+
+  window.removeImage = function() {
+      var wrapper = document.getElementById('imageWrapper');
+      var placeholder = document.getElementById('noImagePlaceholder');
+      var removeHidden = document.getElementById('remove-image-hidden');
+      if (wrapper) wrapper.style.display = 'none';
+      if (placeholder) placeholder.style.display = 'block';
+      if (removeHidden) removeHidden.value = '1';
+  };
+
+  window.replaceImage = function(event) {
+      var file = event.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (e) {
+          var img = document.getElementById('attachedImage');
+          if (img) img.src = e.target.result;
+          var wrapper = document.getElementById('imageWrapper');
+          var placeholder = document.getElementById('noImagePlaceholder');
+          var removeHidden = document.getElementById('remove-image-hidden');
+          if (wrapper) wrapper.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+          if (removeHidden) removeHidden.value = '0';
+      };
+      reader.readAsDataURL(file);
+  };
+  
+  window.confirmDelete = function() {
+      var postId = <?php echo $post['id']; ?>;
+      if (confirm('Are you sure you want to permanently delete this post? This cannot be undone.')) {
+          if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
+          $.ajax({
+              url: '/Discourse/pages/version/delete-post-action.php',
+              method: 'POST',
+              data: { id: postId },
+              dataType: 'json',
+              success: function(res) {
+                  if (res.status === 'success') {
+                      alert(res.message);
+                      window.location.href = '/Discourse/index.php';
+                  } else {
+                      if (typeof KTApp !== 'undefined') KTApp.hidePageLoading();
+                      alert(res.message || 'Failed to delete post.');
+                  }
+              },
+              error: function() {
+                  if (typeof KTApp !== 'undefined') KTApp.hidePageLoading();
+                  alert('Error communicating with database.');
+              }
+          });
+      }
+  };
+  </script>
 </body>

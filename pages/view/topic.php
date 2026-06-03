@@ -26,9 +26,15 @@ $allTopics = [
     'SPORTS'        => ['icon' => 'bi-trophy',             'bg' => '#fef3c7', 'color' => '#92400e', 'desc' => 'Basketball, football, campus leagues, fitness, and athletic achievements.'],
 ];
 
-// Fallback to TECHNOLOGY if invalid topic
+// Fallback/Dynamic registration if invalid topic (like ANIME or custom ones)
 if (!array_key_exists($rawTopic, $allTopics)) {
-    $rawTopic = 'TECHNOLOGY';
+    $style = getCategoryBadgeStyle($rawTopic);
+    $allTopics[$rawTopic] = [
+        'icon' => $style['icon'],
+        'bg' => '#f3f4f6', // neutral light gray
+        'color' => '#374151', // neutral dark gray
+        'desc' => 'Discussions and updates related to ' . htmlspecialchars(ucfirst(strtolower($rawTopic))) . '.'
+    ];
 }
 
 $topic     = $rawTopic;
@@ -354,7 +360,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                                         <?php echo htmlspecialchars($post['title']); ?>
                                                                     </a>
                                                                     <div class="dc-body-wrap">
-                                                                        <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo strip_tags($post['body']); ?></span>
+                                                                        <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo linkHashtags(strip_tags($post['body'])); ?></span>
                                                                         <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                                                     </div>
                                                                     <?php $t_htags = renderHashtagBadges($post['tags'] ?? ''); if ($t_htags): ?>
@@ -373,7 +379,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                                 <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
                                                                 <button class="btn btn-sm dc-post-save"
                                                                         data-on="<?php echo $t_saved ? '1' : '0'; ?>"
-                                                                        style="<?php echo $t_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                                                                        style="<?php echo $t_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
                                                                     <i class="bi <?php echo $t_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                                                     <?php echo $t_saved ? 'Saved' : 'Save'; ?>
                                                                 </button>
@@ -478,7 +484,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                         <a href="/Discourse/pages/view/topic.php?t=<?php echo $t; ?>"
                                                             class="badge <?php echo $b['class']; ?> rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold <?php echo $isActive ? 'dc-topic-tag-active' : ''; ?>"
                                                             style="<?php echo $isActive ? 'outline:2px solid currentColor;outline-offset:1px;' : ''; ?>">
-                                                            <i class="bi <?php echo $b['icon']; ?> <?php echo $b['icon_color']; ?> me-1"></i><?php echo $t; ?>
+                                                            <?php echo $t; ?>
                                                         </a>
                                                     <?php endforeach; ?>
                                                 </div>
@@ -718,6 +724,8 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
         class="align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
         <i class="bi bi-check-circle-fill text-success fs-6"></i><span></span>
     </div>
+
+    <script src="/Discourse/assets/js/sec-posts.js"></script>
 
 </body>
 

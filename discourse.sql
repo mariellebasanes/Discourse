@@ -308,6 +308,8 @@ CREATE TABLE `posts` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`),
   KEY `author_id` (`author_id`),
+  KEY `idx_posts_topic` (`topic`),
+  KEY `idx_posts_community` (`community`),
   CONSTRAINT `fk_posts_author` FOREIGN KEY (`author_id`) REFERENCES `accounts` (`identification`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -350,6 +352,33 @@ LOCK TABLES `saved_posts` WRITE;
 /*!40000 ALTER TABLE `saved_posts` DISABLE KEYS */;
 /*!40000 ALTER TABLE `saved_posts` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `hashtags`
+--
+
+DROP TABLE IF EXISTS `hashtags`;
+CREATE TABLE `hashtags` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Table structure for table `post_hashtags`
+--
+
+DROP TABLE IF EXISTS `post_hashtags`;
+CREATE TABLE `post_hashtags` (
+  `post_id` int(11) NOT NULL,
+  `hashtag_id` int(11) NOT NULL,
+  PRIMARY KEY (`post_id`,`hashtag_id`),
+  KEY `hashtag_id` (`hashtag_id`),
+  CONSTRAINT `fk_post_hashtags_post` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_post_hashtags_hashtag` FOREIGN KEY (`hashtag_id`) REFERENCES `hashtags` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

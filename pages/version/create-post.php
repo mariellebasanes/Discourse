@@ -42,8 +42,8 @@ foreach ($db_communities as $comm) {
         $topics = array_filter(array_map('trim', explode(',', $comm['custom_topics'])));
         $topics = array_values($topics);
     } else {
-        // Fall back to seed defaults or general topics
-        $topics = ["Technology","Culture","Gaming","FEU","Ideas","Creative","Science","News","AI","Academics","Lifestyle","Entertainment","Music","Politics","Issues","Sports","Others"];
+        // Fall back to seed defaults or general
+        $topics = ["GENERAL"];
         foreach ($seed_defaults as $s_title => $s_topics) {
             if (str_replace(' ', '', strtolower($s_title)) === $title_key) {
                 $topics = $s_topics;
@@ -91,11 +91,14 @@ if (empty($initials)) {
   <link rel="stylesheet" href="/Discourse/assets/plugins/global/plugins.bundle.css">
   <link rel="stylesheet" href="/Discourse/assets/css/style.keenicons.css">
   <link rel="stylesheet" href="/Discourse/assets/css/style.bundle.v2.full.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet">
 
   <!-- jQuery -->
   <script src="/Discourse/assets/js/jquery.js"></script>
 
   <link href="/Discourse/assets/css/discourse-css/create-post.css" rel="stylesheet" type="text/css" />
+  <link href="/Discourse/assets/css/dc-editor.css" rel="stylesheet">
 </head>
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
@@ -122,18 +125,22 @@ if (empty($initials)) {
               </div>
 
               <div class="app-container container-xxl pb-10">
-                <form id="createPostForm" action="/Discourse/pages/version/create-post-action.php" method="POST">
+                <form id="createPostForm" action="/Discourse/pages/version/create-post-action.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="redirect_back" value="/Discourse/pages/version/create-post.php">
+                <textarea name="body" id="body-hidden" style="display:none;"></textarea>
                 <div class="row g-6">
                     <!-- Main Form -->
                     <div class="col-lg-8">
                         <div class="card border border-gray-300 shadow-none rounded-2">
                             <div class="card-body p-8">
                                 
-                                <div class="d-flex align-items-center justify-content-between mb-8">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="w-25px h-25px bg-light-success rounded d-flex align-items-center justify-content-center"></div>
-                                        <h3 class="fw-bolder text-dark fs-4 m-0">Post Content</h3>
-                                    </div>
+                                 <div class="d-flex align-items-center justify-content-between mb-8">
+                                     <div class="d-flex align-items-center gap-3">
+                                         <div id="community-preview-icon" class="w-25px h-25px bg-light-success rounded d-flex align-items-center justify-content-center" style="background-color: rgba(26, 139, 68, 0.1); color: #1A8B44;">
+                                             <i class="bi bi-pencil-fill fs-7" style="color: #1A8B44 !important;"></i>
+                                         </div>
+                                         <h3 class="fw-bolder text-dark fs-4 m-0">Post Content</h3>
+                                     </div>
                                     <div id="identity-badge" class="d-flex align-items-center gap-2 bg-light-success px-4 py-2 rounded">
                                         <div id="identity-avatar" class="w-15px h-15px bg-success rounded-circle text-white d-flex align-items-center justify-content-center fs-9"><?php echo htmlspecialchars($initials); ?></div>
                                         <span id="identity-text" class="text-success fw-bold fs-8">Posting as <?php echo htmlspecialchars($ACCOUNT['display_name'] ?? 'yourself'); ?></span>
@@ -143,71 +150,130 @@ if (empty($initials)) {
                                 <!-- Form Fields -->
                                 <div class="mb-6">
                                     <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">TITLE *</label>
-                                    <input type="text" name="title" class="form-control form-control-solid border" placeholder="What's on your mind? Give it a good headline..." required>
+                                    <input type="text" name="title" id="post_title" class="form-control form-control-solid border" placeholder="What's on your mind? Give it a good headline..." required>
                                 </div>
                                 
-                                <div class="row g-4 mb-6">
-                                    <div class="col-md-6">
-                                        <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">COMMUNITY</label>
-                                        <select name="community" class="form-select form-select-solid border" data-control="select2" data-hide-search="true" data-placeholder="Select a community...">
-                                            <option value="">No community</option>
-                                            <?php foreach ($db_communities as $comm): ?>
-                                                <?php 
-                                                $isSelected = (strcasecmp($comm['title'], $default_community) === 0);
-                                                ?>
-                                                <option value="<?php echo htmlspecialchars($comm['title']); ?>" <?php echo $isSelected ? 'selected' : ''; ?>>
-                                                    <?php echo htmlspecialchars(strtoupper($comm['title'])); ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">TOPIC *</label>
-                                        <select name="topic" class="form-select form-select-solid border" data-control="select2" data-hide-search="true" data-placeholder="Select a topic..." required>
-                                            <option></option>
-                                        </select>
-                                    </div>
+                                 <div class="row g-4 mb-6">
+                                     <div class="col-md-6">
+                                          <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">COMMUNITY</label>
+                                          <?php if (!empty($default_community)) { 
+                                              $default_logo = '';
+                                              $default_icon = 'bi-people-fill';
+                                              $default_color = '#1A8B44';
+                                              foreach ($db_communities as $comm) {
+                                                  if (strcasecmp($comm['title'], $default_community) === 0) {
+                                                      $default_logo = $comm['logo_url'] ?? '';
+                                                      $default_icon = $comm['icon'] ?? 'bi-people-fill';
+                                                      $default_color = $comm['theme_color'] ?? '#1A8B44';
+                                                      break;
+                                                  }
+                                              }
+                                          ?>
+                                              <select class="form-select form-select-solid border" data-control="select2" data-hide-search="true" disabled>
+                                                  <option value="<?php echo htmlspecialchars($default_community); ?>" selected
+                                                          data-logo="<?php echo htmlspecialchars($default_logo); ?>"
+                                                          data-icon="<?php echo htmlspecialchars($default_icon); ?>"
+                                                          data-color="<?php echo htmlspecialchars($default_color); ?>">
+                                                      <?php echo htmlspecialchars(strtoupper($default_community)); ?>
+                                                  </option>
+                                              </select>
+                                              <input type="hidden" name="community" value="<?php echo htmlspecialchars($default_community); ?>">
+                                          <?php } else { ?>
+                                              <select name="community" class="form-select form-select-solid border" data-control="select2" data-hide-search="true" data-placeholder="Select a community...">
+                                                  <option value="">No community</option>
+                                                  <?php foreach ($db_communities as $comm): ?>
+                                                      <option value="<?php echo htmlspecialchars($comm['title']); ?>"
+                                                              data-logo="<?php echo htmlspecialchars($comm['logo_url'] ?? ''); ?>"
+                                                              data-icon="<?php echo htmlspecialchars($comm['icon'] ?? 'bi-people-fill'); ?>"
+                                                              data-color="<?php echo htmlspecialchars($comm['theme_color'] ?? '#1A8B44'); ?>">
+                                                          <?php echo htmlspecialchars(strtoupper($comm['title'])); ?>
+                                                      </option>
+                                                  <?php endforeach; ?>
+                                              </select>
+                                          <?php } ?>
+                                     </div>
+                                     <div class="col-md-6">
+                                         <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">TOPIC *</label>
+                                         <select name="topic" id="topic-select" class="form-select form-select-solid border" data-control="select2" data-hide-search="true" data-placeholder="Select a topic..." required>
+                                             <option></option>
+                                         </select>
+                                     </div>
                                 </div>
                                 
-                                <div class="mb-6">
-                                    <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">TAGS</label>
-                                    <input type="text" name="tags" class="form-control form-control-solid border" placeholder="Type a tag and press Enter...">
+                                 <div class="mb-6">
+                                     <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">Cover Photo (Optional)</label>
+                                     <div class="d-flex align-items-center gap-3">
+                                         <input type="file" name="image" id="cover_photo_input" class="form-control form-control-solid border" accept="image/*" style="display:none;" onchange="previewCoverPhoto(this)">
+                                         <button type="button" class="btn btn-light bg-white border border-gray-300 text-dark fw-bold" onclick="document.getElementById('cover_photo_input').click()">
+                                             <i class="bi bi-image me-1"></i> Choose Image
+                                         </button>
+                                         <span id="cover-photo-filename" class="text-muted fs-8">No file chosen</span>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="mb-6">
+                                     <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">TAGS</label>
+                                     <div class="d-flex flex-wrap align-items-center gap-2 form-control form-control-solid border p-2" id="tag-wrap" onclick="document.getElementById('tag-input').focus()" style="min-height: 45px; cursor: text;">
+                                         <input type="text" id="tag-input" class="border-0 bg-transparent flex-grow-1" placeholder="Type a tag and press Enter..." style="outline: none; min-width: 150px; font-size: 13px;">
+                                     </div>
+                                     <input type="hidden" name="tags" id="tags-hidden" value="">
                                 </div>
-                                
-                                <div>
-                                    <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">BODY</label>
-                                    <div class="border border-gray-300 rounded-2">
-                                        <!-- Toolbar -->
-                                        <div class="editor-toolbar p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-                                            <div class="d-flex align-items-center gap-1">
-                                                <button class="btn btn-sm btn-icon btn-active-light-primary text-gray-600"><i class="ki-duotone ki-text-bold"><span class="path1"></span><span class="path2"></span></i></button>
-                                                <button class="btn btn-sm btn-icon btn-active-light-primary text-gray-600"><i class="ki-duotone ki-text-italic"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i></button>
-                                                <button class="btn btn-sm btn-icon btn-active-light-primary text-gray-600"><i class="ki-duotone ki-text-strikethrough"><span class="path1"></span><span class="path2"></span></i></button>
-                                                <button class="btn btn-sm btn-icon btn-active-light-primary text-gray-600"><i class="ki-duotone ki-element-1"><span class="path1"></span><span class="path2"></span></i></button>
-                                                <div class="h-20px border-end border-gray-300 mx-2"></div>
-                                                <button class="btn btn-sm btn-icon btn-active-light-primary text-gray-600"><i class="ki-duotone ki-code"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i></button>
-                                            </div>
-                                            <a href="#" class="text-success fw-bold fs-8 text-hover-primary">Switch to Markdown</a>
-                                        </div>
-                                        
-                                         <!-- Content Area -->
-                                         <div class="editor-content p-4">
-                                             <textarea name="body" class="form-control form-control-flush border-0 p-0 fs-6" rows="8" placeholder="Body text (optional)"></textarea>
-                                         </div>
-                                        
-                                        <!-- Bottom Toolbar -->
-                                        <div class="editor-bottom-toolbar p-3 d-flex align-items-center gap-4 flex-wrap px-6">
-                                            <button class="btn btn-sm btn-active-light text-gray-600 fw-medium fs-8 p-0"><i class="ki-duotone ki-link me-1"><span class="path1"></span><span class="path2"></span></i> Link</button>
-                                            <button class="btn btn-sm btn-active-light text-gray-600 fw-medium fs-8 p-0"><i class="ki-duotone ki-picture me-1"><span class="path1"></span><span class="path2"></span></i> Image</button>
-                                            <button class="btn btn-sm btn-active-light text-gray-600 fw-medium fs-8 p-0"><i class="ki-duotone ki-video me-1"><span class="path1"></span><span class="path2"></span></i> Video</button>
-                                            <button class="btn btn-sm btn-active-light text-gray-600 fw-medium fs-8 p-0"><i class="ki-duotone ki-row-horizontal me-1"><span class="path1"></span><span class="path2"></span></i> List</button>
-                                            <button class="btn btn-sm btn-active-light text-gray-600 fw-medium fs-8 p-0"><i class="ki-duotone ki-eye-slash me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i> Spoiler</button>
-                                            <button class="btn btn-sm btn-active-light text-gray-600 fw-medium fs-8 p-0"><i class="ki-duotone ki-code me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i> Code</button>
-                                            <button class="btn btn-sm btn-active-light text-gray-600 fw-medium fs-8 p-0"><i class="ki-duotone ki-element-plus me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i> Table</button>
-                                            <button class="btn btn-sm btn-active-light text-gray-600 fw-medium fs-8 p-0"><i class="ki-duotone ki-chart-simple me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i> Poll</button>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                <div class="mb-0">
+                                     <label class="form-label fs-8 fw-bold text-gray-700 text-uppercase">BODY *</label>
+
+                                     <!-- Toolbar -->
+                                     <div class="dc-toolbar" id="dc-toolbar">
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Bold" onclick="fmt('bold')"><b>B</b></button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Italic" onclick="fmt('italic')"><i style="font-style:italic;color:#3a5c45;">I</i></button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Strikethrough" onclick="fmt('strikeThrough')"><s>S</s></button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Superscript" onclick="fmt('superscript')">x<sup>2</sup></button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Paragraph" onclick="fmt('formatBlock','p')">¶T</button>
+                                       <span class="dc-tb-sep"></span>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Insert Link" onclick="openModal('modal-link')">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                       </button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Insert Image" onclick="openModal('modal-image')">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                       </button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Embed Video" onclick="openModal('modal-video')">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                                       </button>
+                                       <span class="dc-tb-sep"></span>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Ordered List" onclick="insertList('ol')">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+                                       </button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Unordered List" onclick="insertList('ul')">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/></svg>
+                                       </button>
+                                       <span class="dc-tb-sep"></span>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Inline Code" onclick="fmt('insertHTML','&lt;code style=&quot;background:#f0faf5;border-radius:4px;padding:1px 5px;font-family:monospace;font-size:12px;color:#1a5c38;&quot;&gt;code&lt;/code&gt;')">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                                       </button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Blockquote" onclick="fmt('formatBlock','blockquote')">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/></svg>
+                                       </button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Code Block" onclick="insertCodeBlock()">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="12" y1="3" x2="12" y2="21" stroke-width="1.5"/></svg>
+                                       </button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Spoiler" onclick="insertSpoiler()">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                                       </button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Insert Table" onclick="insertTable()">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                                       </button>
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Insert Poll" onclick="insertPollBuilder()">
+                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                       </button>
+                                       <a class="dc-tb-switch" href="#" onclick="toggleMarkdown(event)">Switch to Markdown</a>
+                                     </div>
+
+                                     <!-- Editor -->
+                                     <div id="dc-editor" class="dc-editor-area" contenteditable="true"
+                                       data-placeholder="Body text (required)"
+                                       style="height:300px !important;overflow-y:auto !important;border-bottom:1.5px solid #e4e6ef !important;border-radius:0 0 8px 8px !important;"></div>
+
+                                 </div>
                                 
                             </div>
                         </div>
@@ -229,8 +295,10 @@ if (empty($initials)) {
                                     </label>
                                 </div>
 
-                                <button type="submit" class="btn w-100 btn-green mb-3 fw-bold">Publish Post</button>
-                                <button type="button" class="btn w-100 btn-light bg-white border border-gray-300 text-dark fw-bold" onclick="window.location.href='/Discourse/index.php'">Discard</button>
+                                <button type="button" class="btn w-100 btn-green mb-3 fw-bold" onclick="submitPost()">
+                                    <i class="bi bi-send me-1"></i> Publish Post
+                                </button>
+                                <button type="button" class="btn w-100 btn-light bg-white border border-gray-300 text-dark fw-bold" onclick="discardPost()">Discard</button>
                             </div>
                         </div>
                         
@@ -288,14 +356,97 @@ if (empty($initials)) {
                 </div>
                 </form>
               </div>
-            </main>
-          </div>
-          <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
+             </main>
+           </div>
+           <?php include(dirname(dirname(__DIR__)) . "/partials/_discourse-modals.php"); ?>
+           <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
         </div>
       </div>
     </div>
   </div>
   <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
+
+  <!-- Link Modal -->
+  <div class="modal fade" id="modal-link" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold fs-5">Insert Link</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body pt-3">
+          <div class="mb-4">
+            <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">Display Text</label>
+            <input type="text" class="form-control form-control-solid" id="link-text" placeholder="Link text...">
+          </div>
+          <div class="mb-2">
+            <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">URL</label>
+            <input type="url" class="form-control form-control-solid" id="link-url" placeholder="https://...">
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0 gap-2">
+          <button class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-success fw-bold" onclick="insertLink()">Insert Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div class="modal fade" id="modal-image" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold fs-5">Insert Image</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body pt-3">
+          <div class="mb-4">
+            <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">Image URL</label>
+            <input type="url" class="form-control form-control-solid" id="img-url" placeholder="https://example.com/image.jpg">
+          </div>
+          <div class="mb-4">
+            <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">
+              Alt Text <span class="text-muted fw-normal fs-8" style="text-transform:none;letter-spacing:0;">optional</span>
+            </label>
+            <input type="text" class="form-control form-control-solid" id="img-alt" placeholder="Describe the image...">
+          </div>
+          <p class="fs-8 text-muted mb-2">Or upload a file:</p>
+          <input type="file" class="form-control" id="img-file" accept="image/*">
+        </div>
+        <div class="modal-footer border-0 pt-0 gap-2">
+          <button class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-success fw-bold" onclick="insertImage()">Insert Image</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="modal fade" id="modal-video" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold fs-5">Embed Video</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body pt-3">
+          <p class="fs-7 text-muted mb-4">Paste a YouTube or direct video URL below.</p>
+          <div class="mb-2">
+            <label class="form-label text-uppercase fw-bold text-gray-600 fs-8">Video URL</label>
+            <input type="url" class="form-control form-control-solid" id="video-url" placeholder="https://youtube.com/watch?v=...">
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0 gap-2">
+          <button class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-success fw-bold" onclick="insertVideo()">Embed Video</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>window.DC_EDITOR_ID = 'dc-editor';</script>
+  <script src="/Discourse/assets/js/dc-editor.js"></script>
 
   <script>
   $(document).ready(function() {
@@ -334,9 +485,116 @@ if (empty($initials)) {
       const communityTopics = <?php echo json_encode($community_topics_map); ?>;
       const communitySelect = $('select[name="community"]');
       const topicSelect = $('select[name="topic"]');
+      const previewIcon = $('#community-preview-icon');
+
+      function hexToRgba(hex, alpha) {
+          hex = hex.replace('#', '');
+          var r, g, b;
+          if (hex.length === 3) {
+              r = parseInt(hex.charAt(0) + hex.charAt(0), 16);
+              g = parseInt(hex.charAt(1) + hex.charAt(1), 16);
+              b = parseInt(hex.charAt(2) + hex.charAt(2), 16);
+          } else {
+              r = parseInt(hex.substring(0, 2), 16) || 0;
+              g = parseInt(hex.substring(2, 4), 16) || 0;
+              b = parseInt(hex.substring(4, 6), 16) || 0;
+          }
+          return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+      }
+
+      function formatCommunity(option) {
+          if (!option.id) {
+              return option.text;
+          }
+          var element = option.element;
+          var logo = $(element).data('logo');
+          var icon = $(element).data('icon') || 'bi-people-fill';
+          var color = $(element).data('color') || '#1A8B44';
+          
+          if (logo) {
+              return $(
+                  '<span class="d-flex align-items-center gap-2">' +
+                  '  <span class="w-20px h-20px rounded d-inline-block" style="background-image: url(\'' + logo + '\'); background-size: cover; background-position: center; flex-shrink: 0;"></span>' +
+                  '  <span>' + option.text + '</span>' +
+                  '</span>'
+              );
+          } else {
+              var rgbaBg = hexToRgba(color, 0.1);
+              return $(
+                  '<span class="d-flex align-items-center gap-2">' +
+                  '  <span class="w-20px h-20px rounded d-flex align-items-center justify-content-center" style="background-color: ' + rgbaBg + '; color: ' + color + '; flex-shrink: 0;">' +
+                  '    <i class="bi ' + icon + ' fs-8" style="color: ' + color + ' !important;"></i>' +
+                  '  </span>' +
+                  '  <span>' + option.text + '</span>' +
+                  '</span>'
+              );
+          }
+      }
+
+      // Re-initialize Select2 for community dropdown to use custom templating
+      if (communitySelect.length && typeof communitySelect.select2 === 'function') {
+          if (communitySelect.hasClass("select2-hidden-accessible")) {
+              communitySelect.select2('destroy');
+          }
+          communitySelect.select2({
+              minimumResultsForSearch: Infinity,
+              templateResult: formatCommunity,
+              templateSelection: formatCommunity,
+              escapeMarkup: function(m) { return m; }
+          });
+      }
+
+      const disabledSelect = $('.col-md-6 select[disabled]');
+      if (disabledSelect.length && typeof disabledSelect.select2 === 'function') {
+          if (disabledSelect.hasClass("select2-hidden-accessible")) {
+              disabledSelect.select2('destroy');
+          }
+          disabledSelect.select2({
+              minimumResultsForSearch: Infinity,
+              templateResult: formatCommunity,
+              templateSelection: formatCommunity,
+              escapeMarkup: function(m) { return m; }
+          });
+      }
+
+      function updateCommunityIcon() {
+          const selectedOption = communitySelect.find('option:selected');
+          const is_disabled_select = $('.col-md-6 select[disabled]');
+          const opt = is_disabled_select.length ? is_disabled_select.find('option:selected') : selectedOption;
+          
+          if (!opt.length || !opt.val()) {
+              previewIcon.css({
+                  'background-image': '',
+                  'background-color': 'rgba(26, 139, 68, 0.1)',
+                  'color': '#1A8B44'
+              }).html('<i class="bi bi-pencil-fill fs-7" style="color: #1A8B44 !important;"></i>');
+              return;
+          }
+          
+          const logo = opt.data('logo');
+          const icon = opt.data('icon') || 'bi-people-fill';
+          const color = opt.data('color') || '#1A8B44';
+          
+          if (logo) {
+              previewIcon.css({
+                  'background-image': 'url("' + logo + '")',
+                  'background-size': 'cover',
+                  'background-position': 'center',
+                  'background-color': '',
+                  'color': ''
+              }).html('');
+          } else {
+              const rgbaBg = hexToRgba(color, 0.1);
+              previewIcon.css({
+                  'background-image': '',
+                  'background-color': rgbaBg,
+                  'color': color
+              }).html('<i class="bi ' + icon + ' fs-7" style="color: ' + color + ' !important;"></i>');
+          }
+      }
 
       function updateTopics() {
-          const selectedComm = communitySelect.val() || "";
+          const selectedComm = $('input[name="community"]').val() || communitySelect.val() || "";
           const topics = communityTopics[selectedComm] || communityTopics[""];
           
           topicSelect.empty();
@@ -345,6 +603,7 @@ if (empty($initials)) {
               topicSelect.append(new Option(t, t.toUpperCase()));
           });
           topicSelect.trigger('change');
+          updateCommunityIcon();
       }
 
       // Initialize on load
@@ -352,6 +611,101 @@ if (empty($initials)) {
 
       // Listen for changes
       communitySelect.on('change', updateTopics);
+
+      // Hashtag input chips logic
+      (function() {
+          const tagInput = $('#tag-input');
+          const tagWrap = $('#tag-wrap');
+          const tagsHidden = $('#tags-hidden');
+          if (!tagInput.length || !tagWrap.length) return;
+          
+          let tags = [];
+
+          tagInput.on('keydown', function(e) {
+              if ((e.key === 'Enter' || e.key === ',') && tagInput.val().trim()) {
+                  e.preventDefault();
+                  let val = tagInput.val().trim().replace(/,/g, '');
+                  if (val) {
+                      if (!val.startsWith('#')) {
+                          val = '#' + val;
+                      }
+                      if (!tags.includes(val)) {
+                          tags.push(val);
+                          renderTags();
+                      }
+                  }
+                  tagInput.val('');
+              }
+              if (e.key === 'Backspace' && !tagInput.val() && tags.length) {
+                  tags.pop();
+                  renderTags();
+              }
+          });
+
+          function renderTags() {
+              tagWrap.find('.badge').remove();
+              tags.forEach(function(tag, i) {
+                  const badge = $('<span class="badge rounded-pill px-3 py-2 fs-8 d-inline-flex align-items-center gap-1"></span>')
+                      .css({'background-color': '#dce8df', 'color': '#3a5c45'})
+                      .text(tag);
+                  const closeBtn = $('<button type="button" class="btn-close btn-close-sm ms-1" style="font-size:9px; cursor: pointer;"></button>')
+                      .on('click', function(e) {
+                          e.stopPropagation();
+                          tags.splice(i, 1);
+                          renderTags();
+                      });
+                  badge.append(closeBtn);
+                  badge.insertBefore(tagInput);
+              });
+              tagsHidden.val(tags.join(','));
+          }
+
+          // In case form submission happens, ensure the hidden input is synced
+          $('#createPostForm').on('submit', function() {
+              tagsHidden.val(tags.join(','));
+          });
+      })();
+
+      window.previewCoverPhoto = function(input) {
+          var filenameSpan = document.getElementById('cover-photo-filename');
+          if (input.files && input.files[0]) {
+              filenameSpan.textContent = input.files[0].name;
+          } else {
+              filenameSpan.textContent = "No file chosen";
+          }
+      };
+
+      window.submitPost = function() {
+          var titleInput = document.getElementById('post_title');
+          if (!titleInput || !titleInput.value.trim()) {
+              alert('Please enter a post title.');
+              if (titleInput) titleInput.focus();
+              return;
+          }
+          
+          var topicSelect = document.getElementById('topic-select');
+          if (!topicSelect || !topicSelect.value) {
+              alert('Please select a topic.');
+              if (topicSelect) $(topicSelect).select2('open');
+              return;
+          }
+          
+          // Sync editor contents to hidden textarea
+          var editor = document.getElementById('dc-editor');
+          var bodyHidden = document.getElementById('body-hidden');
+          if (editor && bodyHidden) {
+              bodyHidden.value = editor.innerHTML;
+          }
+          
+          if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
+          document.getElementById('createPostForm').submit();
+      };
+      
+      window.discardPost = function() {
+          if (confirm('Are you sure you want to discard this post? Your changes will be lost.')) {
+              window.location.href = '/Discourse/index.php';
+          }
+      };
   });
   </script>
 </body>

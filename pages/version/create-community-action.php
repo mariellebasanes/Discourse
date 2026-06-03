@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $name         = isset($_POST['name'])         ? trim($_POST['name'])         : '';
 $desc         = isset($_POST['desc'])         ? trim($_POST['desc'])         : '';
-$category     = isset($_POST['category'])     ? trim($_POST['category'])     : 'my-communities';
+$category     = isset($_POST['School'])     ? trim($_POST['School'])     : 'my-communities';
 $theme_color  = isset($_POST['theme_color'])  ? trim($_POST['theme_color'])  : '#1A8B44';
 $custom_topics_raw = isset($_POST['custom_topics']) ? trim($_POST['custom_topics']) : '';
 
@@ -52,24 +52,43 @@ $color_map = [
     '#20c997' => ['bg-light-success', 'text-success', 'bi-activity'],
 ];
 
-[$bg_class, $text_class, $icon] = $color_map[$theme_color] ?? ['bg-light-success', 'text-success', 'bi-people-fill'];
+[$bg_class, $text_class, $default_icon] = $color_map[$theme_color] ?? ['bg-light-success', 'text-success', 'bi-people-fill'];
+$icon = isset($_POST['icon']) ? trim($_POST['icon']) : '';
 
-// Refine icon by community name keywords
-$name_lower = strtolower($name);
-if      (strpos($name_lower, 'life')   !== false) $icon = 'bi-heart-fill';
-elseif  (strpos($name_lower, 'food')   !== false || strpos($name_lower, 'trip') !== false) $icon = 'bi-cup-hot-fill';
-elseif  (strpos($name_lower, 'cosplay') !== false || strpos($name_lower, 'art') !== false || strpos($name_lower, 'creative') !== false) $icon = 'bi-palette-fill';
-elseif  (strpos($name_lower, 'enroll') !== false || strpos($name_lower, 'thesis') !== false || strpos($name_lower, 'academ') !== false) $icon = 'bi-journal-bookmark-fill';
-elseif  (strpos($name_lower, 'innovat') !== false || strpos($name_lower, 'startup') !== false) $icon = 'bi-lightbulb-fill';
-elseif  (strpos($name_lower, 'diliman') !== false || strpos($name_lower, 'mortarboard') !== false) $icon = 'bi-mortarboard-fill';
-elseif  (strpos($name_lower, 'alabang') !== false) $icon = 'bi-building-fill';
-elseif  (strpos($name_lower, 'sport') !== false || strpos($name_lower, 'game') !== false) $icon = 'bi-trophy-fill';
-elseif  (strpos($name_lower, 'music') !== false) $icon = 'bi-music-note-beamed';
-elseif  (strpos($name_lower, 'tech') !== false || strpos($name_lower, 'dev') !== false) $icon = 'bi-cpu-fill';
-elseif  (strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false || strpos($name_lower, 'fresh') !== false) $icon = 'bi-people-fill';
+if (empty($icon)) {
+    $icon = $default_icon;
+    // Refine icon by community name keywords
+    $name_lower = strtolower($name);
+    if      (strpos($name_lower, 'life')   !== false) $icon = 'bi-heart-fill';
+    elseif  (strpos($name_lower, 'food')   !== false || strpos($name_lower, 'trip') !== false) $icon = 'bi-cup-hot-fill';
+    elseif  (strpos($name_lower, 'cosplay') !== false || strpos($name_lower, 'art') !== false || strpos($name_lower, 'creative') !== false) $icon = 'bi-palette-fill';
+    elseif  (strpos($name_lower, 'enroll') !== false || strpos($name_lower, 'thesis') !== false || strpos($name_lower, 'academ') !== false) $icon = 'bi-journal-bookmark-fill';
+    elseif  (strpos($name_lower, 'innovat') !== false || strpos($name_lower, 'startup') !== false) $icon = 'bi-lightbulb-fill';
+    elseif  (strpos($name_lower, 'diliman') !== false || strpos($name_lower, 'mortarboard') !== false) $icon = 'bi-mortarboard-fill';
+    elseif  (strpos($name_lower, 'alabang') !== false) $icon = 'bi-building-fill';
+    elseif  (strpos($name_lower, 'sport') !== false || strpos($name_lower, 'game') !== false) $icon = 'bi-trophy-fill';
+    elseif  (strpos($name_lower, 'music') !== false) $icon = 'bi-music-note-beamed';
+    elseif  (strpos($name_lower, 'tech') !== false || strpos($name_lower, 'dev') !== false) $icon = 'bi-cpu-fill';
+    elseif  (strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false || strpos($name_lower, 'fresh') !== false) $icon = 'bi-people-fill';
+} else {
+    $icon = sanitize($icon);
+}
 
 $creator_id = $identification ?? null;
 $inserted   = false;
+$logo_url   = '';
+
+if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+    $target_dir = dirname(dirname(__DIR__)) . '/assets/images/communities/';
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+    $file_ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
+    $new_filename = uniqid('comm_', true) . '.' . $file_ext;
+    if (move_uploaded_file($_FILES['logo']['tmp_name'], $target_dir . $new_filename)) {
+        $logo_url = '/Discourse/assets/images/communities/' . $new_filename;
+    }
+}
 
 if ($EDITH && $creator_id) {
     // Check name not already taken
@@ -87,11 +106,11 @@ if ($EDITH && $creator_id) {
     }
 
     $stmt = $EDITH->prepare(
-        "INSERT INTO communities (title, `desc`, category, theme_color, icon, bg_class, text_class, members, posts, admin_id, custom_topics)
-         VALUES (?, ?, ?, ?, ?, ?, ?, 1, 0, ?, ?)"
+        "INSERT INTO communities (title, `desc`, category, theme_color, icon, bg_class, text_class, members, posts, admin_id, custom_topics, logo_url)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 1, 0, ?, ?, ?)"
     );
     if ($stmt) {
-        $stmt->bind_param("sssssssss", $name, $desc, $category, $theme_color, $icon, $bg_class, $text_class, $creator_id, $custom_topics);
+        $stmt->bind_param("ssssssssss", $name, $desc, $category, $theme_color, $icon, $bg_class, $text_class, $creator_id, $custom_topics, $logo_url);
         if ($stmt->execute()) {
             $inserted = true;
             // Add creator as admin member
@@ -115,7 +134,7 @@ if (!$inserted) {
         'theme_color' => $theme_color, 'icon' => $icon,
         'bg_class' => $bg_class, 'text_class' => $text_class,
         'members' => 1, 'posts' => 0, 'admin_id' => $creator_id,
-        'custom_topics' => $custom_topics,
+        'custom_topics' => $custom_topics, 'logo_url' => $logo_url,
     ]);
     if (!isset($_SESSION['joined_communities'])) $_SESSION['joined_communities'] = [];
     $_SESSION['joined_communities'][] = $name;
@@ -135,6 +154,7 @@ echo json_encode([
         'posts'         => 0,
         'admin_id'      => $creator_id,
         'custom_topics' => $custom_topics,
+        'logo_url'      => $logo_url,
     ]
 ]);
 exit();
