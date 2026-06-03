@@ -382,30 +382,40 @@ if ($EDITH) {
                       </div>
                     <?php }
                     foreach ($posts as $post) {
+                      $c_isAnon = (!empty($post['is_anonymous']));
+                      $c_avatar = $c_isAnon ? '/Discourse/assets/images/anonymous.png' : (!empty($post['avatar']) ? $post['avatar'] : '/Discourse/assets/images/anonymous.png');
+                      $c_author = $c_isAnon ? 'Anonymous' : ($post['author'] ?? 'User');
+                      $c_profileHref = ($c_isAnon || empty($post['author_id'])) ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . urlencode($post['author_id']);
+                      $c_commDetails = getCommunityIconDetails($community_name);
+                      $c_saved = IS_POST_SAVED($post['id'], $identification);
+                      $c_commentCount = $post['comments_count'] ?? 0;
                     ?>
-                      <div class="card border-0 shadow mb-5 post-card overflow-hidden" data-dc="post-card">
+                      <!-- ── Post Card ── -->
+                      <div class="card border-0 shadow mb-5" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>">
                         <div class="d-flex">
-                          <!-- Vote Column (Dashboard Style) -->
+
+                          <!-- Vote Column -->
                           <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
-                            <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-up-btn" title="Upvote">
+                            <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
                               <i class="bi bi-hand-thumbs-up p-0"></i>
                             </button>
-                            <span class="fs-7 fw-bold text-gray-600 vote-count-text"><?php echo $post['votes']; ?></span>
-                            <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-down-btn" title="Downvote">
+                            <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['votes']; ?></span>
+                            <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
                               <i class="bi bi-hand-thumbs-down p-0"></i>
                             </button>
                           </div>
 
-                          <!-- Content Section -->
-                          <div class="d-flex flex-column py-5 flex-grow-1 bg-white text-start">
+                          <!-- Post Content -->
+                          <div class="d-flex flex-column py-5 flex-grow-1">
                             <div class="row g-0 px-5">
-                              <!-- Row 1: Tag Badge & Report -->
+
+                              <!-- Row 1: Community badge + Report button -->
                               <div class="col-12 mb-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                   <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($community_name); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
-                                    <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $comm_bg; ?>"
-                                      style="width: 24px; height: 24px;">
-                                      <i class="bi <?php echo $comm_icon; ?> fs-8 <?php echo $comm_text; ?>"></i>
+                                    <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $c_commDetails['bg_class']; ?>"
+                                         style="width: 24px; height: 24px;">
+                                      <i class="bi <?php echo $c_commDetails['icon']; ?> fs-8 <?php echo $c_commDetails['text_class']; ?>"></i>
                                     </div>
                                     <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/<?php echo htmlspecialchars($community_name); ?></span>
                                   </a>
@@ -415,76 +425,77 @@ if ($EDITH) {
                                 </div>
                               </div>
 
-                              <!-- Row 2: User avatar, name, time -->
+                              <!-- Row 2: Avatar + Author name + Timestamp -->
                               <div class="col-12 mb-2">
                                 <div class="d-flex gap-3 align-items-center">
-                                  <img src="<?php echo $post['avatar']; ?>" alt="<?php echo $post['author']; ?>" class="h-40px w-40px rounded-circle" />
+                                  <img src="<?php echo $c_avatar; ?>" alt="<?php echo htmlspecialchars($c_author); ?>" class="h-40px w-40px rounded-circle" />
                                   <div class="d-flex flex-column">
-                                    <?php
-                                    $profileHref = (!empty($post['is_anonymous']) || empty($post['author_id']))
-                                        ? 'javascript:void(0)'
-                                        : '/Discourse/pages/version/profile-other.php?id=' . urlencode($post['author_id']);
-                                    ?>
-                                    <a href="<?php echo $profileHref; ?>" class="fs-6 fw-bold text-gray-800 text-hover-primary"><?php echo htmlspecialchars($post['author']); ?></a>
+                                    <a href="<?php echo $c_profileHref; ?>" class="fs-6 fw-bold text-gray-800 text-hover-primary"><?php echo htmlspecialchars($c_author); ?></a>
                                     <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i><?php echo $post['time']; ?></span>
                                   </div>
                                 </div>
                               </div>
 
-                              <!-- Row 3: Title & Excerpt -->
+                              <!-- Row 3: Topic badge + Title + Excerpt + Hashtags -->
                               <div class="col-12 mb-2">
                                 <div class="d-flex flex-column gap-2 text-start">
-                                  <div>
-                                    <div class="d-flex flex-wrap align-items-center gap-1">
-                                      <?php echo renderTopicBadge($post['tag']); ?>
-                                      <?php echo renderHashtagBadges($post['tags'] ?? ''); ?>
-                                    </div>
+                                  <div class="d-flex flex-wrap align-items-center gap-1">
+                                    <?php echo renderTopicBadge($post['tag']); ?>
                                   </div>
-                                  <h3 class="fw-bold fs-5 mb-0">
-                                    <a href="/Discourse/pages/version/view-post.php<?php echo $post['id'] ? '?id=' . $post['id'] : ''; ?>" class="text-gray-800 text-hover-primary dc-post-title-link">
-                                      <?php echo $post['title']; ?>
-                                    </a>
-                                  </h3>
+                                  <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
+                                    <?php echo htmlspecialchars($post['title']); ?>
+                                  </a>
                                   <div class="dc-body-wrap">
-                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo $post['body']; ?></span>
+                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo strip_tags($post['body']); ?></span>
                                     <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                   </div>
+                                  <?php $c_htags = renderHashtagBadges($post['tags'] ?? ''); if ($c_htags): ?>
+                                  <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+                                    <?php echo $c_htags; ?>
+                                  </div>
+                                  <?php endif; ?>
                                 </div>
                               </div>
+
                             </div>
 
                             <!-- Actions Row -->
                             <div class="row">
                               <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <span class="comment-count-btn-text"><?php echo $post['comments_count']; ?> Comment</span></button>
+                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $c_commentCount; ?> Comment<?php echo $c_commentCount == 1 ? '' : 's'; ?></button>
                                 <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                <button class="btn btn-sm dc-post-save"><i class="bi bi-bookmark me-1"></i> Save</button>
+                                <button class="btn btn-sm dc-post-save"
+                                        data-on="<?php echo $c_saved ? '1' : '0'; ?>"
+                                        style="<?php echo $c_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                                  <i class="bi <?php echo $c_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
+                                  <?php echo $c_saved ? 'Saved' : 'Save'; ?>
+                                </button>
                               </div>
                             </div>
 
-                            <!-- Inline Quick Comment Drawer (Dashboard style) -->
-                            <div class="dc-quick-comment-drawer border-top border-gray-200 mt-4 pt-4 px-5 w-100" style="display: none; background-color: #fcfdfc;">
+                            <!-- Inline Quick Comment Drawer -->
+                            <div class="dc-quick-comment-drawer border-top border-gray-200 mt-4 pt-4 px-5" style="display: none; background-color: #fcfdfc;">
                               <div class="dc-quick-comments-list mb-4 d-flex flex-column gap-3" style="max-height: 180px; overflow-y: auto;">
+                                <?php if (!empty($post['first_comment'])): ?>
                                 <div class="d-flex align-items-start gap-2 fs-7">
-                                  <img src="https://ui-avatars.com/api/?name=Sofia+Karim&background=f3f4f6&color=d97706&rounded=true" class="h-25px w-25px rounded-circle" alt="Sofia Karim">
+                                  <img src="https://ui-avatars.com/api/?name=User&background=f3f4f6&color=d97706&rounded=true" class="h-25px w-25px rounded-circle" alt="User">
                                   <div class="bg-light p-2 rounded-3 flex-grow-1 text-start">
-                                    <div class="d-flex justify-content-between">
-                                      <span class="fw-bold text-gray-800">Sofia Karim</span>
-                                      <span class="text-muted fs-9">2d ago</span>
-                                    </div>
-                                    <p class="text-gray-700 m-0 mt-1"><?php echo $post['first_comment']; ?></p>
+                                    <p class="text-gray-700 m-0"><?php echo htmlspecialchars($post['first_comment']); ?></p>
                                   </div>
                                 </div>
+                                <?php endif; ?>
                               </div>
                               <form class="dc-quick-comment-form">
+                                <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>" />
                                 <div class="d-flex align-items-center gap-2">
-                                  <img src="/Discourse/assets/images/catalina.webp" class="h-30px w-30px rounded-circle" alt="User avatar" />
-                                  <input type="text" class="form-control form-control-sm rounded-pill px-4 fs-7 bg-white border border-gray-300" placeholder="Write a quick comment..." required style="height: 35px;" />
-                                  <button type="submit" class="btn btn-sm btn-success rounded-pill px-4 fw-bold" style="background:#0b301f; color:#fff; border: none; height: 35px;">Post</button>
+                                  <img src="<?php echo !empty($ACCOUNT['avatar_md']) ? $ACCOUNT['avatar_md'] : '/Discourse/assets/images/anonymous.png'; ?>" class="h-30px w-30px rounded-circle" alt="User avatar" />
+                                  <input type="text" class="form-control form-control-sm rounded-pill px-4 fs-7 bg-white border border-gray-300" placeholder="Write a quick comment..." required />
+                                  <button type="submit" class="btn btn-sm btn-success rounded-pill px-4 fw-bold" style="background:#0b301f; color:#fff;">Post</button>
                                 </div>
                               </form>
                             </div>
                           </div>
+
                         </div>
                       </div>
                     <?php } ?>
@@ -682,13 +693,13 @@ if ($EDITH) {
       });
 
       // 1. Voting Logic
-      $(document).on('click', '.vote-btn-v2', function(e) {
+      $(document).on('click', '.dc-vote-up, .dc-vote-down', function(e) {
         e.preventDefault();
         const btn = $(this);
-        const isUpvote = btn.hasClass('vote-up-btn');
-        const container = btn.closest('.post-card');
-        const scoreSpan = container.find('.vote-count-text');
-        const otherBtn = isUpvote ? container.find('.vote-down-btn') : container.find('.vote-up-btn');
+        const isUpvote = btn.hasClass('dc-vote-up');
+        const container = btn.closest('[data-dc="post-card"]');
+        const scoreSpan = container.find('.dc-vote-count');
+        const otherBtn = isUpvote ? container.find('.dc-vote-down') : container.find('.dc-vote-up');
 
         let currentScore = parseInt(scoreSpan.text()) || 0;
 
@@ -718,7 +729,7 @@ if ($EDITH) {
       // 2. Real-time Search Filtering
       $('.search-input-v2').on('keyup', function() {
         const searchTerm = $(this).val().toLowerCase();
-        $('.post-card').each(function() {
+        $('[data-dc="post-card"]').each(function() {
           const title = $(this).find('.dc-post-title-link').text().toLowerCase();
           const content = $(this).find('.dc-body-clamp').text().toLowerCase();
 
@@ -755,7 +766,7 @@ if ($EDITH) {
 
         const card = form.closest('[data-dc="post-card"]');
         const commentsList = card.find('.dc-quick-comments-list');
-        const commentCountSpan = card.find('.comment-count-btn-text');
+        const commentCountBtn = card.find('.dc-post-comment');
 
         function escapeHtml(text) {
           return text
@@ -783,10 +794,14 @@ if ($EDITH) {
         commentsList.scrollTop(commentsList[0].scrollHeight);
         input.val('');
 
-        // Increment comment count
-        let currentCount = parseInt(commentCountSpan.text()) || 0;
-        currentCount++;
-        commentCountSpan.text(currentCount + (currentCount === 1 ? ' Comment' : ' Comments'));
+        // Increment comment count on button text
+        if (commentCountBtn.length) {
+          const btnText = commentCountBtn.text().trim();
+          const match = btnText.match(/^(\d+)/);
+          const currentCount = match ? parseInt(match[1]) : 0;
+          const newCount = currentCount + 1;
+          commentCountBtn.html('<i class="bi bi-chat me-1"></i> ' + newCount + ' Comment' + (newCount === 1 ? '' : 's'));
+        }
 
         // Show Toast
         showFeedToast('Comment posted!');

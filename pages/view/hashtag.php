@@ -186,9 +186,9 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                 <div class="d-flex">
                                                     <!-- Vote column -->
                                                     <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
-                                                        <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-up-btn" title="Upvote"><i class="bi bi-hand-thumbs-up p-0"></i></button>
-                                                        <span class="fs-7 fw-bold text-gray-600 vote-count-text"><?php echo $post['upvotes'] ?? 0; ?></span>
-                                                        <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-down-btn" title="Downvote"><i class="bi bi-hand-thumbs-down p-0"></i></button>
+                                                        <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote"><i class="bi bi-hand-thumbs-up p-0"></i></button>
+                                                        <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['upvotes'] ?? 0; ?></span>
+                                                        <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote"><i class="bi bi-hand-thumbs-down p-0"></i></button>
                                                     </div>
 
                                                     <!-- Content -->
@@ -221,31 +221,31 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                                 </div>
                                                             </div>
 
-                                                            <!-- Topic + Hashtag badges + Title + Body -->
+                                                            <!-- Topic badge + Title + Body + Hashtags below -->
                                                             <div class="col-12 mb-2">
                                                                 <div class="d-flex flex-column gap-2 text-start">
                                                                     <div class="d-flex flex-wrap align-items-center gap-1">
                                                                         <?php echo renderTopicBadge($post['topic'] ?? ''); ?>
-                                                                        <?php
-                                                                        // Highlight the current hashtag, show others too
-                                                                        $tagsRaw = $post['tags'] ?? '';
-                                                                        $tagArr  = array_filter(array_map('trim', preg_split('/[,•]+/', $tagsRaw)));
-                                                                        foreach ($tagArr as $t) {
-                                                                            $isActive = (strtolower($t) === strtolower($tag));
-                                                                            $url = '/Discourse/pages/view/hashtag.php?tag=' . urlencode($t);
-                                                                            echo '<a href="' . $url . '" class="badge rounded-pill px-2 py-1 fs-9 fw-semibold text-decoration-none" '
-                                                                               . 'style="' . ($isActive ? 'background:#0b301f;color:#fff;border:1px solid #0b301f;' : 'background:#f1f3f4;color:#555;border:1px solid #e0e0e0;') . '">'
-                                                                               . '#' . htmlspecialchars(strtolower($t)) . '</a> ';
-                                                                        }
-                                                                        ?>
                                                                     </div>
-                                                                    <h3 class="fw-bold fs-5 mb-0">
-                                                                        <a href="<?php echo $postHref; ?>" class="text-gray-800 text-hover-primary dc-post-title-link"><?php echo htmlspecialchars($post['title']); ?></a>
-                                                                    </h3>
+                                                                    <a href="<?php echo $postHref; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link"><?php echo htmlspecialchars($post['title']); ?></a>
                                                                     <div class="dc-body-wrap">
                                                                         <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo htmlspecialchars(strip_tags($post['body'] ?? '')); ?></span>
                                                                         <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                                                     </div>
+                                                                    <?php
+                                                                    $tagsRaw = $post['tags'] ?? '';
+                                                                    $tagArr  = array_filter(array_map('trim', preg_split('/[,•]+/', $tagsRaw)));
+                                                                    if (!empty($tagArr)): ?>
+                                                                    <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+                                                                        <?php foreach ($tagArr as $ht) {
+                                                                            $isActive = (strtolower($ht) === strtolower($tag));
+                                                                            $url = '/Discourse/pages/view/hashtag.php?tag=' . urlencode($ht);
+                                                                            echo '<a href="' . $url . '" class="badge rounded-pill px-2 py-1 fs-9 fw-semibold text-decoration-none" '
+                                                                               . 'style="' . ($isActive ? 'background:#0b301f;color:#fff;border:1px solid #0b301f;' : 'background:#f1f3f4;color:#555;border:1px solid #e0e0e0;') . '">'
+                                                                               . '#' . htmlspecialchars(strtolower($ht)) . '</a> ';
+                                                                        } ?>
+                                                                    </div>
+                                                                    <?php endif; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -265,24 +265,26 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                         </div>
 
                                                         <!-- Quick comment drawer -->
-                                                        <?php if (!empty($post['first_comment'])): ?>
                                                         <div class="dc-quick-comment-drawer border-top border-gray-200 mt-4 pt-4 px-5" style="display:none;background:#fcfdfc;">
                                                             <div class="dc-quick-comments-list mb-4 d-flex flex-column gap-3" style="max-height:180px;overflow-y:auto;">
+                                                                <?php if (!empty($post['first_comment'])): ?>
                                                                 <div class="d-flex align-items-start gap-2 fs-7">
                                                                     <img src="<?php echo htmlspecialchars($post['avatar']); ?>" class="h-25px w-25px rounded-circle" alt="<?php echo htmlspecialchars($post['author']); ?>">
                                                                     <div class="bg-light p-2 rounded-3 flex-grow-1">
                                                                         <p class="text-gray-700 m-0"><?php echo htmlspecialchars($post['first_comment']); ?></p>
                                                                     </div>
                                                                 </div>
+                                                                <?php endif; ?>
                                                             </div>
                                                             <form class="dc-quick-comment-form">
+                                                                <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>" />
                                                                 <div class="d-flex align-items-center gap-2">
+                                                                    <img src="<?php echo !empty($ACCOUNT['avatar_md']) ? $ACCOUNT['avatar_md'] : '/Discourse/assets/images/anonymous.png'; ?>" class="h-30px w-30px rounded-circle" alt="You" />
                                                                     <input type="text" class="form-control form-control-sm rounded-pill px-4 fs-7 bg-white border border-gray-300" placeholder="Write a quick comment..." required />
                                                                     <button type="submit" class="btn btn-sm rounded-pill px-4 fw-bold" style="background:#0b301f;color:#fff;">Post</button>
                                                                 </div>
                                                             </form>
                                                         </div>
-                                                        <?php endif; ?>
 
                                                     </div>
                                                 </div>
@@ -367,7 +369,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
         $('#hashtagSearchInput').on('keyup', function() {
             const q = $(this).val().toLowerCase();
             let visible = 0;
-            $('#hashtagPostFeed .post-card').each(function() {
+            $('#hashtagPostFeed [data-dc="post-card"]').each(function() {
                 const text = $(this).find('.dc-post-title-link, .dc-body-clamp').text().toLowerCase();
                 const show = text.includes(q);
                 $(this).toggle(show);
@@ -377,25 +379,65 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
         });
 
         // Voting
-        $(document).on('click', '.vote-btn-v2', function(e) {
+        $(document).on('click', '.dc-vote-up, .dc-vote-down', function(e) {
             e.preventDefault();
             const btn = $(this);
-            const isUp = btn.hasClass('vote-up-btn');
-            const card = btn.closest('.post-card');
-            const score = card.find('.vote-count-text');
-            const other = isUp ? card.find('.vote-down-btn') : card.find('.vote-up-btn');
+            const isUp = btn.hasClass('dc-vote-up');
+            const card = btn.closest('[data-dc="post-card"]');
+            const score = card.find('.dc-vote-count');
+            const other = isUp ? card.find('.dc-vote-down') : card.find('.dc-vote-up');
             let n = parseInt(score.text()) || 0;
             if (btn.hasClass('active-vote-up') || btn.hasClass('active-vote-down')) {
                 btn.removeClass('active-vote-up active-vote-down');
+                btn.find('i').attr('class', isUp ? 'bi bi-hand-thumbs-up p-0' : 'bi bi-hand-thumbs-down p-0');
                 score.text(n - (isUp ? 1 : -1));
             } else {
                 if (other.hasClass('active-vote-up') || other.hasClass('active-vote-down')) {
                     other.removeClass('active-vote-up active-vote-down');
+                    other.find('i').attr('class', isUp ? 'bi bi-hand-thumbs-down p-0' : 'bi bi-hand-thumbs-up p-0');
                     n += isUp ? 1 : -1;
                 }
                 btn.addClass(isUp ? 'active-vote-up' : 'active-vote-down');
+                btn.find('i').attr('class', isUp ? 'bi bi-hand-thumbs-up-fill p-0' : 'bi bi-hand-thumbs-down-fill p-0');
                 score.text(n + (isUp ? 1 : -1));
             }
+        });
+
+        // Comment Drawer
+        $(document).on('click', '.dc-post-comment', function(e) {
+            e.preventDefault();
+            const drawer = $(this).closest('[data-dc="post-card"]').find('.dc-quick-comment-drawer');
+            drawer.slideToggle(200);
+            drawer.find('input[type="text"]').focus();
+        });
+
+        // Comment Submit
+        $(document).on('submit', '.dc-quick-comment-form', function(e) {
+            e.preventDefault();
+            const input = $(this).find('input[type="text"]');
+            const text = input.val().trim();
+            if (!text) return;
+            const card = $(this).closest('[data-dc="post-card"]');
+            const list = card.find('.dc-quick-comments-list');
+            const commentBtn = card.find('.dc-post-comment');
+            function esc(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+            list.append(`
+                <div class="d-flex align-items-start gap-2 fs-7">
+                  <img src="/Discourse/assets/images/anonymous.png" class="h-25px w-25px rounded-circle">
+                  <div class="bg-light p-2 rounded-3 flex-grow-1 text-start">
+                    <div class="d-flex justify-content-between">
+                      <span class="fw-bold text-gray-800">You</span>
+                      <span class="text-muted fs-9">just now</span>
+                    </div>
+                    <p class="text-gray-700 m-0 mt-1">${esc(text)}</p>
+                  </div>
+                </div>`);
+            list.scrollTop(list[0].scrollHeight);
+            input.val('');
+            const btnText = commentBtn.text().trim();
+            const match = btnText.match(/^(\d+)/);
+            const n = (match ? parseInt(match[1]) : 0) + 1;
+            commentBtn.html('<i class="bi bi-chat me-1"></i> ' + n + ' Comment' + (n === 1 ? '' : 's'));
         });
     });
     </script>
