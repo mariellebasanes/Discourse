@@ -115,7 +115,12 @@ if (!function_exists('getCategoryBadgeStyle')) {
   <div class="app-container container-xxl d-flex align-items-stretch justify-content-between" id="kt_app_header_container">
 
     <div class="app-navbar flex-shrink-0">
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-applications-browser.php'); ?>
+      <?php 
+      $widget_path = $_SERVER['DOCUMENT_ROOT'] . '/includes/widget-applications-browser.php';
+      if (file_exists($widget_path)) {
+          include($widget_path);
+      }
+      ?>
       <a href="/Discourse/index.php" onclick="KTApp.showPageLoading()" class="d-flex align-items-center ms-4">
         <img src="/Discourse/assets/images/Discourse-logo.png" class="h-70px me-2">
       </a>
@@ -158,8 +163,14 @@ if (!function_exists('getCategoryBadgeStyle')) {
         <!-- Optional/Hidden Widgets -->
         <div class="d-none">
           <?php
-          include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-login.php');
-          include($_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-hamburger.php');
+          $login_widget = $_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-login.php';
+          $hamburger_widget = $_SERVER['DOCUMENT_ROOT'] . '/includes/widget-app-item-hamburger.php';
+          if (file_exists($login_widget)) {
+              include($login_widget);
+          }
+          if (file_exists($hamburger_widget)) {
+              include($hamburger_widget);
+          }
           ?>
         </div>
 
