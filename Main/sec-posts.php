@@ -429,10 +429,7 @@ if (!function_exists('renderPostCardMarkup')) {
                 <div class="col-12 mb-2">
                   <div class="d-flex flex-column gap-2 text-start">
                     <div class="d-flex flex-wrap align-items-center gap-1">
-                      <?php
-                        echo renderTopicBadge($post['topic']);
-                        echo renderHashtagBadges($post['tags'] ?? '');
-                      ?>
+                      <?php echo renderTopicBadge($post['topic']); ?>
                     </div>
                     <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                       <?php echo htmlspecialchars($post['title']); ?>
@@ -441,6 +438,11 @@ if (!function_exists('renderPostCardMarkup')) {
                       <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo strip_tags($post['body']); ?></span>
                       <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                     </div>
+                    <?php $htags = renderHashtagBadges($post['tags'] ?? ''); if ($htags): ?>
+                    <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+                      <?php echo $htags; ?>
+                    </div>
+                    <?php endif; ?>
                   </div>
                 </div>
     

@@ -17,6 +17,7 @@ $karma         = 0;
 $joined_count  = 0;
 $my_posts      = [];
 $my_comments   = [];
+$my_communities = [];
 
 if ($EDITH && $identification) {
     $id = $identification;
@@ -57,6 +58,20 @@ if ($EDITH && $identification) {
         $stmt->bind_param("s", $id);
         $stmt->execute();
         $my_comments = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+    }
+
+    // Communities tab
+    $stmt = $EDITH->prepare(
+        "SELECT cm.community_title, COALESCE(c.members,0) as members
+         FROM community_members cm
+         LEFT JOIN communities c ON c.title = cm.community_title
+         WHERE cm.identification=? ORDER BY cm.id ASC"
+    );
+    if ($stmt) {
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $my_communities = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
     }
 }
@@ -188,6 +203,7 @@ if (!function_exists('profile_relative_time')) {
                       <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'upvoted' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="upvoted">Upvoted</a>
                       <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'downvoted' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="downvoted">Downvoted</a>
                       <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'saved' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="saved">Saved</a>
+                      <a class="profile-tab fw-bolder fs-6 text-muted <?php echo $active_tab === 'communities' ? 'active' : ''; ?> py-3 text-nowrap" data-tab="communities">Communities</a>
                     </div>
 
                     <!-- Tab Content -->
@@ -273,46 +289,109 @@ if (!function_exists('profile_relative_time')) {
                         $post['tag']      = $post['topic'] ?? 'GENERAL';
                         $post['time']     = profile_relative_time($post['created_at']);
                         $post['comments'] = $post['comment_count'] ?? 0;
-                        $post['image']    = '';
+                        $p_commDetails = getCommunityIconDetails($post['community'] ?? '');
+                        $p_saved = IS_POST_SAVED($post['id'], $identification);
                       ?>
-                      <div class="card border border-gray-300 shadow-none mb-5 rounded-2">
-                        <div class="card-body p-5">
-                          <div class="d-flex align-items-center gap-2 mb-3">
-                            <div class="symbol symbol-20px avatar-circle shadow-sm" style="background-color: #8C9933;">
-                              <img src="/Discourse/assets/img/logo/feu-tech.webp" alt="" class="w-100 p-1">
+                      <!-- ── Post Card ── -->
+                      <div class="card border-0 shadow mb-5" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>">
+                        <div class="d-flex">
+
+                          <!-- Vote Column -->
+                          <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
+                            <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
+                              <i class="bi bi-hand-thumbs-up p-0"></i>
+                            </button>
+                            <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['upvotes']; ?></span>
+                            <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
+                              <i class="bi bi-hand-thumbs-down p-0"></i>
+                            </button>
+                          </div>
+
+                          <!-- Post Content -->
+                          <div class="d-flex flex-column py-5 flex-grow-1">
+                            <div class="row g-0 px-5">
+
+                              <!-- Row 1: Community badge + Report button -->
+                              <div class="col-12 mb-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($post['community'] ?? ''); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
+                                    <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $p_commDetails['bg_class']; ?>"
+                                         style="width: 24px; height: 24px;">
+                                      <i class="bi <?php echo $p_commDetails['icon']; ?> fs-8 <?php echo $p_commDetails['text_class']; ?>"></i>
+                                    </div>
+                                    <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/<?php echo htmlspecialchars($post['community'] ?? ''); ?></span>
+                                  </a>
+                                  <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportPost">
+                                    <i class="bi bi-flag me-1"></i> Report
+                                  </button>
+                                </div>
+                              </div>
+
+                              <!-- Row 2: Avatar + Author name + Timestamp -->
+                              <div class="col-12 mb-2">
+                                <div class="d-flex gap-3 align-items-center">
+                                  <img src="<?php echo !empty($ACCOUNT['avatar_md']) ? $ACCOUNT['avatar_md'] : '/Discourse/assets/images/anonymous.png'; ?>" alt="<?php echo htmlspecialchars($ACCOUNT['display_name'] ?? 'User'); ?>" class="h-40px w-40px rounded-circle" />
+                                  <div class="d-flex flex-column">
+                                    <span class="fs-6 fw-bold text-gray-800"><?php echo htmlspecialchars($ACCOUNT['display_name'] ?? 'User'); ?></span>
+                                    <span class="text-muted fs-8"><i class="bi bi-clock me-1 fs-8"></i><?php echo $post['time']; ?></span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- Row 3: Topic badge + Title + Excerpt + Hashtags -->
+                              <div class="col-12 mb-2">
+                                <div class="d-flex flex-column gap-2 text-start">
+                                  <div class="d-flex flex-wrap align-items-center gap-1">
+                                    <?php echo renderTopicBadge($post['tag']); ?>
+                                  </div>
+                                  <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
+                                    <?php echo htmlspecialchars($post['title']); ?>
+                                  </a>
+                                  <?php if (!empty($post['body'])): ?>
+                                  <div class="dc-body-wrap">
+                                    <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo strip_tags($post['body']); ?></span>
+                                    <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
+                                  </div>
+                                  <?php endif; ?>
+                                  <?php $p_htags = renderHashtagBadges($post['tags'] ?? ''); if ($p_htags): ?>
+                                  <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+                                    <?php echo $p_htags; ?>
+                                  </div>
+                                  <?php endif; ?>
+                                </div>
+                              </div>
+
                             </div>
-                            <span class="fw-bold text-dark fs-8"><?php echo $post['community']; ?></span>
-                            <span class="text-muted fs-9">· <?php echo $post['time']; ?></span>
+
+                            <!-- Actions Row -->
+                            <div class="row">
+                              <div class="d-flex justify-content-start align-items-center w-100 px-5">
+                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comments']; ?> Comment<?php echo $post['comments'] == 1 ? '' : 's'; ?></button>
+                                <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                <button class="btn btn-sm dc-post-save"
+                                        data-on="<?php echo $p_saved ? '1' : '0'; ?>"
+                                        style="<?php echo $p_saved ? 'background:rgba(13,110,253,.12);color:#0d6efd;border-color:#0d6efd;' : ''; ?>">
+                                  <i class="bi <?php echo $p_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
+                                  <?php echo $p_saved ? 'Saved' : 'Save'; ?>
+                                </button>
+                              </div>
+                            </div>
+
+                            <!-- Inline Quick Comment Drawer -->
+                            <div class="dc-quick-comment-drawer border-top border-gray-200 mt-4 pt-4 px-5" style="display: none; background-color: #fcfdfc;">
+                              <div class="dc-quick-comments-list mb-4 d-flex flex-column gap-3" style="max-height: 180px; overflow-y: auto;"></div>
+                              <form class="dc-quick-comment-form">
+                                <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>" />
+                                <div class="d-flex align-items-center gap-2">
+                                  <img src="<?php echo !empty($ACCOUNT['avatar_md']) ? $ACCOUNT['avatar_md'] : '/Discourse/assets/images/anonymous.png'; ?>" class="h-30px w-30px rounded-circle" alt="User avatar" />
+                                  <input type="text" class="form-control form-control-sm rounded-pill px-4 fs-7 bg-white border border-gray-300" placeholder="Write a quick comment..." required />
+                                  <button type="submit" class="btn btn-sm btn-success rounded-pill px-4 fw-bold" style="background:#0b301f; color:#fff;">Post</button>
+                                </div>
+                              </form>
+                            </div>
+
                           </div>
-                           <div class="mb-2 d-flex flex-wrap align-items-center gap-1">
-                             <?php echo renderTopicBadge($post['tag']); ?>
-                             <?php echo renderHashtagBadges($post['tags'] ?? ''); ?>
-                           </div>
-                          <h4 class="fw-bolder fs-4 mb-2">
-                            <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-dark text-hover-primary"><?php echo htmlspecialchars($post['title']); ?></a>
-                          </h4>
-                          <?php if (!empty($post['body'])) { ?>
-                          <p class="text-gray-700 fs-7 mb-3"><?php echo $post['body']; ?></p>
-                          <?php } ?>
-                          <?php if (!empty($post['image'])) { ?>
-                          <div class="mb-3 rounded-3 overflow-hidden">
-                            <img src="<?php echo $post['image']; ?>" class="w-100 rounded-3" alt="Post image" style="max-height: 300px; object-fit: cover;">
-                          </div>
-                          <?php } ?>
-                          <div class="d-flex align-items-center gap-1 pt-2 border-top border-gray-200">
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['upvotes']; ?></span>
-                            </button>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['downvotes']; ?></span>
-                            </button>
-                            <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill text-decoration-none">
-                              <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9"><?php echo $post['comments']; ?></span>
-                            </a>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                              <i class="bi bi-share fs-9"></i> <span class="fw-bold fs-9">Share</span>
-                            </button>
-                          </div>
+
                         </div>
                       </div>
                       <?php } ?>
@@ -547,6 +626,40 @@ if (!function_exists('profile_relative_time')) {
                           }
                       }
                       ?>
+                    </div>
+
+                    <!-- Communities Tab -->
+                    <div class="tab-pane <?php echo $active_tab === 'communities' ? 'active' : ''; ?>" id="tab-communities">
+                      <div class="row g-4">
+                        <?php if (empty($my_communities)) { ?>
+                        <div class="col-12 text-center py-10 text-muted">
+                          <i class="bi bi-people fs-1 d-block mb-3 opacity-50"></i>
+                          <p class="fs-6">You haven't joined any communities yet.</p>
+                        </div>
+                        <?php }
+                        foreach ($my_communities as $comm) {
+                          $mCount = $comm['members'] >= 1000 ? round($comm['members']/1000,1).'k' : $comm['members'];
+                          $c_commDetails = getCommunityIconDetails($comm['community_title']);
+                        ?>
+                        <div class="col-md-6">
+                          <div class="card border border-gray-300 shadow-none rounded-2" style="cursor:pointer;" onclick="window.location.href='/Discourse/pages/version/community.php?c=<?php echo urlencode($comm['community_title']); ?>'">
+                            <div class="card-body p-5 d-flex align-items-center gap-4">
+                              <div class="w-50px h-50px rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 <?php echo $c_commDetails['bg_class']; ?>">
+                                <i class="bi <?php echo $c_commDetails['icon']; ?> fs-3 <?php echo $c_commDetails['text_class']; ?>"></i>
+                              </div>
+                              <div class="flex-grow-1">
+                                <h5 class="fw-bolder text-dark fs-5 mb-1"><?php echo htmlspecialchars($comm['community_title']); ?></h5>
+                                <div class="d-flex align-items-center gap-1 text-muted fs-8">
+                                  <i class="ki-duotone ki-people fs-9"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                  <span><?php echo $mCount; ?> members</span>
+                                </div>
+                              </div>
+                              <i class="ki-duotone ki-arrow-right text-muted fs-8"><span class="path1"></span><span class="path2"></span></i>
+                            </div>
+                          </div>
+                        </div>
+                        <?php } ?>
+                      </div>
                     </div>
 
                   </div>

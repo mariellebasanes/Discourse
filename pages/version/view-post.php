@@ -506,10 +506,18 @@ if (!$db_post_loaded && $showImage) {
                                                                 <div class="d-flex align-items-center gap-1 mt-2">
                                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">0</span></button>
                                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span></button>
-                                                                    <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span></button>
+                                                                    <button class="btn btn-sm btn-light-muted reply-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"
+                                                                        data-author="<?php echo htmlspecialchars($comment['author_name'] ?? 'User'); ?>"
+                                                                        data-comment-id="<?php echo $comment['id']; ?>">
+                                                                        <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <!-- Inline reply thread area -->
+                                                        <div class="reply-thread-area ps-5 mt-2" id="thread-<?php echo $comment['id']; ?>"></div>
+                                                        <!-- Inline reply composer (hidden by default) -->
+                                                        <div class="reply-composer ps-5 mt-2" id="composer-<?php echo $comment['id']; ?>" style="display:none;"></div>
                                                     </div>
                                                     <?php } ?>
                                                     <?php } else { ?>
@@ -538,7 +546,7 @@ if (!$db_post_loaded && $showImage) {
                                                                 <div class="d-flex align-items-center gap-1 mt-2">
                                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9"><?php echo $showImage ? '6' : '12'; ?></span></button>
                                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span></button>
-                                                                    <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span></button>
+                                                                    <button class="btn btn-sm btn-light-muted reply-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span></button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -552,7 +560,7 @@ if (!$db_post_loaded && $showImage) {
                                                                         <div class="d-flex align-items-center gap-1 mt-2">
                                                                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">5</span></button>
                                                                             <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span></button>
-                                                                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span></button>
+                                                                            <button class="btn btn-sm btn-light-muted reply-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -569,7 +577,7 @@ if (!$db_post_loaded && $showImage) {
                                                                     <div class="d-flex align-items-center gap-1 mt-2">
                                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">8</span></button>
                                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span></button>
-                                                                        <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span></button>
+                                                                        <button class="btn btn-sm btn-light-muted reply-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -885,26 +893,176 @@ if (!$db_post_loaded && $showImage) {
                 }
             });
 
-            $(document).on('click', '.vote-btn:has(.bi-chat)', function(e) {
-                e.preventDefault();
-                const threadContainer = $(this).closest('.mb-2');
-                replyingToThread = threadContainer.length ? threadContainer : null;
-                const authorName = $(this).closest('.d-flex').find('.fw-bolder.text-dark.fs-7').first().text();
-                $('#main-comment-input').val(`@${authorName} `).focus();
+            // ── Reply System ────────────────────────────────────────────
+            function buildCommentHtml(displayName, displayInitials, avatarBg, text, anonBadgeHtml, replyingTo) {
+                const replyTag = replyingTo
+                    ? `<span class="text-muted fs-9 me-1">replying to</span><span class="fw-bold text-success fs-9">@${replyingTo}</span>`
+                    : '';
+                return `
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="symbol-label w-28px h-28px rounded-circle d-flex align-items-center justify-content-center text-white fw-bold fs-8" style="width:28px;height:28px;background:${avatarBg};">${displayInitials}</div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                            <span class="fw-bolder text-dark fs-7">${displayName}</span>
+                            ${anonBadgeHtml}
+                            ${replyTag}
+                            <span class="text-muted fs-9">Just now</span>
+                        </div>
+                        <p class="text-gray-800 fs-7 mb-2">${text}</p>
+                        <div class="d-flex align-items-center gap-1 mt-1">
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">0</span></button>
+                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span></button>
+                            <button class="btn btn-sm btn-light-muted reply-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span></button>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            function buildInlineComposer(commentId, replyingToName) {
+                const initials = isAnonymous ? 'A' : realInitials;
+                const bg       = isAnonymous ? '#ea580c' : '#198754';
+                const uid      = 'reply-anon-' + commentId;
+                return `
+                <div class="d-flex align-items-start gap-2 inline-composer" data-for="${commentId}" data-reply-anon="${isAnonymous ? '1' : '0'}">
+                    <div class="flex-shrink-0">
+                        <div class="reply-composer-avatar symbol-label rounded-circle d-flex align-items-center justify-content-center text-white fw-bold fs-9"
+                             style="width:26px;height:26px;background:${bg};flex-shrink:0;">${initials}</div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                            <span class="text-muted fs-9">Replying to <strong class="text-success">@${replyingToName}</strong></span>
+                            <!-- Anon toggle -->
+                            <label class="anon-toggle-wrapper reply-anon-toggle ${isAnonymous ? 'is-anon' : ''}" for="${uid}" style="cursor:pointer;">
+                                <i class="bi bi-incognito anon-icon"></i>
+                                <span class="anon-label">${isAnonymous ? 'Anonymous' : 'Post anonymously'}</span>
+                                <div class="anon-switch">
+                                    <input type="checkbox" id="${uid}" class="reply-anon-checkbox" ${isAnonymous ? 'checked' : ''}>
+                                    <span class="anon-switch-slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <input type="text" class="form-control form-control-sm rounded-pill px-3 fs-8 bg-white border border-gray-300 reply-input" placeholder="Write a reply..." style="flex:1;" />
+                            <button class="btn btn-sm fw-bold rounded-pill px-3 submit-reply-btn" style="background:#0b301f;color:#fff;white-space:nowrap;">Post</button>
+                            <button class="btn btn-sm btn-light-muted rounded-pill px-2 cancel-reply-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // Live anon toggle inside inline composer — update avatar + label
+            $(document).on('change', '.reply-anon-checkbox', function() {
+                const composer  = $(this).closest('.inline-composer');
+                const wrapper   = $(this).closest('.reply-anon-toggle');
+                const avatar    = composer.find('.reply-composer-avatar');
+                const label     = wrapper.find('.anon-label');
+                const isAnon    = $(this).is(':checked');
+                composer.attr('data-reply-anon', isAnon ? '1' : '0');
+                if (isAnon) {
+                    wrapper.addClass('is-anon');
+                    label.text('Anonymous');
+                    avatar.text('A').css('background', '#ea580c');
+                } else {
+                    wrapper.removeClass('is-anon');
+                    label.text('Post anonymously');
+                    avatar.text(realInitials).css('background', '#198754');
+                }
             });
 
+            // Open inline reply composer
+            $(document).on('click', '.reply-btn', function(e) {
+                e.preventDefault();
+                const btn = $(this);
+
+                // Find the parent comment block and its IDs
+                const commentBlock = btn.closest('.mb-4, .mb-3, .d-flex.gap-3').closest('[id^=""], .mb-4');
+                const composerTarget = btn.closest('.mb-4');
+                const commentId = composerTarget.find('[id^="composer-"]').attr('id')?.replace('composer-', '')
+                                || composerTarget.attr('data-cid')
+                                || ('dyn-' + Date.now());
+                const authorName = btn.closest('.flex-grow-1').find('.fw-bolder.text-dark.fs-7').first().text().trim()
+                                || btn.closest('.d-flex').find('.fw-bolder.text-dark.fs-7').first().text().trim()
+                                || 'User';
+
+                // Close any other open composers
+                $('.inline-composer').closest('.reply-composer').hide().empty();
+
+                // Find the reply-composer slot or create one right after this comment block
+                let composerSlot = composerTarget.find('.reply-composer').first();
+                if (composerSlot.length === 0) {
+                    composerTarget.append('<div class="reply-composer ps-5 mt-2"></div>');
+                    composerSlot = composerTarget.find('.reply-composer');
+                }
+
+                composerSlot.html(buildInlineComposer(commentId, authorName)).show();
+                composerSlot.find('.reply-input').focus();
+
+                $('html, body').animate({ scrollTop: composerSlot.offset().top - 120 }, 250);
+            });
+
+            // Cancel reply
+            $(document).on('click', '.cancel-reply-btn', function() {
+                $(this).closest('.reply-composer').hide().empty();
+            });
+
+            // Submit inline reply
+            $(document).on('click', '.submit-reply-btn', function() {
+                const composer = $(this).closest('.inline-composer');
+                const input = composer.find('.reply-input');
+                const text = input.val().trim();
+                if (!text) return;
+
+                const replyingToName = composer.find('.text-success').text().replace('@','').trim();
+                // Read anon state from THIS composer's own toggle (not global)
+                const replyIsAnon = composer.find('.reply-anon-checkbox').is(':checked');
+                const displayName = replyIsAnon ? 'Anonymous' : realName;
+                const displayInitials = replyIsAnon ? 'A' : realInitials;
+                const avatarBg = replyIsAnon ? '#ea580c' : '#198754';
+                const anonBadgeHtml = replyIsAnon
+                    ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>`
+                    : '';
+
+                const replyHtml = `<div class="mb-3 pb-2 border-start border-2 ps-3" style="border-color:#d1fae5!important;">${buildCommentHtml(displayName, displayInitials, avatarBg, text, anonBadgeHtml, replyingToName)}</div>`;
+
+                // Find or create thread area right above the composer
+                const composerSlot = composer.closest('.reply-composer');
+                const commentBlock = composerSlot.closest('.mb-4');
+                let threadArea = commentBlock.find('.reply-thread-area').first();
+                if (threadArea.length === 0) {
+                    composerSlot.before('<div class="reply-thread-area ps-5 mt-2"></div>');
+                    threadArea = commentBlock.find('.reply-thread-area');
+                }
+                threadArea.append(replyHtml);
+                composerSlot.hide().empty();
+
+                commentCount++;
+                $('#comment-count-badge').text(commentCount);
+                $('#comment-count-text-btn').text(commentCount);
+            });
+
+            // Enter key in reply input
+            $(document).on('keypress', '.reply-input', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $(this).closest('.inline-composer').find('.submit-reply-btn').click();
+                }
+            });
+
+            // ── Main Comment Submit ──────────────────────────────────────
             $('#post-comment-btn').click(function(e) {
                 e.preventDefault();
-                submitComment();
+                submitMainComment();
             });
             $('#main-comment-input').keypress(function(e) {
                 if (e.which == 13) {
                     e.preventDefault();
-                    submitComment();
+                    submitMainComment();
                 }
             });
 
-            function submitComment() {
+            function submitMainComment() {
                 const input = $('#main-comment-input');
                 const text = input.val().trim();
                 if (!text) return;
@@ -925,54 +1083,16 @@ if (!$db_post_loaded && $showImage) {
                 const displayName = isAnonymous ? 'Anonymous' : realName;
                 const displayInitials = isAnonymous ? 'A' : realInitials;
                 const avatarBg = isAnonymous ? '#ea580c' : '#198754';
-                const anonBadgeHtml = isAnonymous ?
-                    `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;">
-                       <i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous
-                   </span>` : '';
-                const newCommentHtml = `
-                <div class="d-flex mb-3">
-                    <div class="symbol symbol-30px symbol-circle me-3 flex-shrink-0">
-                        <div class="symbol-label text-white fw-bold fs-7" style="background:${avatarBg};">${displayInitials}</div>
-                    </div>
-                    <div class="flex-grow-1">
-                        <div class="d-flex align-items-center justify-content-between mb-1">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="fw-bolder text-dark fs-7">${displayName}</span>
-                                ${anonBadgeHtml}
-                                <span class="text-muted fs-9">Just now</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-800 fs-7 mb-2">${text}</p>
-                        <div class="d-flex align-items-center gap-1 mt-2">
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                <i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">0</span>
-                            </button>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                <i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span>
-                            </button>
-                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill">
-                                <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
-                if (replyingToThread) {
-                    let nestedWrapper = replyingToThread.find('.comment-thread-line').first();
-                    if (nestedWrapper.length === 0) {
-                        replyingToThread.append('<div class="comment-thread-line mt-3 mb-4"></div>');
-                        nestedWrapper = replyingToThread.find('.comment-thread-line');
-                    }
-                    nestedWrapper.append(newCommentHtml);
-                } else {
-                    $('#comments-container').append(`<div class="mb-2 mt-6">${newCommentHtml}</div>`);
-                }
+                const anonBadgeHtml = isAnonymous
+                    ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>`
+                    : '';
+                const newBlockHtml = `<div class="mb-4">${buildCommentHtml(displayName, displayInitials, avatarBg, text, anonBadgeHtml, null)}<div class="reply-thread-area ps-5 mt-2"></div><div class="reply-composer ps-5 mt-1" style="display:none;"></div></div>`;
+                $('#comments-container').append(newBlockHtml);
                 input.val('');
-                replyingToThread = null;
                 commentCount++;
                 $('#comment-count-badge').text(commentCount);
-                $('html, body').animate({
-                    scrollTop: $("#comments-container").offset().top + $("#comments-container").height() - 200
-                }, 300);
+                $('#comment-count-text-btn').text(commentCount);
+                $('html, body').animate({ scrollTop: $('#comments-container').offset().top + $('#comments-container').height() - 200 }, 300);
             }
 
             $(document).on('click', '.discourse-poll-option', function(e) {
