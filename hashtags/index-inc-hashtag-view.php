@@ -1,9 +1,9 @@
 <?php
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 $rawTag = isset($_GET['tag']) ? trim($_GET['tag']) : '';
 if (empty($rawTag)) {
-    header("Location: /Discourse/pages/version/index.php"); exit;
+    header("Location: /Discourse/communities/index.php"); exit;
 }
 
 $tag          = $rawTag;
@@ -84,20 +84,20 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet">
     <link href="/Discourse/assets/css/sec-sidebar.css" rel="stylesheet">
-    <link href="/Discourse/assets/css/sec-posts.css" rel="stylesheet">
-    <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet">
+    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet">
+    <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
     <script src="/Discourse/assets/js/jquery.js"></script>
 </head>
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
     data-kt-app-layout="light-header" class="app-default">
 
-    <?php include(dirname(dirname(__DIR__)) . "/partials/_page-loader.php"); ?>
+    <?php include(dirname(__DIR__) . "/partials/_page-loader.php"); ?>
 
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
-            <?php include(dirname(dirname(__DIR__)) . "/partials/_header.php"); ?>
+            <?php include(dirname(__DIR__) . "/partials/_header.php"); ?>
 
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -121,7 +121,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                         <!-- Info -->
                                         <div class="flex-grow-1">
                                             <div class="d-flex align-items-center gap-3 mb-1">
-                                                <a href="/Discourse/pages/version/index.php" class="text-white text-opacity-60 fs-7 text-decoration-none text-hover-white"><i class="bi bi-house me-1"></i>Home</a>
+                                                <a href="/Discourse/communities/index.php" class="text-white text-opacity-60 fs-7 text-decoration-none text-hover-white"><i class="bi bi-house me-1"></i>Home</a>
                                                 <i class="bi bi-chevron-right text-white text-opacity-40 fs-9"></i>
                                                 <span class="text-white text-opacity-60 fs-7">Hashtags</span>
                                                 <i class="bi bi-chevron-right text-white text-opacity-40 fs-9"></i>
@@ -140,7 +140,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
 
                                         <!-- New Post button -->
                                         <div class="flex-shrink-0 ms-auto">
-                                            <a href="/Discourse/pages/version/create-post.php" class="btn fw-bolder px-8 py-3 d-flex align-items-center gap-2 rounded-pill"
+                                            <a href="/Discourse/posts/index.php?action=create" class="btn fw-bolder px-8 py-3 d-flex align-items-center gap-2 rounded-pill"
                                                 style="background:#fff;color:#0b301f;border:2px solid #fff;">
                                                 <i class="bi bi-plus-lg fs-6"></i> New Post
                                             </a>
@@ -171,7 +171,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                 <div class="mb-3" style="font-size:3rem;">🏷️</div>
                                                 <h4 class="fw-bold text-gray-700 mb-2">No posts yet for <?php echo htmlspecialchars($tagDisplay); ?></h4>
                                                 <p class="text-muted fs-6">Be the first to post with this tag!</p>
-                                                <a href="/Discourse/pages/version/create-post.php" class="btn btn-sm rounded-pill fw-bold px-6 py-3 mt-2" style="background:#0b301f;color:#fff;">
+                                                <a href="/Discourse/posts/index.php?action=create" class="btn btn-sm rounded-pill fw-bold px-6 py-3 mt-2" style="background:#0b301f;color:#fff;">
                                                     <i class="bi bi-plus-lg me-1"></i> Create Post
                                                 </a>
                                             </div>
@@ -179,9 +179,9 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                             <?php foreach ($posts as $post):
                                                 $commDetails = getCommunityIconDetails($post['community'] ?? '');
                                                 $is_saved    = IS_POST_SAVED($post['id'], $identification);
-                                                $authorHref  = '/Discourse/pages/version/profile-other.php?id=' . urlencode($post['author_id'] ?? '');
-                                                $commHref    = '/Discourse/pages/version/community.php?c=' . urlencode($post['community'] ?? '');
-                                                $postHref    = '/Discourse/pages/version/view-post.php?id=' . $post['id'];
+                                                $authorHref  = '/Discourse/profiles/index.php?id=' . urlencode($post['author_id'] ?? '');
+                                                $commHref    = '/Discourse/communities/index.php?c=' . urlencode($post['community'] ?? '');
+                                                $postHref    = '/Discourse/posts/index.php?id=' . $post['id'] . '&back=hashtag&tag=' . urlencode($_GET['tag'] ?? '');
                                             ?>
                                             <div class="card border-0 shadow mb-5 post-card overflow-hidden" data-dc="post-card" data-post-id="<?php echo $post['id']; ?>">
                                                 <div class="d-flex">
@@ -240,7 +240,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                                     <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
                                                                         <?php foreach ($tagArr as $ht) {
                                                                             $isActive = (strtolower($ht) === strtolower($tag));
-                                                                            $url = '/Discourse/pages/view/hashtag.php?tag=' . urlencode($ht);
+                                                                            $url = '/Discourse/hashtags/index.php?tag=' . urlencode($ht);
                                                                             echo '<a href="' . $url . '" class="badge rounded-pill px-2 py-1 fs-9 fw-semibold text-decoration-none" '
                                                                                . 'style="' . ($isActive ? 'background:#0b301f;color:#fff;border:1px solid #0b301f;' : 'background:#f1f3f4;color:#555;border:1px solid #e0e0e0;') . '">'
                                                                                . '#' . htmlspecialchars(strtolower($ht)) . '</a> ';
@@ -257,8 +257,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                                 <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comments_count']; ?> Comment<?php echo $post['comments_count'] !== 1 ? 's' : ''; ?></button>
                                                                 <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
                                                                 <button class="btn btn-sm dc-post-save"
-                                                                    data-on="<?php echo $is_saved ? '1' : '0'; ?>"
-                                                                    style="<?php echo $is_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
+                                                                    data-on="<?php echo $is_saved ? '1' : '0'; ?>">
                                                                     <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                                                     <?php echo $is_saved ? 'Saved' : 'Save'; ?>
                                                                 </button>
@@ -319,7 +318,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                             </div>
                                             <div class="card-body p-4 pt-3">
                                                 <p class="fs-7 text-gray-600 mb-3">All posts tagged with <strong><?php echo htmlspecialchars($tagDisplay); ?></strong> across all communities.</p>
-                                                <a href="/Discourse/pages/version/create-post.php" class="btn btn-sm w-100 fw-bold rounded-pill" style="background:#0b301f;color:#fff;">
+                                                <a href="/Discourse/posts/index.php?action=create" class="btn btn-sm w-100 fw-bold rounded-pill" style="background:#0b301f;color:#fff;">
                                                     <i class="bi bi-plus-lg me-1"></i> Post with this tag
                                                 </a>
                                             </div>
@@ -334,7 +333,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                     $topics = ['TECHNOLOGY','CULTURE','GAMING','FEU','IDEAS','CREATIVE','SCIENCE','NEWS','AI','ACADEMICS','LIFESTYLE','ENTERTAINMENT','MUSIC','POLITICS','ISSUES','SPORTS'];
                                                     foreach ($topics as $t) {
                                                         $b = getCategoryBadgeStyle($t);
-                                                        echo '<a href="/Discourse/pages/view/topic.php?t=' . $t . '" class="badge ' . $b['class'] . ' rounded-pill px-3 py-2 fs-8 text-decoration-none fw-bold">'
+                                                        echo '<a href="/Discourse/topics/index.php?t=' . $t . '" class="badge ' . $b['class'] . ' rounded-pill px-3 py-2 fs-8 text-decoration-none fw-bold">'
                                                            . $t . '</a>';
                                                     }
                                                     ?>
@@ -349,17 +348,17 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
 
                         </main>
                     </div>
-                    <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
+                    <?php include(dirname(__DIR__) . "/partials/_footer.php"); ?>
                 </div>
             </div>
         </div>
     </div>
 
-    <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
-    <?php include(dirname(dirname(__DIR__)) . "/partials/_discourse-modals.php"); ?>
+    <?php include(dirname(__DIR__) . "/partials/_scrolltop.php"); ?>
+    <?php include(dirname(__DIR__) . "/partials/_discourse-modals.php"); ?>
 
     <script src="/Discourse/assets/js/dashboard.js"></script>
-    <script src="/Discourse/assets/js/sec-posts.js"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
     <script src="/Discourse/assets/js/sec-modals.js"></script>
 
     <script>
@@ -440,6 +439,6 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
         });
     });
     </script>
-    <script src="/Discourse/assets/js/sec-posts.js"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
 </body>
 </html>

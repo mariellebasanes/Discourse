@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 $META_TITLE = "Discourse - FEU Communities";
 ?>
@@ -27,15 +27,15 @@ $META_TITLE = "Discourse - FEU Communities";
 
   <!-- jQuery -->
   <script src="/Discourse/assets/js/jquery.js"></script>
-  <link href="/Discourse/assets/css/discourse-css/index.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/Discourse/assets/css/discourse-css/index.css">
 </head>
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
   data-kt-app-layout="light-header" class="app-default">
-  <?php include(dirname(dirname(__DIR__)) . "/partials/_page-loader.php"); ?>
+  <?php include(dirname(__DIR__) . "/partials/_page-loader.php"); ?>
   <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-      <?php include(dirname(dirname(__DIR__)) . "/partials/_header.php"); ?>
+      <?php include(dirname(__DIR__) . "/partials/_header.php"); ?>
       <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
           <div class="d-flex flex-column flex-column-fluid">
@@ -102,7 +102,7 @@ $META_TITLE = "Discourse - FEU Communities";
                         }
                     }
 
-                    // No hardcoded fallback — show empty state when DB unavailable
+                    // No fallback — show empty state if DB is empty
                     if (empty($communities_list)) { ?>
                       <div class="col-12 text-center py-10 text-muted">
                         <i class="bi bi-people fs-1 d-block mb-3 opacity-50"></i>
@@ -116,44 +116,49 @@ $META_TITLE = "Discourse - FEU Communities";
                         $comm_title = $community['title'];
                         $comm_members = $community['members'];
                         $comm_posts = $community['posts'];
+                        $is_joined = IS_COMMUNITY_MEMBER($comm_title, $identification);
+                        $is_admin = ($community['admin_id'] ?? '') === $identification;
                     ?>
-                    <div class="col-md-4 col-lg-3 community-item" data-category="<?php echo htmlspecialchars($comm_cat); ?>" data-is-admin="<?php echo ($community['admin_id'] === $identification) ? '1' : '0'; ?>">
+                    <div class="col-md-4 col-lg-3 community-item" 
+                         data-category="<?php echo htmlspecialchars($comm_cat); ?>"
+                         data-is-joined="<?php echo $is_joined ? '1' : '0'; ?>"
+                         data-is-admin="<?php echo $is_admin ? '1' : '0'; ?>">
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body p-6 text-center d-flex flex-column">
                                 <div class="mb-4 d-flex justify-content-center">
                                     <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="<?php echo !empty($community['logo_url']) ? 'background-image: url(\'' . htmlspecialchars($community['logo_url']) . '\'); background-size: cover; background-position: center;' : getLightColorStyle($community['theme_color']); ?>">
                                         <?php if (empty($community['logo_url'])) { ?>
-                                        <i class="bi <?php echo htmlspecialchars($community['icon'] ?? 'bi-people-fill'); ?> fs-2hx"></i>
+                                        <i class="bi <?php echo htmlspecialchars($community['icon'] ?? 'bi-people-fill'); ?> fs-2hx" style="color: <?php echo htmlspecialchars($community['theme_color']); ?> !important;"></i>
                                         <?php } ?>
                                     </div>
                                 </div>
                                 <h3 class="fs-6 fw-bolder mb-2 text-dark">
-                                    <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($comm_title); ?>" class="text-dark text-hover-success"><?php echo htmlspecialchars($comm_title); ?></a>
+                                    <a href="/Discourse/communities/index.php?c=<?php echo urlencode($comm_title); ?>" class="text-dark text-hover-success"><?php echo htmlspecialchars($comm_title); ?></a>
                                 </h3>
                                 <p class="text-muted fs-8 mb-4 flex-grow-1"><?php echo htmlspecialchars($comm_desc); ?></p>
-                                <div class="d-flex justify-content-center gap-4 mb-4">
-                                    <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
-                                        <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
-                                            <i class="fas fa-user fs-8 me-1"></i> <span class="comm-members-val"><?php echo number_format($comm_members); ?></span>
-                                        </div>
-                                        <div class="fs-9 text-muted">Members</div>
-                                    </div>
-                                    <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
-                                        <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
-                                            <i class="fas fa-edit fs-8 me-1"></i> <?php echo number_format($comm_posts); ?>
-                                        </div>
-                                        <div class="fs-9 text-muted">Posts</div>
-                                    </div>
-                                </div>
-                                <?php 
-                                $is_joined = IS_COMMUNITY_MEMBER($comm_title, $identification);
-                                ?>
-                                <button class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 dc-list-join-btn" 
-                                        data-comm-title="<?php echo htmlspecialchars($comm_title); ?>" 
-                                        style="background-color: <?php echo $is_joined ? '#fbc501' : '#1A8B44'; ?>; color: white; border: none;">
-                                    <i class="fas <?php echo $is_joined ? 'fa-check' : 'fa-plus'; ?> text-white fs-8"></i> 
-                                    <span class="join-btn-text"><?php echo $is_joined ? 'JOINED' : 'JOIN COMMUNITY'; ?></span>
-                                </button>
+                                 <div class="d-flex justify-content-center gap-4 mb-4">
+                                     <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
+                                         <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
+                                             <i class="fas fa-user fs-8 me-1"></i> <span class="comm-members-val"><?php echo number_format($comm_members); ?></span>
+                                         </div>
+                                         <div class="fs-9 text-muted">Members</div>
+                                     </div>
+                                     <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
+                                         <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
+                                             <i class="fas fa-edit fs-8 me-1"></i> <?php echo number_format($comm_posts); ?>
+                                         </div>
+                                         <div class="fs-9 text-muted">Posts</div>
+                                     </div>
+                                 </div>
+                                 <?php 
+                                 // Already loaded above
+                                 ?>
+                                  <button class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 dc-list-join-btn" 
+                                          data-comm-title="<?php echo htmlspecialchars($comm_title); ?>" 
+                                          style="background-color: <?php echo $is_joined ? '#fbc501' : '#1A8B44'; ?>; color: white; border: none;">
+                                     <i class="fas <?php echo $is_joined ? 'fa-check' : 'fa-plus'; ?> text-white fs-8"></i> 
+                                     <span class="join-btn-text"><?php echo $is_joined ? 'JOINED' : 'JOIN COMMUNITY'; ?></span>
+                                 </button>
                             </div>
                         </div>
                     </div>
@@ -234,9 +239,16 @@ $META_TITLE = "Discourse - FEU Communities";
                                     </div>
                                     
                                     <div class="fv-row mb-8">
-                                        <button type="button" class="btn btn-light-secondary text-muted bg-light fw-bold">
-                                            <i class="fas fa-plus text-muted"></i> Add Categories
-                                        </button>
+                                        <label class="fs-6 fw-bold mb-2 text-dark">Custom Topic Categories <span class="text-muted fw-normal fs-7">(optional)</span></label>
+                                        <div id="comm-topics-wrap" class="d-flex flex-wrap gap-2 mb-2" style="min-height:36px;"></div>
+                                        <div class="d-flex gap-2">
+                                            <input type="text" id="comm-topic-input" class="form-control form-control-solid bg-light flex-grow-1" placeholder="e.g. Gaming, Events, Projects…" />
+                                            <button type="button" id="comm-topic-add-btn" class="btn btn-light-success fw-bold px-4">
+                                                <i class="bi bi-plus-lg"></i> Add
+                                            </button>
+                                        </div>
+                                        <input type="hidden" id="comm-topics-hidden" name="custom_topics" value="" />
+                                        <div class="text-muted fs-8 mt-2">Type a category and click Add. These will appear as topic filters in your community.</div>
                                     </div>
                                     
                                     <div class="d-flex flex-stack gap-4">
@@ -252,16 +264,53 @@ $META_TITLE = "Discourse - FEU Communities";
               </div>
             </main>
           </div>
-          <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
+          <?php include(dirname(__DIR__) . "/partials/_footer.php"); ?>
         </div>
       </div>
     </div>
   </div>
-  <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
+  <?php include(dirname(__DIR__) . "/partials/_scrolltop.php"); ?>
 
   <!-- Theme Color Picker Script -->
   <script>
     $(document).ready(function() {
+        // 0. Custom topic tags
+        var commTopics = [];
+
+        function renderTopicTags() {
+            var wrap = $('#comm-topics-wrap');
+            wrap.empty();
+            commTopics.forEach(function(t, i) {
+                wrap.append(
+                    $('<span class="badge bg-light-success text-success fw-bold px-3 py-2 d-inline-flex align-items-center gap-1" style="font-size:12px;"></span>')
+                    .text(t)
+                    .append($('<i class="bi bi-x ms-1" style="cursor:pointer;font-size:11px;"></i>').on('click', function() {
+                        commTopics.splice(i, 1);
+                        renderTopicTags();
+                    }))
+                );
+            });
+            $('#comm-topics-hidden').val(commTopics.join(','));
+        }
+
+        $('#comm-topic-add-btn').on('click', function() {
+            var val = $('#comm-topic-input').val().trim();
+            if (val && commTopics.length < 20 && !commTopics.includes(val)) {
+                commTopics.push(val.charAt(0).toUpperCase() + val.slice(1));
+                renderTopicTags();
+            }
+            $('#comm-topic-input').val('').focus();
+        });
+        $('#comm-topic-input').on('keypress', function(e) {
+            if (e.which === 13) { e.preventDefault(); $('#comm-topic-add-btn').click(); }
+        });
+
+        // Reset topics on modal close
+        $('#create_community_modal').on('hidden.bs.modal', function() {
+            commTopics = [];
+            renderTopicTags();
+        });
+
         // 1. Handle theme color selection
         $('.theme-color-btn').on('click', function() {
             $('.theme-color-btn').removeClass('active');
@@ -287,7 +336,9 @@ $META_TITLE = "Discourse - FEU Communities";
                 const desc = $(this).find('p').text().toLowerCase();
                 
                 const matchesQuery = title.includes(query) || desc.includes(query);
-                const matchesFilter = (activeFilter === 'all') || ($(this).data('category') === activeFilter);
+                const matchesFilter = (activeFilter === 'all') || 
+                                      (activeFilter === 'my-communities' && ($(this).attr('data-is-joined') === '1' || $(this).attr('data-is-admin') === '1')) ||
+                                      ($(this).data('category') === activeFilter);
                 
                 if (matchesQuery && matchesFilter) {
                     $(this).fadeIn(200);
@@ -323,6 +374,7 @@ $META_TITLE = "Discourse - FEU Communities";
             formData.append('School', cat);
             formData.append('theme_color', activeColor);
             formData.append('icon', selectedIcon);
+            formData.append('custom_topics', commTopics.join(','));
             
             var logoFile = $('#comm-logo')[0].files[0];
             if (logoFile) {
@@ -345,7 +397,7 @@ $META_TITLE = "Discourse - FEU Communities";
             }
             
             $.ajax({
-                url: '/Discourse/pages/version/create-community-action.php',
+                url: '/Discourse/communities/index-ajax-add-community.php',
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -354,9 +406,10 @@ $META_TITLE = "Discourse - FEU Communities";
                 success: function(response) {
                     if (response.status === 'success') {
                         const comm = response.community;
+                        let icon = comm.icon || 'bi-cpu';
                         
                         let logoStyles = '';
-                        let logoIconHtml = `<i class="bi ${comm.icon} fs-2hx" style="color: ${comm.theme_color} !important;"></i>`;
+                        let logoIconHtml = `<i class="bi ${icon} fs-2hx" style="color: ${comm.theme_color} !important;"></i>`;
                         if (comm.logo_url) {
                             logoStyles = `background-image: url('${comm.logo_url}'); background-size: cover; background-position: center;`;
                             logoIconHtml = '';
@@ -372,35 +425,34 @@ $META_TITLE = "Discourse - FEU Communities";
                                          <div class="w-60px h-60px rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="${logoStyles}">
                                              ${logoIconHtml}
                                          </div>
-                                     </div>  
-                                    
+                                     </div>
                                     <h3 class="fs-6 fw-bolder mb-2 text-dark">
-                                        <a href="/Discourse/pages/version/community.php?c=${encodeURIComponent(comm.title)}" class="text-dark text-hover-success">${comm.title}</a>
+                                        <a href="/Discourse/communities/index.php?c=${encodeURIComponent(comm.title)}" class="text-dark text-hover-success">${comm.title}</a>
                                     </h3>
                                     <p class="text-muted fs-8 mb-4 flex-grow-1">${comm.desc}</p>
                                     <div class="d-flex justify-content-center gap-4 mb-4">
-                                         <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
-                                             <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
-                                                 <i class="fas fa-user fs-8 me-1"></i> <span class="comm-members-val">${comm.members}</span>
-                                             </div>
-                                             <div class="fs-9 text-muted">Members</div>
-                                         </div>
-                                         <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
-                                             <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
-                                                 <i class="fas fa-edit fs-8 me-1"></i> ${comm.posts}
-                                             </div>
-                                             <div class="fs-9 text-muted">Posts</div>
-                                         </div>
-                                     </div>
+                                        <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
+                                            <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-user fs-8 me-1"></i> <span class="comm-members-val">${comm.members}</span>
+                                            </div>
+                                            <div class="fs-9 text-muted">Members</div>
+                                        </div>
+                                        <div class="border border-dashed border-gray-300 rounded px-3 py-2 w-50">
+                                            <div class="fs-7 fw-bold text-dark d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-edit fs-8 me-1"></i> ${comm.posts}
+                                            </div>
+                                            <div class="fs-9 text-muted">Posts</div>
+                                        </div>
+                                    </div>
                                      <button class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 dc-list-join-btn" 
                                              data-comm-title="${comm.title}" 
                                              style="background-color: #fbc501; color: white; border: none;">
-                                         <i class="fas fa-check text-white fs-8"></i> 
-                                         <span class="join-btn-text">JOINED</span>
-                                     </button>
-                                 </div>
-                             </div>
-                         </div>`;
+                                        <i class="fas fa-check text-white fs-8"></i> 
+                                        <span class="join-btn-text">JOINED</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
                         
                         $('#communities-grid').prepend(newCard);
                         $('#communities-grid .community-item:first').fadeIn(400);
@@ -441,7 +493,7 @@ $META_TITLE = "Discourse - FEU Communities";
             }
 
             $.ajax({
-                url: '/Discourse/pages/version/join-community-action.php',
+                url: '/Discourse/communities/index-ajax-join-community.php',
                 method: 'POST',
                 data: { community_title: commTitle },
                 dataType: 'json',
@@ -453,10 +505,17 @@ $META_TITLE = "Discourse - FEU Communities";
                             btn.css('background-color', '#fbc501');
                             textSpan.text('JOINED');
                             icon.removeClass('fa-plus').addClass('fa-check');
+                            card.attr('data-is-joined', '1');
                         } else {
                             btn.css('background-color', '#1A8B44');
                             textSpan.text('JOIN COMMUNITY');
                             icon.removeClass('fa-check').addClass('fa-plus');
+                            card.attr('data-is-joined', '0');
+                            
+                            const activeFilter = $('.filter-btn.active').data('filter');
+                            if (activeFilter === 'my-communities' && card.attr('data-is-admin') !== '1') {
+                                card.fadeOut(200);
+                            }
                         }
                         if (res.members_count !== null && memberCountSpan.length) {
                             memberCountSpan.text(res.members_count.toLocaleString());

@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: /Discourse/index.php");
@@ -22,7 +22,7 @@ $has_new_image = false;
 
 // Handle new image upload
 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-    $target_dir = dirname(dirname(__DIR__)) . '/assets/images/posts/';
+    $target_dir = dirname(__DIR__) . '/assets/images/posts/';
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);
     }
@@ -88,6 +88,6 @@ if (isset($_SESSION['mock_posts']) && is_array($_SESSION['mock_posts'])) {
 }
 
 // Redirect back to view post page
-header("Location: /Discourse/pages/version/view-post.php?id=" . $post_id . ($updated ? "&status=success" : "&status=error"));
+header("Location: /Discourse/posts/index.php?id=" . $post_id . ($updated ? "&status=success" : "&status=error"));
 exit();
 ?>

@@ -14,7 +14,7 @@
 
     <div class="d-flex flex-column gap-1 border-top border-white-10 pt-2 flex-grow-1">
 
-      <a href="/Discourse/pages/version/view-post.php?poll=1"
+      <a href="/Discourse/posts/index.php?poll=1"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">📊</span>
         <div class="d-flex flex-column">
@@ -25,7 +25,7 @@
         </div>
       </a>
 
-      <a href="/Discourse/pages/version/view-post.php"
+      <a href="/Discourse/posts/index.php"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">🔵</span>
         <div class="d-flex flex-column">
@@ -36,7 +36,7 @@
         </div>
       </a>
 
-      <a href="/Discourse/pages/version/view-post.php?sample=1"
+      <a href="/Discourse/posts/index.php?sample=1"
         class="discourse-info-post-item d-flex align-items-start gap-2 p-2 rounded text-decoration-none">
         <span class="fs-7 mt-1">💡</span>
         <div class="d-flex flex-column">
@@ -109,7 +109,7 @@
   <div class="card-body p-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
       <h6 class="fs-6 fw-bold text-gray-800 mb-0">Communities</h6>
-      <a href="/Discourse/pages/version/community-home-page.php"
+      <a href="/Discourse/communities/index.php"
         class="badge badge-light-success rounded-pill px-4 py-2 fs-8 fw-bold text-decoration-none dc-see-all-btn">
         See All
       </a>
@@ -145,11 +145,11 @@
       }
       foreach ($sidebarCommunities as $comm):
       ?>
-        <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($comm['name']); ?>" class="discourse-community-item d-flex align-items-center gap-3 text-decoration-none p-2 rounded-2">
+        <a href="/Discourse/communities/index.php?c=<?php echo urlencode($comm['name']); ?>" class="discourse-community-item d-flex align-items-center gap-3 text-decoration-none p-2 rounded-2">
           <div class="d-flex align-items-center justify-content-center rounded-2 fs-5"
             style="width:38px;height:38px;flex-shrink:0; <?php echo !empty($comm['logo_url']) ? 'background-image: url(\'' . htmlspecialchars($comm['logo_url']) . '\'); background-size: cover; background-position: center;' : getLightColorStyle($comm['theme_color']); ?>">
             <?php if (empty($comm['logo_url'])) { ?>
-            <i class="bi <?php echo htmlspecialchars($comm['icon'] ?? 'bi-people-fill'); ?>"></i>
+            <i class="bi <?php echo htmlspecialchars($comm['icon'] ?? 'bi-people-fill'); ?>" style="color: <?php echo htmlspecialchars($comm['theme_color']); ?> !important;"></i>
             <?php } ?>
           </div>
           <div class="d-flex flex-column">
@@ -190,7 +190,7 @@
       foreach ($sidebarTopics as $topic):
         $b = getCategoryBadgeStyle($topic);
       ?>
-        <a href="/Discourse/pages/view/topic.php?t=<?php echo $topic; ?>" class="badge <?php echo $b['class']; ?> rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold">
+        <a href="/Discourse/topics/index.php?t=<?php echo $topic; ?>" class="badge <?php echo $b['class']; ?> rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold">
           <i class="bi <?php echo $b['icon']; ?> <?php echo $b['icon_color']; ?> me-1"></i><?php echo $topic; ?>
         </a>
       <?php endforeach; ?>
@@ -205,11 +205,11 @@
 
     <p class="fs-8 fw-bold text-muted text-uppercase mb-2" style="letter-spacing:0.08em;">Trending Today</p>
     <div class="d-flex flex-wrap gap-2 mb-3">
-      <a href="/Discourse/pages/view/hashtag.php?tag=hashtag" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#HASHTAG</a>
-      <a href="/Discourse/pages/view/hashtag.php?tag=worldpeace" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#WORLDPEACE</a>
-      <a href="/Discourse/pages/view/hashtag.php?tag=valorant" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#VALORANT</a>
-      <a href="/Discourse/pages/view/hashtag.php?tag=petition" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#PETITION</a>
-      <a href="/Discourse/pages/view/hashtag.php?tag=poster" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#POSTER</a>
+      <a href="/Discourse/hashtags/index.php?tag=hashtag" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#HASHTAG</a>
+      <a href="/Discourse/hashtags/index.php?tag=worldpeace" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#WORLDPEACE</a>
+      <a href="/Discourse/hashtags/index.php?tag=valorant" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#VALORANT</a>
+      <a href="/Discourse/hashtags/index.php?tag=petition" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#PETITION</a>
+      <a href="/Discourse/hashtags/index.php?tag=poster" class="badge badge-light rounded-pill border px-4 py-2 fs-8 text-decoration-none text-gray-800 text-hover-primary">#POSTER</a>
     </div>
 
     <p class="fs-8 fw-bold text-muted text-uppercase mb-2" style="letter-spacing:0.08em;">Posting Tips</p>

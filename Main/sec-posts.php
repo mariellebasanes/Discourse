@@ -1,134 +1,5 @@
 <?php
-if (!function_exists('getCommunityIconDetails')) {
-  function getCommunityIconDetails($name, $category = null)
-  {
-    $name_lower = strtolower($name);
-
-    $icon       = "bi-cpu";
-    $bg_class   = "bg-light-success";
-    $text_class = "text-success";
-
-    if (strpos($name_lower, 'life') !== false) {
-      $icon       = "bi-heart-fill";
-      $bg_class   = "bg-light-danger";
-      $text_class = "text-danger";
-    } elseif (strpos($name_lower, 'culture') !== false || strpos($name_lower, 'hub') !== false) {
-      $icon       = "bi-music-note-beamed";
-      $bg_class   = "bg-light-primary";
-      $text_class = "text-primary";
-    } elseif (strpos($name_lower, 'food') !== false || strpos($name_lower, 'trip') !== false) {
-      $icon       = "bi-cup-hot-fill";
-      $bg_class   = "bg-light-warning";
-      $text_class = "text-warning";
-    } elseif (strpos($name_lower, 'cosplay') !== false || strpos($name_lower, 'artist') !== false) {
-      $icon       = "bi-palette-fill";
-      $bg_class   = "bg-light-primary";
-      $text_class = "text-primary";
-    } elseif (strpos($name_lower, 'enroll') !== false || strpos($name_lower, 'thesis') !== false || strpos($name_lower, 'advice') !== false) {
-      $icon       = "bi-journal-bookmark-fill";
-      $bg_class   = "bg-light-warning";
-      $text_class = "text-warning";
-    } elseif (strpos($name_lower, 'innovat') !== false || strpos($name_lower, 'startup') !== false) {
-      $icon       = "bi-lightbulb-fill";
-      $bg_class   = "bg-light-warning";
-      $text_class = "text-warning";
-    } elseif (strpos($name_lower, 'alabang') !== false) {
-      $icon       = "bi-building-fill";
-      $bg_class   = "bg-light-warning";
-      $text_class = "text-warning";
-    } elseif (strpos($name_lower, 'diliman') !== false) {
-      $icon       = "bi-mortarboard-fill";
-      $bg_class   = "bg-light-info";
-      $text_class = "text-info";
-    } elseif (strpos($name_lower, 'fresh') !== false || strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false) {
-      $icon       = "bi-people-fill";
-      $bg_class   = "bg-light-info";
-      $text_class = "text-info";
-    } elseif (strpos($name_lower, 'tech') !== false || strpos($name_lower, 'dev') !== false || strpos($name_lower, 'support') !== false) {
-      $icon       = "bi-cpu-fill";
-      $bg_class   = "bg-light-success";
-      $text_class = "text-success";
-    }
-
-    return [
-      'icon'       => $icon,
-      'bg_class'   => $bg_class,
-      'text_class' => $text_class,
-      'bg_hex'     => '',
-      'color_hex'  => '',
-    ];
-  }
-}
-
-if (!function_exists('getCategoryBadgeStyle')) {
-  function getCategoryBadgeStyle($category)
-  {
-    $cat = strtoupper(trim($category));
-    switch ($cat) {
-      case 'TECHNOLOGY':
-        return ['class' => 'badge-light-primary',  'icon' => 'bi-cpu',               'icon_color' => 'text-primary'];
-      case 'CULTURE':
-        return ['class' => 'badge-light-danger',   'icon' => 'bi-palette',           'icon_color' => 'text-danger'];
-      case 'GAMING':
-        return ['class' => 'badge-light-warning',  'icon' => 'bi-controller',        'icon_color' => 'text-warning'];
-      case 'FEU':
-        return ['class' => 'badge-light-warning',  'icon' => 'bi-building',          'icon_color' => 'text-warning'];
-      case 'IDEAS':
-        return ['class' => 'badge-light-info',     'icon' => 'bi-lightbulb',         'icon_color' => 'text-info'];
-      case 'CREATIVE':
-        return ['class' => 'badge-light-primary',  'icon' => 'bi-stars',             'icon_color' => 'text-primary'];
-      case 'SCIENCE':
-        return ['class' => 'badge-light-info',     'icon' => 'bi-droplet-half',      'icon_color' => 'text-info'];
-      case 'NEWS':
-        return ['class' => 'badge-light-danger',   'icon' => 'bi-newspaper',         'icon_color' => 'text-danger'];
-      case 'AI':
-        return ['class' => 'badge-light-success',  'icon' => 'bi-robot',             'icon_color' => 'text-success'];
-      case 'ACADEMICS':
-        return ['class' => 'badge-light-warning',  'icon' => 'bi-book',              'icon_color' => 'text-warning'];
-      case 'LIFESTYLE':
-        return ['class' => 'badge-light-info',     'icon' => 'bi-emoji-smile',       'icon_color' => 'text-info'];
-      case 'ENTERTAINMENT':
-        return ['class' => 'badge-light-primary',  'icon' => 'bi-film',              'icon_color' => 'text-primary'];
-      case 'MUSIC':
-        return ['class' => 'badge-light-danger',   'icon' => 'bi-music-note',        'icon_color' => 'text-danger'];
-      case 'POLITICS':
-        return ['class' => 'badge-light-dark',     'icon' => 'bi-megaphone',         'icon_color' => 'text-dark'];
-      case 'ISSUES':
-        return ['class' => 'badge-light-danger',   'icon' => 'bi-exclamation-circle', 'icon_color' => 'text-danger'];
-      case 'SPORTS':
-        return ['class' => 'badge-light-warning',  'icon' => 'bi-trophy',            'icon_color' => 'text-warning'];
-      default:
-        return ['class' => 'badge-light-secondary', 'icon' => 'bi-tag',               'icon_color' => 'text-secondary'];
-    }
-  }
-}
-
-// Dynamic Fetching from Database with fallback
-
-if (!function_exists('get_relative_time')) {
-    function get_relative_time($datetime) {
-        $time = strtotime($datetime);
-        if (!$time) return '1d ago';
-        $now = time();
-        $diff = $now - $time;
-        if ($diff < 60) {
-            return 'Just now';
-        }
-        $diff = round($diff / 60);
-        if ($diff < 60) {
-            return $diff . 'm ago';
-        }
-        $diff = round($diff / 60);
-        if ($diff < 24) {
-            return $diff . 'h ago';
-        }
-        $diff = round($diff / 24);
-        if ($diff < 30) {
-            return $diff . 'd ago';
-        }
-        return date('F j, Y', $time);
-    }
-}
+// Functions removed and separated to functions-new.php
 
 $feed_posts = [];
 if (isset($EDITH) && $EDITH) {
@@ -377,7 +248,7 @@ if (!function_exists('renderPostCardMarkup')) {
         $isAnon = (isset($post['is_anonymous']) && $post['is_anonymous'] == 1);
         $avatar = $isAnon ? '/Discourse/assets/images/anonymous.png' : (!empty($post['avatar_md']) ? $post['avatar_md'] : '/Discourse/assets/images/anonymous.png');
         $authorName = $isAnon ? 'Anonymous' : ($post['display_name'] ?? 'User');
-        $authorLink = $isAnon ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . $post['author_id'];
+        $authorLink = $isAnon ? 'javascript:void(0)' : '/Discourse/profiles/index.php?id=' . $post['author_id'];
         ?>
         <?php
         $c_highlighted = (!empty($post['is_highlighted']));
@@ -425,7 +296,7 @@ if (!function_exists('renderPostCardMarkup')) {
                 <div class="col-12 mb-2">
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-2">
-                        <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($post['community']); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
+                        <a href="/Discourse/communities/index.php?c=<?php echo urlencode($post['community']); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
                           <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
                                style="width: 24px; height: 24px;">
                             <i class="bi <?php echo $commDetails['icon']; ?> fs-8 <?php echo $commDetails['text_class']; ?>"></i>
@@ -465,7 +336,7 @@ if (!function_exists('renderPostCardMarkup')) {
                     <div class="d-flex flex-wrap align-items-center gap-1">
                       <?php echo renderTopicBadge($post['topic']); ?>
                     </div>
-                    <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
+                    <a href="/Discourse/posts/index.php?id=<?php echo $post['id']; ?>&back=dashboard" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                       <?php echo htmlspecialchars($post['title']); ?>
                     </a>
                     <div class="dc-body-wrap">
@@ -512,10 +383,9 @@ if (!function_exists('renderPostCardMarkup')) {
                   <?php 
                   $is_saved = IS_POST_SAVED($post['id'], $identification);
                   ?>
-                  <button class="btn btn-sm dc-post-save" 
-                          data-on="<?php echo $is_saved ? '1' : '0'; ?>"
-                          style="<?php echo $is_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
-                      <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
+                   <button class="btn btn-sm dc-post-save" 
+                           data-on="<?php echo $is_saved ? '1' : '0'; ?>">
+                       <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                       <?php echo $is_saved ? 'Saved' : 'Save'; ?>
                   </button>
                 </div>

@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 $community_name = isset($_GET['c']) ? trim($_GET['c']) : 'FEU LIFE';
 $META_TITLE = htmlspecialchars($community_name) . " - Discourse Community";
 
@@ -126,8 +126,8 @@ if ($EDITH) {
   <link href="/Discourse/assets/css/sec-hero.css" rel="stylesheet">
   <link href="/Discourse/assets/css/sec-sidebar.css" rel="stylesheet">
   <link href="/Discourse/assets/css/sec-search-filter.css" rel="stylesheet">
-  <link href="/Discourse/assets/css/sec-posts.css" rel="stylesheet">
-  <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet">
+  <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet">
+  <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
 
   <!-- jQuery -->
   <script src="/Discourse/assets/js/jquery.js"></script>
@@ -187,10 +187,10 @@ if ($EDITH) {
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
   data-kt-app-layout="light-header" class="app-default">
-  <?php include(dirname(dirname(__DIR__)) . "/partials/_page-loader.php"); ?>
+  <?php include(dirname(__DIR__) . "/partials/_page-loader.php"); ?>
   <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-      <?php include(dirname(dirname(__DIR__)) . "/partials/_header.php"); ?>
+      <?php include(dirname(__DIR__) . "/partials/_header.php"); ?>
       <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
           <div class="d-flex flex-column flex-column-fluid">
@@ -203,9 +203,9 @@ if ($EDITH) {
                   <div class="d-flex align-items-center flex-wrap gap-6">
                     <!-- Community Logo -->
                     <div class="flex-shrink-0">
-                      <div class="w-100px h-100px w-lg-120px h-lg-120px d-flex align-items-center justify-content-center community-logo-container shadow rounded-3 fs-1" style="<?php echo !empty($comm_data['logo_url']) ? 'background-image: url(\'' . htmlspecialchars($comm_data['logo_url']) . '\'); background-size: cover; background-position: center;' : getLightColorStyle($comm_theme_color); ?>">
+                      <div class="w-100px h-100px w-lg-120px h-lg-120px d-flex align-items-center justify-content-center community-logo-container shadow rounded-3 fs-1" style="<?php echo !empty($comm_data['logo_url']) ? 'background-image: url(\'' . htmlspecialchars($comm_data['logo_url']) . '\'); background-size: cover; background-position: center;' : 'background-color: #ffffff !important;'; ?>">
                         <?php if (empty($comm_data['logo_url'])) { ?>
-                        <i class="bi <?php echo htmlspecialchars($comm_icon); ?> fs-2hx"></i>
+                        <i class="bi <?php echo htmlspecialchars($comm_icon); ?> fs-2hx" style="color: <?php echo htmlspecialchars($comm_theme_color); ?> !important;"></i>
                         <?php } ?>
                       </div>
                     </div>
@@ -309,7 +309,7 @@ if ($EDITH) {
                             $hpBadge = getCategoryBadgeStyle($hp['topic'] ?? 'GENERAL');
                         ?>
                         <div class="col-6">
-                          <a href="/Discourse/pages/version/view-post.php?id=<?php echo $hp['id']; ?>" class="card border-0 shadow-sm rounded-3 h-100 text-decoration-none d-block" style="transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
+                          <a href="/Discourse/posts/index.php?id=<?php echo $hp['id']; ?>&back=community&community=<?php echo urlencode($community_name); ?>" class="card border-0 shadow-sm rounded-3 h-100 text-decoration-none d-block" style="transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow=''">
                             <div class="card-body p-5">
                               <h5 class="fw-bolder text-gray-900 fs-6 mb-2 lh-sm"><?php echo htmlspecialchars(mb_substr($hp['title'], 0, 55)) . (mb_strlen($hp['title']) > 55 ? '…' : ''); ?></h5>
                               <div class="d-flex align-items-center gap-3 mb-4">
@@ -337,7 +337,7 @@ if ($EDITH) {
                         <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-gray-500 pe-none fs-6"></i>
                         <input type="text" class="form-control bg-white rounded-pill ps-12 fs-6 text-gray-700 search-input-v2 shadow-sm" placeholder="Search discussions, topics, people...">
                       </div>
-                      <a href="/Discourse/pages/version/create-post.php?c=<?php echo urlencode($community_name); ?>" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
+                      <a href="/Discourse/posts/index.php?action=create&c=<?php echo urlencode($community_name); ?>" class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1" style="background:#0b301f; color:#fff;">
                         <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
                       </a>
                     </div>
@@ -394,7 +394,7 @@ if ($EDITH) {
                            }
                            foreach ($display_topics as $dt) { ?>
                            <li><a class="dropdown-item rounded-2 py-2 px-4 text-gray-700 text-hover-success bg-hover-light-success fs-7"
-                                  href="/Discourse/pages/view/topic.php?t=<?php echo urlencode(strtoupper($dt)); ?>"><?php echo htmlspecialchars($dt); ?></a></li>
+                                  href="/Discourse/topics/index.php?t=<?php echo urlencode(strtoupper($dt)); ?>"><?php echo htmlspecialchars($dt); ?></a></li>
                            <?php } ?>
                         </ul>
                       </div>
@@ -430,7 +430,7 @@ if ($EDITH) {
                         <i class="bi bi-chat-square-text fs-1 d-block mb-3 opacity-50"></i>
                         <p class="fs-5 fw-bold mb-1">No posts yet</p>
                         <p class="fs-7">Be the first to post in <?php echo htmlspecialchars($community_name); ?>!</p>
-                        <a href="/Discourse/pages/version/create-post.php?c=<?php echo urlencode($community_name); ?>" class="btn btn-sm mt-3" style="background:#0b301f;color:#fff;">
+                        <a href="/Discourse/posts/index.php?action=create&c=<?php echo urlencode($community_name); ?>" class="btn btn-sm mt-3" style="background:#0b301f;color:#fff;">
                           <i class="bi bi-plus-lg me-1"></i> Create Post
                         </a>
                       </div>
@@ -439,7 +439,7 @@ if ($EDITH) {
                       $c_isAnon = (!empty($post['is_anonymous']));
                       $c_avatar = $c_isAnon ? '/Discourse/assets/images/anonymous.png' : (!empty($post['avatar']) ? $post['avatar'] : '/Discourse/assets/images/anonymous.png');
                       $c_author = $c_isAnon ? 'Anonymous' : ($post['author'] ?? 'User');
-                      $c_profileHref = ($c_isAnon || empty($post['author_id'])) ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . urlencode($post['author_id']);
+                      $c_profileHref = ($c_isAnon || empty($post['author_id'])) ? 'javascript:void(0)' : '/Discourse/profiles/index.php?id=' . urlencode($post['author_id']);
                       $c_commDetails = getCommunityIconDetails($community_name);
                       $c_saved = IS_POST_SAVED($post['id'], $identification);
                       $c_commentCount = $post['comments_count'] ?? 0;
@@ -490,7 +490,7 @@ if ($EDITH) {
                               <div class="col-12 mb-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                   <div class="d-flex align-items-center gap-2">
-                                    <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($community_name); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
+                                    <a href="/Discourse/communities/index.php?c=<?php echo urlencode($community_name); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
                                       <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $c_commDetails['bg_class']; ?>"
                                            style="width: 24px; height: 24px;">
                                         <i class="bi <?php echo $c_commDetails['icon']; ?> fs-8 <?php echo $c_commDetails['text_class']; ?>"></i>
@@ -530,7 +530,7 @@ if ($EDITH) {
                                   <div class="d-flex flex-wrap align-items-center gap-1">
                                     <?php echo renderTopicBadge($post['tag']); ?>
                                   </div>
-                                  <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
+                                  <a href="/Discourse/posts/index.php?id=<?php echo $post['id']; ?>&back=community&community=<?php echo urlencode($community_name); ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                                     <?php echo htmlspecialchars($post['title']); ?>
                                   </a>
                                   <div class="dc-body-wrap">
@@ -558,8 +558,7 @@ if ($EDITH) {
                                 <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $c_commentCount; ?> Comment<?php echo $c_commentCount == 1 ? '' : 's'; ?></button>
                                 <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
                                 <button class="btn btn-sm dc-post-save"
-                                        data-on="<?php echo $c_saved ? '1' : '0'; ?>"
-                                        style="<?php echo $c_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
+                                        data-on="<?php echo $c_saved ? '1' : '0'; ?>">
                                   <i class="bi <?php echo $c_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                   <?php echo $c_saved ? 'Saved' : 'Save'; ?>
                                 </button>
@@ -684,7 +683,7 @@ if ($EDITH) {
                             $c_avatar = !empty($c['avatar_md']) ? $c['avatar_md'] : 'https://ui-avatars.com/api/?name=' . urlencode($c['display_name']) . '&background=e8ede9&color=0b301f&rounded=true';
                           ?>
                             <div class="d-flex align-items-center justify-content-between">
-                              <a href="/Discourse/pages/version/profile-other.php?id=<?php echo urlencode($c['identification']); ?>" class="d-flex align-items-center gap-3 text-decoration-none">
+                              <a href="/Discourse/profiles/index.php?id=<?php echo urlencode($c['identification']); ?>" class="d-flex align-items-center gap-3 text-decoration-none">
                                 <img src="<?php echo htmlspecialchars($c_avatar); ?>" alt="<?php echo htmlspecialchars($c['display_name']); ?>"
                                   class="rounded-circle" style="width:42px;height:42px;object-fit:cover;border:2px solid #e5e7eb;">
                                 <div class="d-flex flex-column">
@@ -721,7 +720,7 @@ if ($EDITH) {
                             if ($dc_res) while ($dc = $dc_res->fetch_assoc()) $disc_comm[] = $dc;
                         }
                         foreach ($disc_comm as $dc) { ?>
-                          <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($dc['title']); ?>" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none" style="transition:background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                          <a href="/Discourse/communities/index.php?c=<?php echo urlencode($dc['title']); ?>" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none" style="transition:background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                             <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0 <?php echo $dc['bg_class']; ?>"
                               style="width:42px;height:42px;">
                               <i class="bi <?php echo $dc['icon']; ?> <?php echo $dc['text_class']; ?>" style="font-size:1.1rem;"></i>
@@ -741,7 +740,7 @@ if ($EDITH) {
 
                 </div>
 
-                <?php include(dirname(dirname(__DIR__)) . "/partials/_discourse-modals.php"); ?>
+                <?php include(dirname(__DIR__) . "/partials/_discourse-modals.php"); ?>
 
                 <?php if ($is_community_admin) { ?>
                 <!-- Edit Community Modal -->
@@ -960,12 +959,12 @@ if ($EDITH) {
               </div>
             </main>
           </div>
-          <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
+          <?php include(dirname(__DIR__) . "/partials/_footer.php"); ?>
         </div>
       </div>
     </div>
   </div>
-  <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
+  <?php include(dirname(__DIR__) . "/partials/_scrolltop.php"); ?>
 
   <!-- Scripts -->
   <script src="/Discourse/assets/js/dashboard.js"></script>
@@ -987,7 +986,7 @@ if ($EDITH) {
         }
         btn.prop('disabled', true);
         $.ajax({
-          url: '/Discourse/pages/version/join-community-action.php',
+          url: '/Discourse/communities/index-ajax-join-community.php',
           method: 'POST',
           data: { community_title: comm, action: joined ? 'leave' : 'join' },
           dataType: 'json',
@@ -1157,7 +1156,7 @@ if ($EDITH) {
         var formData = new FormData(this);
         
         $.ajax({
-          url: '/Discourse/pages/version/edit-community-action.php',
+          url: '/Discourse/communities/index-ajax-update-community.php',
           method: 'POST',
           data: formData,
           processData: false,
@@ -1189,7 +1188,7 @@ if ($EDITH) {
         submitBtn.prop('disabled', true);
         
         $.ajax({
-          url: '/Discourse/pages/version/add-announcement-action.php',
+          url: '/Discourse/posts/index-ajax-add-announcement.php',
           method: 'POST',
           data: form.serialize(),
           dataType: 'json',
@@ -1227,7 +1226,7 @@ if ($EDITH) {
         submitBtn.prop('disabled', true);
         
         $.ajax({
-          url: '/Discourse/pages/version/delete-community-action.php',
+          url: '/Discourse/communities/index-ajax-delete-community.php',
           method: 'POST',
           data: form.serialize(),
           dataType: 'json',
@@ -1312,7 +1311,7 @@ if ($EDITH) {
         btn.prop('disabled', true);
         
         $.ajax({
-          url: '/Discourse/pages/version/highlight-post-action.php',
+          url: '/Discourse/posts/index-ajax-highlight-post.php',
           method: 'POST',
           data: { post_id: postId, action: highlighted ? 'unhighlight' : 'highlight' },
           dataType: 'json',
@@ -1389,7 +1388,7 @@ if ($EDITH) {
   <div id="dc-feed-toast" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:1090;" class="d-flex align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
     <i class="bi bi-check-circle-fill text-success fs-6"></i><span></span>
   </div>
-  <script src="/Discourse/assets/js/sec-posts.js"></script>
+  <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
 </body>
 
 </html>

@@ -78,11 +78,11 @@ $dp_karma_fmt = $dp_karma >= 1000 ? round($dp_karma/1000, 1).'k' : $dp_karma;
 
     <div class="discourse-profile-section d-flex flex-column gap-1 mb-2">
       <span class="discourse-profile-section-label text-muted fw-bolder text-uppercase px-3 py-1 fs-8" style="letter-spacing: 0.08em;">Account</span>
-      <a href="/Discourse/pages/version/profile.php" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-person-circle text-muted fs-6"></i> View My Profile</a>
-      <a href="/Discourse/pages/version/profile.php?tab=posts" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-journal-text text-muted fs-6"></i> My Posts</a>
-      <a href="/Discourse/pages/version/profile.php?tab=comments" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-chat-left-text-fill text-muted fs-6"></i> My Comments</a>
-      <a href="/Discourse/pages/version/profile.php?tab=saved" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-bookmark-fill text-muted fs-6"></i> Saved Posts</a>
-      <a href="/Discourse/pages/version/community-home-page.php" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-people-fill text-muted fs-6"></i> My Communities</a>
+      <a href="/Discourse/profiles/index.php" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-person-circle text-muted fs-6"></i> View My Profile</a>
+      <a href="/Discourse/profiles/index.php?tab=posts" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-journal-text text-muted fs-6"></i> My Posts</a>
+      <a href="/Discourse/profiles/index.php?tab=comments" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-chat-left-text-fill text-muted fs-6"></i> My Comments</a>
+      <a href="/Discourse/profiles/index.php?tab=saved" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-bookmark-fill text-muted fs-6"></i> Saved Posts</a>
+      <a href="/Discourse/communities/index.php" class="discourse-profile-link nav-link text-gray-700 bg-hover-light-success rounded px-3 py-2 d-flex align-items-center gap-3 fs-6"><i class="bi bi-people-fill text-muted fs-6"></i> My Communities</a>
     </div>
 
     <div class="discourse-profile-section border-top border-gray-100 pt-2">
@@ -90,7 +90,7 @@ $dp_karma_fmt = $dp_karma >= 1000 ? round($dp_karma/1000, 1).'k' : $dp_karma;
     </div>
 
     <div class="discourse-profile-logout-wrap border-top border-gray-100 pt-2 mt-1">
-      <a href="/Discourse/pages/version/logout.php" class="discourse-profile-logout nav-link text-danger bg-hover-light-danger rounded px-3 py-2 d-flex align-items-center gap-3 fs-6 fw-bold">
+      <a href="/Discourse/logout.php" class="discourse-profile-logout nav-link text-danger bg-hover-light-danger rounded px-3 py-2 d-flex align-items-center gap-3 fs-6 fw-bold">
         <i class="bi bi-box-arrow-right text-danger fs-6"></i> Log Out
       </a>
     </div>

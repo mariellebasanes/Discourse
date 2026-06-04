@@ -132,19 +132,19 @@ $m_karma_fmt = $m_karma >= 1000 ? round($m_karma/1000, 1).'k' : $m_karma;
 
   <div class="px-2 py-2 border-bottom">
     <span class="d-block fs-8 fw-bolder text-muted text-uppercase px-3 py-1 ls-1">Account</span>
-    <a href="/Discourse/pages/version/profile.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/profiles/index.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-person me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> View My Profile
     </a>
-    <a href="/Discourse/pages/version/profile.php?tab=posts" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/profiles/index.php?tab=posts" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-file-text me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> My Posts
     </a>
-    <a href="/Discourse/pages/version/profile.php?tab=comments" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/profiles/index.php?tab=comments" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-chat-left-text me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> My Comments
     </a>
-    <a href="/Discourse/pages/version/profile.php?tab=saved" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/profiles/index.php?tab=saved" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-bookmark me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> Saved Posts
     </a>
-    <a href="/Discourse/pages/version/community-home-page.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/communities/index.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-people me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> My Communities
     </a>
   </div>
@@ -152,7 +152,7 @@ $m_karma_fmt = $m_karma >= 1000 ? round($m_karma/1000, 1).'k' : $m_karma;
   <!-- Settings Links -->
   <div class="px-2 py-2 border-bottom">
     <span class="d-block fs-8 fw-bolder text-muted text-uppercase px-3 py-1 ls-1">Settings</span>
-    <a href="/Discourse/pages/version/profile.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/profiles/index.php" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-gear me-3 text-muted fs-6" style="width:16px;text-align:center;"></i> Settings
     </a>
     <a href="/" class="d-flex align-items-center fs-7 text-gray-700 text-hover-success text-decoration-none px-3 py-2 rounded-3">
@@ -162,7 +162,7 @@ $m_karma_fmt = $m_karma >= 1000 ? round($m_karma/1000, 1).'k' : $m_karma;
 
   <!-- Log Out -->
   <div class="px-2 py-2">
-    <a href="/Discourse/pages/version/logout.php" class="d-flex align-items-center fs-7 fw-bold text-danger text-hover-danger text-decoration-none px-3 py-2 rounded-3">
+    <a href="/Discourse/logout.php" class="d-flex align-items-center fs-7 fw-bold text-danger text-hover-danger text-decoration-none px-3 py-2 rounded-3">
       <i class="bi bi-box-arrow-right me-3 fs-6" style="width:16px;text-align:center;"></i> Log Out
     </a>
   </div>

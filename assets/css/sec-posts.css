@@ -95,11 +95,27 @@
   text-decoration: none !important;
   display: inline-block;
   margin-top: 2px;
+}
 /* ── Post action icons monochromatic ───────────────────── */
 .dc-post-save i,
 .dc-post-highlight i,
 .dc-post-comment i,
 .dc-post-share i,
-.dc-post-report i {
+.dc-post-report i,
+#profile-follow-btn i,
+#follow-btn i {
   color: currentColor !important;
+}
+
+/* ── Saved state: matching blue text, icon, and outline ── */
+.dc-post-save[data-on="1"],
+#save-post-btn.saved {
+  background-color: rgba(13, 110, 253, 0.12) !important;
+  color: #0d6efd !important;
+  border: 1px solid #0d6efd !important;
+}
+
+.dc-post-save[data-on="1"] i,
+#save-post-btn.saved i {
+  color: #0d6efd !important; /* matching blue icon */
 }

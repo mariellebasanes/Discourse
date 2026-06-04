@@ -55090,3 +55090,12 @@ body {
 .border-hover-gco-connect:hover {
   border-color: var(--gco-connect) !important;
 }
+
+/* Custom Global Hover Icon Color Fix */
+.btn:hover i,
+.btn:hover [class^="bi-"],
+.btn:hover [class*=" bi-"],
+.btn:hover .ki-duotone,
+.btn:hover [class^="ki-"] {
+  color: #ffffff !important;
+}

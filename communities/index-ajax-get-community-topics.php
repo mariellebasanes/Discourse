@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 header('Content-Type: application/json');
 
 $community = isset($_GET['c']) ? trim($_GET['c']) : '';

@@ -1,10 +1,10 @@
 <?php
 define('MBG', TRUE);
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 $other_id = isset($_GET['id']) ? trim($_GET['id']) : 'T202210344'; // Sofia Karim
 if ($other_id === $identification) {
-    header("Location: /Discourse/pages/version/profile.php");
+    header("Location: /Discourse/profiles/index.php");
     exit;
 }
 $other_account = GET_ACCOUNT_DETAILS($other_id);
@@ -99,14 +99,15 @@ if (!function_exists('profile_relative_time')) {
   <script src="/Discourse/assets/js/jquery.js"></script>
 
   <link href="/Discourse/assets/css/discourse-css/profile-other.css" rel="stylesheet" type="text/css" />
+  <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet" type="text/css" />
 </head>
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
   data-kt-app-layout="light-header" class="app-default">
-  <?php include(dirname(dirname(__DIR__)) . "/partials/_page-loader.php"); ?>
+  <?php include(dirname(__DIR__) . "/partials/_page-loader.php"); ?>
   <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-      <?php include(dirname(dirname(__DIR__)) . "/partials/_header.php"); ?>
+      <?php include(dirname(__DIR__) . "/partials/_header.php"); ?>
       <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
           <div class="d-flex flex-column flex-column-fluid">
@@ -253,7 +254,7 @@ if (!function_exists('profile_relative_time')) {
                               </div>
                               <span class="fw-bolder text-dark fs-8">D/<?php echo htmlspecialchars($act['community'] ?? ''); ?></span>
                             </div>
-                            <a href="/Discourse/pages/version/view-post.php?id=<?php echo $act['post_id'] ?? ''; ?>" class="fw-bold text-dark text-hover-primary fs-6 d-block mb-1 text-truncate"><?php echo htmlspecialchars($act['post_title'] ?? ''); ?></a>
+                            <a href="/Discourse/posts/index.php?id=<?php echo $act['post_id'] ?? ''; ?>" class="fw-bold text-dark text-hover-primary fs-6 d-block mb-1 text-truncate"><?php echo htmlspecialchars($act['post_title'] ?? ''); ?></a>
                           </div>
                           <p class="text-gray-700 fs-6 lh-lg mb-4"><?php echo htmlspecialchars($act['body'] ?? ''); ?></p>
                           <div class="d-flex align-items-center gap-1">
@@ -302,7 +303,7 @@ if (!function_exists('profile_relative_time')) {
                               <!-- Row 1: Community badge + Report button -->
                               <div class="col-12 mb-2">
                                 <div class="d-flex justify-content-between align-items-center">
-                                  <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($post['community'] ?? ''); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
+                                  <a href="/Discourse/communities/index.php?c=<?php echo urlencode($post['community'] ?? ''); ?>" class="d-flex align-items-center gap-2 text-decoration-none">
                                     <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $po_commDetails['bg_class']; ?>"
                                          style="width: 24px; height: 24px;">
                                       <i class="bi <?php echo $po_commDetails['icon']; ?> fs-8 <?php echo $po_commDetails['text_class']; ?>"></i>
@@ -332,7 +333,7 @@ if (!function_exists('profile_relative_time')) {
                                   <div class="d-flex flex-wrap align-items-center gap-1">
                                     <?php echo renderTopicBadge($post['topic'] ?? 'GENERAL'); ?>
                                   </div>
-                                  <a href="/Discourse/pages/version/view-post.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
+                                  <a href="/Discourse/posts/index.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                                     <?php echo htmlspecialchars($post['title']); ?>
                                   </a>
                                   <?php if (!empty($post['body'])): ?>
@@ -357,7 +358,7 @@ if (!function_exists('profile_relative_time')) {
                                 <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $po_commentCount; ?> Comment<?php echo $po_commentCount == 1 ? '' : 's'; ?></button>
                                 <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
                                  <?php $po_saved = IS_POST_SAVED($post['id'], $identification); ?>
-                                 <button class="btn btn-sm dc-post-save" data-on="<?php echo $po_saved ? '1' : '0'; ?>" style="<?php echo $po_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
+                                 <button class="btn btn-sm dc-post-save" data-on="<?php echo $po_saved ? '1' : '0'; ?>">
                                      <i class="bi <?php echo $po_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i> <?php echo $po_saved ? 'Saved' : 'Save'; ?>
                                  </button>
                               </div>
@@ -415,7 +416,7 @@ if (!function_exists('profile_relative_time')) {
                               </div>
                               <span class="fw-bolder text-dark fs-8">D/<?php echo htmlspecialchars($c['community'] ?? ''); ?></span>
                             </div>
-                            <a href="/Discourse/pages/version/view-post.php?id=<?php echo $c['post_id'] ?? ''; ?>" class="fw-bold text-dark text-hover-primary fs-6 d-block mb-1 text-truncate"><?php echo htmlspecialchars($c['post_title'] ?? ''); ?></a>
+                            <a href="/Discourse/posts/index.php?id=<?php echo $c['post_id'] ?? ''; ?>" class="fw-bold text-dark text-hover-primary fs-6 d-block mb-1 text-truncate"><?php echo htmlspecialchars($c['post_title'] ?? ''); ?></a>
                           </div>
                           <p class="text-gray-700 fs-6 lh-lg mb-4"><?php echo htmlspecialchars($c['body'] ?? ''); ?></p>
                           <div class="d-flex align-items-center gap-1 mt-2">
@@ -449,7 +450,7 @@ if (!function_exists('profile_relative_time')) {
                           $mCount = $comm['members'] >= 1000 ? round($comm['members']/1000,1).'k' : $comm['members'];
                         ?>
                         <div class="col-md-6">
-                          <div class="card border border-gray-300 shadow-none community-card rounded-2" onclick="window.location.href='/Discourse/pages/version/community.php?c=<?php echo urlencode($comm['community_title']); ?>'">
+                          <div class="card border border-gray-300 shadow-none community-card rounded-2" onclick="window.location.href='/Discourse/communities/index.php?c=<?php echo urlencode($comm['community_title']); ?>'">
                             <div class="card-body p-5 d-flex align-items-center gap-4">
                               <div class="w-50px h-50px rounded-3 d-flex align-items-center justify-content-center avatar-circle flex-shrink-0" style="background-color: #8C9933;">
                                 <img src="/Discourse/assets/img/logo/feu-tech.webp" alt="">
@@ -475,12 +476,12 @@ if (!function_exists('profile_relative_time')) {
               </div>
             </main>
           </div>
-          <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
+          <?php include(dirname(__DIR__) . "/partials/_footer.php"); ?>
         </div>
       </div>
     </div>
   </div>
-  <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
+  <?php include(dirname(__DIR__) . "/partials/_scrolltop.php"); ?>
 
   <script>
     $(document).ready(function() {
@@ -498,7 +499,7 @@ if (!function_exists('profile_relative_time')) {
         const following = btn.data('following') == '1';
         btn.prop('disabled', true);
         $.ajax({
-          url: '/Discourse/pages/version/follow-action.php',
+          url: '/Discourse/profiles/index-ajax-follow.php',
           method: 'POST',
           data: { target_id: target },
           dataType: 'json',
@@ -520,7 +521,7 @@ if (!function_exists('profile_relative_time')) {
       });
     });
   </script>
-  <script src="/Discourse/assets/js/sec-posts.js"></script>
+  <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
 </body>
 
 </html>

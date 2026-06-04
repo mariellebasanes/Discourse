@@ -16,8 +16,8 @@ $META_TITLE = "Dashboard · Discourse";
   <link href="assets/css/sec-hero.css" rel="stylesheet">
   <link href="assets/css/sec-sidebar.css" rel="stylesheet">
   <link href="assets/css/sec-search-filter.css" rel="stylesheet">
-  <link href="assets/css/sec-posts.css" rel="stylesheet">
-  <link href="assets/css/sec-modals.css" rel="stylesheet">
+  <link href="assets/css/sec-posts.css?v=1.0.4" rel="stylesheet">
+  <link href="assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
 </head>
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
@@ -37,14 +37,14 @@ $META_TITLE = "Dashboard · Discourse";
 
                   <!-- ── LEFT COLUMN ──────────────────────────────────────── -->
                   <div class="discourse-feed-col">
-                    <?php include("Main/sec-hero.php"); ?>
-                    <?php include("Main/sec-search-filter.php"); ?>
-                    <?php include("Main/sec-posts.php"); ?>
+                    <?php include("main/sec-hero.php"); ?>
+                    <?php include("main/sec-search-filter.php"); ?>
+                    <?php include("main/sec-posts.php"); ?>
                   </div>
 
                   <!-- ── RIGHT COLUMN ─────────────────────────────────────── -->
                   <div class="discourse-sidebar-col">
-                    <?php include("Main/sec-sidebar.php"); ?>
+                    <?php include("main/sec-sidebar.php"); ?>
                   </div>
 
                 </div>
@@ -63,7 +63,7 @@ $META_TITLE = "Dashboard · Discourse";
   <script src="assets/js/sec-hero.js"></script>
   <script src="assets/js/sec-sidebar.js"></script>
   <script src="assets/js/sec-search-filter.js"></script>
-  <script src="assets/js/sec-posts.js"></script>
+  <script src="assets/js/sec-posts.js?v=1.0.4"></script>
   <script src="assets/js/sec-modals.js"></script>
 </body>
 

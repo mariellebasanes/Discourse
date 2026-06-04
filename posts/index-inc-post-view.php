@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 if (!function_exists('get_relative_time')) {
     function get_relative_time($datetime) {
@@ -93,12 +93,15 @@ if ($post) {
     $authorName      = $isAnon ? 'Anonymous' : $dbDisplayName;
     $authorInitials  = $isAnon ? 'A' : implode('', array_map(fn($w) => $w[0] ?? '', explode(' ', $authorName)));
     $authorAvatar    = $isAnon ? '/Discourse/assets/images/anonymous.png' : $dbAvatar;
-    $authorProfileLink = $isAnon ? 'javascript:void(0)' : '/Discourse/pages/version/profile-other.php?id=' . $post['author_id'];
+    $authorProfileLink = $isAnon ? 'javascript:void(0)' : '/Discourse/profiles/index.php?id=' . $post['author_id'];
     $bannerMeta      = $post['community'] . ' • Posted by ' . $authorName . ' • ' . get_relative_time($post['created_at']);
     $tag             = !empty($post['tags']) ? $post['tags'] : $post['topic'];
     $community       = $post['community'];
     $can_edit        = isset($_SESSION['identification']) && $post['author_id'] === $_SESSION['identification'];
 }
+
+$loggedInName      = $ACCOUNT['display_name'] ?? 'User';
+$loggedInInitials  = implode('', array_map(fn($w) => $w[0] ?? '', explode(' ', $loggedInName)));
 
 if (!$db_post_loaded) {
 $META_TITLE = "View Post - Discourse";
@@ -160,6 +163,40 @@ if (!$db_post_loaded && $showImage) {
     $tag         = "TECHNOLOGY";
     $community   = "FEU Tech";
 }
+
+// ── Back URL: context-aware navigation ──────────────────────
+$backParam = $_GET['back'] ?? '';
+switch ($backParam) {
+    case 'dashboard':
+        $backUrl   = '/Discourse/index.php';
+        $backLabel = 'Back to Dashboard';
+        break;
+    case 'community':
+        $backCommunity = $_GET['community'] ?? ($community ?? '');
+        $backUrl   = '/Discourse/communities/index.php?c=' . urlencode($backCommunity);
+        $backLabel = 'Back to Community';
+        break;
+    case 'topic':
+        $backTopic = $_GET['topic'] ?? '';
+        $backUrl   = '/Discourse/topics/index.php?t=' . urlencode($backTopic);
+        $backLabel = 'Back to Topic';
+        break;
+    case 'hashtag':
+        $backTag = $_GET['tag'] ?? '';
+        $backUrl = '/Discourse/hashtags/index.php?tag=' . urlencode($backTag);
+        $backLabel = 'Back to Feed';
+        break;
+    case 'profile':
+        $backProfile = $_GET['profile'] ?? '';
+        $backUrl  = '/Discourse/profiles/index.php?id=' . urlencode($backProfile);
+        $backLabel = 'Back to Profile';
+        break;
+    default:
+        // Default: go back to the community the post belongs to
+        $backUrl   = '/Discourse/communities/index.php?c=' . urlencode($community ?? 'FEU LIFE');
+        $backLabel = 'Back to Feed';
+        break;
+}
 ?>
 
 <!DOCTYPE html>
@@ -182,7 +219,9 @@ if (!$db_post_loaded && $showImage) {
 
     <script src="/Discourse/assets/js/jquery.js"></script>
     <link href="/Discourse/assets/css/discourse-css/view-post.css" rel="stylesheet" type="text/css" />
-    <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet" type="text/css" />
+    <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet" type="text/css" />
+    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet" type="text/css" />
+    <link href="/Discourse/assets/css/dc-editor.css" rel="stylesheet" type="text/css" />
     <style>
         .anon-toggle-wrapper {
             display: flex;
@@ -294,10 +333,10 @@ if (!$db_post_loaded && $showImage) {
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
     data-kt-app-layout="light-header" class="app-default">
-    <?php include(dirname(dirname(__DIR__)) . "/partials/_page-loader.php"); ?>
+    <?php include(dirname(__DIR__) . "/partials/_page-loader.php"); ?>
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-            <?php include(dirname(dirname(__DIR__)) . "/partials/_header.php"); ?>
+            <?php include(dirname(__DIR__) . "/partials/_header.php"); ?>
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
                     <div class="d-flex flex-column flex-column-fluid">
@@ -323,9 +362,9 @@ if (!$db_post_loaded && $showImage) {
                                             <span class="text-white text-opacity-75 fs-8"><?php echo $bannerType; ?> • <?php echo $bannerMembers; ?> Members</span>
                                         </div>
                                     </div>
-                                    <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($community ?? 'FEU LIFE'); ?>"
+                                    <a href="<?php echo htmlspecialchars($backUrl); ?>"
                                         class="btn btn-sm btn-outline btn-outline-white text-white border-white border-opacity-25 px-4 py-2 d-flex align-items-center gap-2 text-decoration-none">
-                                        <i class="ki-duotone ki-arrow-left text-white fs-8"><span class="path1"></span><span class="path2"></span></i> Back to Feed
+                                        <i class="ki-duotone ki-arrow-left text-white fs-8"><span class="path1"></span><span class="path2"></span></i> <?php echo htmlspecialchars($backLabel); ?>
                                     </a>
                                 </div>
                             </div>
@@ -345,11 +384,11 @@ if (!$db_post_loaded && $showImage) {
                                                             <div class="symbol-label bg-success text-white fw-bold fs-6"><?php echo $authorInitials; ?></div>
                                                         </div>
                                                         <div class="d-flex align-items-center gap-2">
-                                                            <a href="<?php echo $authorProfileLink ?? '/Discourse/pages/version/profile-other.php'; ?>" class="fw-bolder text-dark text-hover-primary fs-6"><?php echo htmlspecialchars($authorName); ?></a>
+                                                            <a href="<?php echo $authorProfileLink ?? '/Discourse/profiles/index.php'; ?>" class="fw-bolder text-dark text-hover-primary fs-6"><?php echo htmlspecialchars($authorName); ?></a>
                                                             <span class="text-muted fs-8">in</span>
                                                             <?php $commDetails = getCommunityIconDetails($community); ?>
                                                             <!-- FIX 2: text_class moved to <i> tag -->
-                                                            <a href="/Discourse/pages/version/community.php?c=<?php echo urlencode($community); ?>" class="d-inline-flex align-items-center gap-1 text-decoration-none">
+                                                            <a href="/Discourse/communities/index.php?c=<?php echo urlencode($community); ?>" class="d-inline-flex align-items-center gap-1 text-decoration-none">
                                                                 <div class="d-flex align-items-center justify-content-center rounded-2 <?php echo $commDetails['bg_class']; ?>"
                                                                     style="width:20px;height:20px;">
                                                                     <i class="bi <?php echo $commDetails['icon']; ?> <?php echo $commDetails['text_class']; ?>" style="font-size:8px;"></i>
@@ -431,15 +470,18 @@ if (!$db_post_loaded && $showImage) {
                                                             <i class="bi bi-chat fs-7"></i> <span class="fw-bold fs-8" id="comment-count-text-btn"><?php echo $post ? count($comments) : ($showImage ? '1' : '3'); ?></span>
                                                         </button>
                                                         <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
-                                                            <i class="bi bi-share fs-7"></i> <span class="fw-bold fs-8">Share</span>
-                                                        </button>
-                                                        <button class="btn btn-sm btn-light-muted vote-btn btn-save d-flex align-items-center gap-1 px-3 py-2 rounded-pill" id="save-post-btn">
-                                                            <i class="bi bi-bookmark fs-7"></i> <span class="fw-bold fs-8">Save</span>
-                                                        </button>
+                                                             <i class="bi bi-share fs-7"></i> <span class="fw-bold fs-8">Share</span>
+                                                         </button>
+                                                        <?php
+                                                         $is_saved = ($post && IS_POST_SAVED($post['id'], $identification));
+                                                         ?>
+                                                         <button class="btn btn-sm <?php echo $is_saved ? 'saved btn-light-primary' : 'btn-light-muted'; ?> vote-btn btn-save d-flex align-items-center gap-1 px-3 py-2 rounded-pill" id="save-post-btn">
+                                                             <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> fs-7"></i> <span class="fw-bold fs-8"><?php echo $is_saved ? 'Saved' : 'Save'; ?></span>
+                                                         </button>
                                                     </div>
                                                     <div class="d-flex align-items-center gap-1">
                                                         <?php if ($can_edit ?? $showImage) { ?>
-                                                            <a href="/Discourse/pages/view/edit-post.php<?php echo $post ? '?id=' . $post['id'] : ''; ?>" class="btn btn-sm btn-light-primary d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
+                                                            <a href="/Discourse/posts/index.php?action=edit<?php echo $post ? '?id=' . $post['id'] : ''; ?>" class="btn btn-sm btn-light-primary d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
                                                                 <i class="bi bi-pencil-square fs-7 text-primary"></i> <span class="fw-bold fs-8">Edit Post</span>
                                                             </a>
                                                             <?php if ($post) { ?>
@@ -467,22 +509,39 @@ if (!$db_post_loaded && $showImage) {
 
                                                     <?php if ($post) {
                                                         if (!empty($comments)) {
+                                                            $topLevelComments = [];
+                                                            $repliesByParent = [];
                                                             foreach ($comments as $comment) {
-                                                                $cInitials = implode('', array_map(fn($w) => $w[0] ?? '', explode(' ', $comment['author_name'] ?? 'U')));
-                                                                $cAvatar = !empty($comment['avatar_md']) ? $comment['avatar_md'] : '';
+                                                                if (!empty($comment['parent_id'])) {
+                                                                    $repliesByParent[$comment['parent_id']][] = $comment;
+                                                                } else {
+                                                                    $topLevelComments[] = $comment;
+                                                                }
+                                                            }
+                                                            
+                                                            if (!empty($topLevelComments)) {
+                                                                foreach ($topLevelComments as $comment) {
+                                                                    $isCommentAnon = ($comment['is_anonymous'] == 1);
+                                                                    $cName = $isCommentAnon ? 'Anonymous' : ($comment['author_name'] ?? 'User');
+                                                                    $cInitials = $isCommentAnon ? 'A' : implode('', array_map(fn($w) => $w[0] ?? '', explode(' ', $cName)));
+                                                                    $cAvatar = $isCommentAnon ? '' : (!empty($comment['avatar_md']) ? $comment['avatar_md'] : '');
+                                                                    $cBg = $isCommentAnon ? '#ea580c' : '#17c653';
                                                     ?>
-                                                    <div class="mb-4">
+                                                    <div class="mb-4" data-cid="<?php echo $comment['id']; ?>">
                                                         <div class="d-flex">
                                                             <div class="symbol symbol-30px symbol-circle me-3 flex-shrink-0">
                                                                 <?php if ($cAvatar) { ?>
-                                                                    <img src="<?php echo htmlspecialchars($cAvatar); ?>" class="h-30px w-30px rounded-circle" alt="<?php echo htmlspecialchars($comment['author_name']); ?>">
+                                                                    <img src="<?php echo htmlspecialchars($cAvatar); ?>" class="h-30px w-30px rounded-circle" alt="<?php echo htmlspecialchars($cName); ?>">
                                                                 <?php } else { ?>
-                                                                    <div class="symbol-label bg-success text-white fw-bold fs-7"><?php echo htmlspecialchars($cInitials ?: 'U'); ?></div>
+                                                                    <div class="symbol-label text-white fw-bold fs-7" style="background-color: <?php echo $cBg; ?> !important;"><?php echo htmlspecialchars($cInitials ?: 'U'); ?></div>
                                                                 <?php } ?>
                                                             </div>
                                                             <div class="flex-grow-1">
                                                                 <div class="d-flex align-items-center gap-2 mb-1">
-                                                                    <span class="fw-bolder text-dark fs-7"><?php echo htmlspecialchars($comment['author_name'] ?? 'User'); ?></span>
+                                                                    <span class="fw-bolder text-dark fs-7"><?php echo htmlspecialchars($cName); ?></span>
+                                                                    <?php if ($isCommentAnon) { ?>
+                                                                        <span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>
+                                                                    <?php } ?>
                                                                     <span class="text-muted fs-9"><?php echo get_relative_time($comment['created_at']); ?></span>
                                                                 </div>
                                                                 <p class="text-gray-800 fs-7 mb-2"><?php echo htmlspecialchars($comment['body']); ?></p>
@@ -490,7 +549,7 @@ if (!$db_post_loaded && $showImage) {
                                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">0</span></button>
                                                                     <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span></button>
                                                                     <button class="btn btn-sm btn-light-muted reply-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"
-                                                                        data-author="<?php echo htmlspecialchars($comment['author_name'] ?? 'User'); ?>"
+                                                                        data-author="<?php echo htmlspecialchars($cName); ?>"
                                                                         data-comment-id="<?php echo $comment['id']; ?>">
                                                                         <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
                                                                     </button>
@@ -498,12 +557,65 @@ if (!$db_post_loaded && $showImage) {
                                                             </div>
                                                         </div>
                                                         <!-- Inline reply thread area -->
-                                                        <div class="reply-thread-area ps-5 mt-2" id="thread-<?php echo $comment['id']; ?>"></div>
+                                                        <div class="reply-thread-area ps-5 mt-2" id="thread-<?php echo $comment['id']; ?>">
+                                                            <?php
+                                                            if (isset($repliesByParent[$comment['id']])) {
+                                                                foreach ($repliesByParent[$comment['id']] as $reply) {
+                                                                    $isReplyAnon = ($reply['is_anonymous'] == 1);
+                                                                    $rName = $isReplyAnon ? 'Anonymous' : ($reply['author_name'] ?? 'User');
+                                                                    $rInitials = $isReplyAnon ? 'A' : implode('', array_map(fn($w) => $w[0] ?? '', explode(' ', $rName)));
+                                                                    $rAvatar = $isReplyAnon ? '' : (!empty($reply['avatar_md']) ? $reply['avatar_md'] : '');
+                                                                    $rBg = $isReplyAnon ? '#ea580c' : '#17c653';
+                                                                    $replyingToName = $cName;
+                                                            ?>
+                                                            <div class="mb-3 pb-2 border-start border-2 ps-3" style="border-color:#d1fae5!important;">
+                                                                <div class="d-flex gap-3">
+                                                                    <div class="flex-shrink-0">
+                                                                        <?php if ($rAvatar) { ?>
+                                                                            <img src="<?php echo htmlspecialchars($rAvatar); ?>" class="rounded-circle" style="width: 28px; height: 28px; object-fit: cover;" alt="<?php echo htmlspecialchars($rName); ?>">
+                                                                        <?php } else { ?>
+                                                                            <div class="symbol-label text-white fw-bold fs-8" style="width:28px;height:28px;background:<?php echo $rBg; ?>;"><?php echo htmlspecialchars($rInitials); ?></div>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                    <div class="flex-grow-1">
+                                                                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                                                            <span class="fw-bolder text-dark fs-7"><?php echo htmlspecialchars($rName); ?></span>
+                                                                            <span class="text-muted fs-9 me-1">replying to</span><span class="fw-bold text-success fs-9">@<?php echo htmlspecialchars($replyingToName); ?></span>
+                                                                            <?php if ($isReplyAnon) { ?>
+                                                                                <span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>
+                                                                            <?php } ?>
+                                                                            <span class="text-muted fs-9"><?php echo get_relative_time($reply['created_at']); ?></span>
+                                                                        </div>
+                                                                        <p class="text-gray-800 fs-7 mb-2"><?php echo htmlspecialchars($reply['body']); ?></p>
+                                                                        <div class="d-flex align-items-center gap-1 mt-1">
+                                                                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-up fs-9"></i> <span class="fw-bold fs-9">0</span></button>
+                                                                            <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"><i class="bi bi-hand-thumbs-down fs-9"></i> <span class="fw-bold fs-9">0</span></button>
+                                                                            <button class="btn btn-sm btn-light-muted reply-btn d-flex align-items-center gap-1 px-2 py-1 rounded-pill"
+                                                                                data-author="<?php echo htmlspecialchars($rName); ?>"
+                                                                                data-comment-id="<?php echo $comment['id']; ?>">
+                                                                                <i class="bi bi-chat fs-9"></i> <span class="fw-bold fs-9">Reply</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </div>
                                                         <!-- Inline reply composer (hidden by default) -->
                                                         <div class="reply-composer ps-5 mt-2" id="composer-<?php echo $comment['id']; ?>" style="display:none;"></div>
                                                     </div>
-                                                    <?php } ?>
-                                                    <?php } else { ?>
+                                                    <?php 
+                                                                }
+                                                            } else {
+                                                    ?>
+                                                        <div class="text-muted fs-7 py-4 text-center" id="no-comments-msg">No comments yet. Be the first to start the conversation!</div>
+                                                    <?php
+                                                            }
+                                                        } else { 
+                                                    ?>
                                                         <div class="text-muted fs-7 py-4 text-center" id="no-comments-msg">No comments yet. Be the first to start the conversation!</div>
                                                     <?php } ?>
                                                     <?php } else { ?>
@@ -575,7 +687,7 @@ if (!$db_post_loaded && $showImage) {
                                                 <!-- Write Comment -->
                                                 <div class="d-flex align-items-start mt-8" id="comment-composer">
                                                     <div class="symbol symbol-35px symbol-circle me-3 flex-shrink-0 mt-1" id="commenter-avatar">
-                                                        <div class="symbol-label bg-success text-white fw-bold fs-6" id="commenter-initials"><?php echo $authorInitials; ?></div>
+                                                        <div class="symbol-label text-white fw-bold fs-6" id="commenter-initials" style="background-color: #17c653 !important;"><?php echo htmlspecialchars($loggedInInitials); ?></div>
                                                     </div>
                                                     <div class="comment-input-row flex-grow-1">
                                                         <div class="comment-input-wrapper">
@@ -718,7 +830,7 @@ if (!$db_post_loaded && $showImage) {
                                                     <?php foreach ($related_posts as $idx => $rp) {
                                                         if ($idx > 0) echo '<div class="separator separator-dashed my-1"></div>';
                                                     ?>
-                                                    <a href="/Discourse/pages/version/view-post.php?id=<?php echo $rp['id']; ?>" class="d-flex align-items-start gap-3 text-decoration-none">
+                                                    <a href="/Discourse/posts/index.php?id=<?php echo $rp['id']; ?>" class="d-flex align-items-start gap-3 text-decoration-none">
                                                         <div class="d-flex align-items-center gap-1 mt-1 text-success">
                                                             <i class="ki-duotone ki-arrow-up fs-9"><span class="path1"></span><span class="path2"></span></i>
                                                             <span class="vote-count-up"><?php echo $rp['upvotes']; ?></span>
@@ -769,13 +881,13 @@ if (!$db_post_loaded && $showImage) {
                             </div>
                         </main>
                     </div>
-                    <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
+                    <?php include(dirname(__DIR__) . "/partials/_footer.php"); ?>
                 </div>
             </div>
         </div>
     </div>
-    <?php include(dirname(dirname(__DIR__)) . "/partials/_discourse-modals.php"); ?>
-    <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
+    <?php include(dirname(__DIR__) . "/partials/_discourse-modals.php"); ?>
+    <?php include(dirname(__DIR__) . "/partials/_scrolltop.php"); ?>
     <script src="/Discourse/assets/js/sec-modals.js"></script>
 
     <script>
@@ -784,8 +896,8 @@ if (!$db_post_loaded && $showImage) {
             let replyingToThread = null;
             let isAnonymous = false;
             const postId = <?php echo json_encode($post ? $post['id'] : 0); ?>;
-            const realName = '<?php echo addslashes($authorName); ?>';
-            const realInitials = '<?php echo $authorInitials; ?>';
+            const realName = '<?php echo addslashes($loggedInName); ?>';
+            const realInitials = '<?php echo $loggedInInitials; ?>';
 
             $('#anon-toggle-checkbox').on('change', function() {
                 isAnonymous = $(this).is(':checked');
@@ -807,7 +919,7 @@ if (!$db_post_loaded && $showImage) {
                 const following = btn.data('following') == '1';
                 btn.prop('disabled', true);
                 $.ajax({
-                    url: '/Discourse/pages/version/follow-action.php',
+                    url: '/Discourse/profiles/index-ajax-follow.php',
                     method: 'POST',
                     data: { target_id: target },
                     dataType: 'json',
@@ -830,16 +942,34 @@ if (!$db_post_loaded && $showImage) {
 
             $('#save-post-btn').on('click', function() {
                 const btn = $(this);
-                const isSaved = btn.hasClass('saved');
-                if (isSaved) {
-                    btn.removeClass('saved btn-light-warning').addClass('btn-light-muted');
-                    btn.find('i').removeClass('bi-bookmark-fill').addClass('bi-bookmark');
-                    btn.find('span').text('Save');
-                } else {
-                    btn.removeClass('btn-light-muted').addClass('saved btn-light-warning');
-                    btn.find('i').removeClass('bi-bookmark').addClass('bi-bookmark-fill');
-                    btn.find('span').text('Saved');
-                }
+                const postId = '<?php echo $post ? $post['id'] : 0; ?>';
+                if (!postId || postId == 0) return;
+
+                $.ajax({
+                    url: '/Discourse/posts/index-ajax-save-post.php',
+                    method: 'POST',
+                    data: { post_id: postId },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.success) {
+                            const saved = res.saved;
+                            if (saved) {
+                                btn.removeClass('btn-light-muted').addClass('saved btn-light-primary');
+                                btn.find('i').removeClass('bi-bookmark').addClass('bi-bookmark-fill');
+                                btn.find('span').text('Saved');
+                            } else {
+                                btn.removeClass('saved btn-light-primary').addClass('btn-light-muted');
+                                btn.find('i').removeClass('bi-bookmark-fill').addClass('bi-bookmark');
+                                btn.find('span').text('Save');
+                            }
+                        } else {
+                            alert(res.message || 'Error processing request.');
+                        }
+                    },
+                    error: function() {
+                        alert('Error communicating with database.');
+                    }
+                });
             });
 
             $(document).on('click', '.vote-btn:has(.bi-hand-thumbs-up), .vote-btn:has(.bi-hand-thumbs-down)', function(e) {
@@ -897,7 +1027,7 @@ if (!$db_post_loaded && $showImage) {
 
             function buildInlineComposer(commentId, replyingToName) {
                 const initials = isAnonymous ? 'A' : realInitials;
-                const bg       = isAnonymous ? '#ea580c' : '#198754';
+                const bg       = isAnonymous ? '#ea580c' : '#17c653';
                 const uid      = 'reply-anon-' + commentId;
                 return `
                 <div class="d-flex align-items-start gap-2 inline-composer" data-for="${commentId}" data-reply-anon="${isAnonymous ? '1' : '0'}">
@@ -941,7 +1071,7 @@ if (!$db_post_loaded && $showImage) {
                 } else {
                     wrapper.removeClass('is-anon');
                     label.text('Post anonymously');
-                    avatar.text(realInitials).css('background', '#198754');
+                    avatar.text(realInitials).css('background', '#17c653');
                 }
             });
 
@@ -991,9 +1121,36 @@ if (!$db_post_loaded && $showImage) {
                 const replyingToName = composer.find('.text-success').text().replace('@','').trim();
                 // Read anon state from THIS composer's own toggle (not global)
                 const replyIsAnon = composer.find('.reply-anon-checkbox').is(':checked');
+                const parentId = composer.attr('data-for');
+
+                if (postId > 0) {
+                    $.ajax({
+                        url: '/Discourse/posts/index-ajax-add-comment.php',
+                        method: 'POST',
+                        data: {
+                            post_id: postId,
+                            body: text,
+                            parent_id: parentId,
+                            is_anonymous: replyIsAnon ? 1 : 0
+                        },
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.success) {
+                                window.location.reload();
+                            } else {
+                                alert(res.message || 'Failed to post reply.');
+                            }
+                        },
+                        error: function() {
+                            alert('Error communicating with database.');
+                        }
+                    });
+                    return;
+                }
+
                 const displayName = replyIsAnon ? 'Anonymous' : realName;
                 const displayInitials = replyIsAnon ? 'A' : realInitials;
-                const avatarBg = replyIsAnon ? '#ea580c' : '#198754';
+                const avatarBg = replyIsAnon ? '#ea580c' : '#17c653';
                 const anonBadgeHtml = replyIsAnon
                     ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>`
                     : '';
@@ -1042,9 +1199,9 @@ if (!$db_post_loaded && $showImage) {
                 if (!text) return;
                 if (postId > 0) {
                     $.ajax({
-                        url: '/Discourse/pages/version/add-comment-action.php',
+                        url: '/Discourse/posts/index-ajax-add-comment.php',
                         method: 'POST',
-                        data: { post_id: postId, body: text },
+                        data: { post_id: postId, body: text, is_anonymous: isAnonymous ? 1 : 0 },
                         dataType: 'json',
                         success: function(res) {
                             if (res.success) { window.location.reload(); }
@@ -1056,7 +1213,7 @@ if (!$db_post_loaded && $showImage) {
                 }
                 const displayName = isAnonymous ? 'Anonymous' : realName;
                 const displayInitials = isAnonymous ? 'A' : realInitials;
-                const avatarBg = isAnonymous ? '#ea580c' : '#198754';
+                const avatarBg = isAnonymous ? '#ea580c' : '#17c653';
                 const anonBadgeHtml = isAnonymous
                     ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>`
                     : '';
@@ -1083,7 +1240,7 @@ if (!$db_post_loaded && $showImage) {
                 if (confirm('Are you sure you want to permanently delete this post? This cannot be undone.')) {
                     if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
                     $.ajax({
-                        url: '/Discourse/pages/version/delete-post-action.php',
+                        url: '/Discourse/posts/index-ajax-delete-post.php',
                         method: 'POST',
                         data: { id: postId },
                         dataType: 'json',

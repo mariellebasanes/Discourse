@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 $post_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $post = null;
@@ -51,12 +51,12 @@ $META_DESC  = "Edit your existing post.";
   data-kt-app-header-fixed-mobile="true"
   class="app-default">
 
-  <?php include(dirname(dirname(__DIR__)) . '/partials/_page-loader.php'); ?>
+  <?php include(dirname(__DIR__) . '/partials/_page-loader.php'); ?>
 
   <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
-      <?php include(dirname(dirname(__DIR__)) . '/partials/_header.php'); ?>
+      <?php include(dirname(__DIR__) . '/partials/_header.php'); ?>
 
       <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -81,7 +81,7 @@ $META_DESC  = "Edit your existing post.";
 
               <div id="kt_app_content" class="flex-column-fluid">
                 <div class="app-container container-xxl">
-                  <form id="editPostForm" action="/Discourse/pages/version/edit-post-action.php" method="POST" enctype="multipart/form-data">
+                  <form id="editPostForm" action="/Discourse/posts/index-ajax-update-post.php" method="POST" enctype="multipart/form-data">
                   <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
                   <input type="hidden" name="body" id="body-hidden">
                   <input type="hidden" name="remove_image" id="remove-image-hidden" value="0">
@@ -349,13 +349,13 @@ $META_DESC  = "Edit your existing post.";
 
             </main>
           </div>
-          <?php include(dirname(dirname(__DIR__)) . '/partials/_footer.php'); ?>
+          <?php include(dirname(__DIR__) . '/partials/_footer.php'); ?>
         </div>
       </div>
     </div>
   </div>
 
-  <?php include(dirname(dirname(__DIR__)) . '/partials/_scrolltop.php'); ?>
+  <?php include(dirname(__DIR__) . '/partials/_scrolltop.php'); ?>
 
   <!-- Link Modal -->
   <div class="modal fade" id="modal-link" tabindex="-1" aria-hidden="true">
@@ -460,7 +460,7 @@ $META_DESC  = "Edit your existing post.";
       if (confirm('Are you sure you want to permanently delete this post? This cannot be undone.')) {
           if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
           $.ajax({
-              url: '/Discourse/pages/version/delete-post-action.php',
+              url: '/Discourse/posts/index-ajax-delete-post.php',
               method: 'POST',
               data: { id: postId },
               dataType: 'json',

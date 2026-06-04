@@ -121,7 +121,7 @@
       }
 
       $.ajax({
-        url: '/Discourse/pages/version/add-comment-action.php',
+        url: '/Discourse/posts/index-ajax-add-comment.php',
         method: 'POST',
         data: {
           post_id: postId,
@@ -195,7 +195,7 @@
       if (!postId) return;
 
       $.ajax({
-        url: '/Discourse/pages/version/save-post-action.php',
+        url: '/Discourse/posts/index-ajax-save-post.php',
         method: 'POST',
         data: { post_id: postId },
         dataType: 'json',
@@ -203,7 +203,6 @@
           if (res.success) {
             var saved = res.saved;
             btn.dataset.on = saved ? '1' : '0';
-            btn.style.cssText = saved ? 'background:rgba(251,197,1,.15) !important; color:#d97706 !important; border-color:rgba(251,197,1,.3) !important;' : '';
             btn.innerHTML = saved
               ? '<i class="bi bi-bookmark-fill me-1"></i> Saved'
               : '<i class="bi bi-bookmark me-1"></i> Save';

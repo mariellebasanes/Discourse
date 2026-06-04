@@ -1,5 +1,5 @@
 <?php
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 // ── Topic config ────────────────────────────────────────────────────────────
 // In production, get this from $_GET['topic'] and validate it.
@@ -164,8 +164,8 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
     <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet">
     <link href="/Discourse/assets/css/sec-sidebar.css" rel="stylesheet">
     <link href="/Discourse/assets/css/sec-search-filter.css" rel="stylesheet">
-    <link href="/Discourse/assets/css/sec-posts.css" rel="stylesheet">
-    <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet">
+    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet">
+    <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
 
     <!-- jQuery -->
     <script src="/Discourse/assets/js/jquery.js"></script>
@@ -174,12 +174,12 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
     data-kt-app-layout="light-header" class="app-default">
 
-    <?php include(dirname(dirname(__DIR__)) . "/partials/_page-loader.php"); ?>
+    <?php include(dirname(__DIR__) . "/partials/_page-loader.php"); ?>
 
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
-            <?php include(dirname(dirname(__DIR__)) . "/partials/_header.php"); ?>
+            <?php include(dirname(__DIR__) . "/partials/_header.php"); ?>
 
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -209,7 +209,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                         <div class="flex-grow-1">
                                             <div class="d-flex align-items-center gap-3 mb-1">
                                                 <!-- Breadcrumb -->
-                                                <a href="/Discourse/pages/version/index.php" class="text-white text-opacity-60 fs-7 text-decoration-none text-hover-white">
+                                                <a href="/Discourse/communities/index.php" class="text-white text-opacity-60 fs-7 text-decoration-none text-hover-white">
                                                     <i class="bi bi-house me-1"></i>Home
                                                 </a>
                                                 <i class="bi bi-chevron-right text-white text-opacity-40 fs-9"></i>
@@ -237,7 +237,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
 
                                         <!-- Post Button -->
                                         <div class="flex-shrink-0 ms-auto">
-                                            <a href="/Discourse/pages/version/create-post.php" class="btn btn-warning fw-bolder text-white px-8 py-3 d-flex align-items-center gap-2 rounded-pill"
+                                            <a href="/Discourse/posts/index.php?action=create" class="btn btn-warning fw-bolder text-white px-8 py-3 d-flex align-items-center gap-2 rounded-pill"
                                                 style="background-color:#fbc501; box-shadow:0 4px 14px rgba(245,166,35,0.3);">
                                                 <i class="bi bi-plus-lg text-white fs-6"></i> New Post
                                             </a>
@@ -261,7 +261,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                 <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-4 text-gray-500 pe-none fs-6"></i>
                                                 <input type="text" id="topicSearchInput" class="form-control bg-white rounded-pill ps-12 fs-6 text-gray-700 shadow-sm" placeholder="Search in <?php echo ucfirst(strtolower($topic)); ?>...">
                                             </div>
-                                            <a href="/Discourse/pages/version/create-post.php"
+                                            <a href="/Discourse/posts/index.php?action=create"
                                                 class="btn btn-sm rounded-pill fw-bold fs-7 px-5 py-3 d-inline-flex align-items-center justify-content-center gap-1"
                                                 style="background:#0b301f; color:#fff;">
                                                 <i class="bi bi-plus-lg me-1 fs-7"></i> New Post
@@ -300,9 +300,9 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                 $t_commDetails = getCommunityIconDetails($post['community'] ?? '');
                                                 $t_saved = IS_POST_SAVED($post['id'], $identification);
                                                 $t_authorId = $post['author_id'] ?? $post['author_identification'] ?? '';
-                                                $t_authorHref = !empty($t_authorId) ? '/Discourse/pages/version/profile-other.php?id=' . urlencode($t_authorId) : 'javascript:void(0)';
-                                                $t_commHref = '/Discourse/pages/version/community.php?c=' . urlencode($post['community'] ?? '');
-                                                $t_postHref = '/Discourse/pages/version/view-post.php?id=' . $post['id'];
+                                                $t_authorHref = !empty($t_authorId) ? '/Discourse/profiles/index.php?id=' . urlencode($t_authorId) : 'javascript:void(0)';
+                                                $t_commHref = '/Discourse/communities/index.php?c=' . urlencode($post['community'] ?? '');
+                                                $t_postHref = '/Discourse/posts/index.php?id=' . $post['id'] . '&back=topic&topic=' . urlencode($_GET['t'] ?? '');
                                                 $t_commentCount = $post['comments_count'] ?? 0;
                                             ?>
                                             <!-- ── Post Card ── -->
@@ -378,8 +378,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                                 <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $t_commentCount; ?> Comment<?php echo $t_commentCount !== 1 ? 's' : ''; ?></button>
                                                                 <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
                                                                 <button class="btn btn-sm dc-post-save"
-                                                                        data-on="<?php echo $t_saved ? '1' : '0'; ?>"
-                                                                        style="<?php echo $t_saved ? 'background:rgba(251,197,1,.15);color:#d97706;border-color:rgba(251,197,1,.3);' : ''; ?>">
+                                                                        data-on="<?php echo $t_saved ? '1' : '0'; ?>">
                                                                     <i class="bi <?php echo $t_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                                                     <?php echo $t_saved ? 'Saved' : 'Save'; ?>
                                                                 </button>
@@ -423,7 +422,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                             <div class="mb-4" style="font-size:3rem;"><?php echo str_replace('bi-', '', $topicData['icon']); ?></div>
                                             <h4 class="fw-bold text-gray-700 mb-2">No posts found</h4>
                                             <p class="text-muted fs-6">Try a different search term or be the first to post!</p>
-                                            <a href="/Discourse/pages/version/create-post.php" class="btn btn-sm rounded-pill fw-bold px-6 py-3 mt-2" style="background:#0b301f;color:#fff;">
+                                            <a href="/Discourse/posts/index.php?action=create" class="btn btn-sm rounded-pill fw-bold px-6 py-3 mt-2" style="background:#0b301f;color:#fff;">
                                                 <i class="bi bi-plus-lg me-1"></i> Create Post
                                             </a>
                                         </div>
@@ -481,7 +480,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                         $isActive = ($t === $topic);
                                                         $b = getCategoryBadgeStyle($t);
                                                     ?>
-                                                        <a href="/Discourse/pages/view/topic.php?t=<?php echo $t; ?>"
+                                                        <a href="/Discourse/topics/index.php?t=<?php echo $t; ?>"
                                                             class="badge <?php echo $b['class']; ?> rounded-pill px-3 py-2 fs-8 text-decoration-none dc-topic-tag fw-bold <?php echo $isActive ? 'dc-topic-tag-active' : ''; ?>"
                                                             style="<?php echo $isActive ? 'outline:2px solid currentColor;outline-offset:1px;' : ''; ?>">
                                                             <?php echo $t; ?>
@@ -569,24 +568,24 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
 
                                 </div><!-- /layout -->
 
-                                <?php include(dirname(dirname(__DIR__)) . "/partials/_discourse-modals.php"); ?>
+                                <?php include(dirname(__DIR__) . "/partials/_discourse-modals.php"); ?>
 
                             </div><!-- /container -->
                         </main>
                     </div>
-                    <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
+                    <?php include(dirname(__DIR__) . "/partials/_footer.php"); ?>
                 </div>
             </div>
         </div>
     </div>
 
-    <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
+    <?php include(dirname(__DIR__) . "/partials/_scrolltop.php"); ?>
 
     <!-- Scripts -->
     <script src="/Discourse/assets/js/dashboard.js"></script>
     <script src="/Discourse/assets/js/sec-sidebar.js"></script>
     <script src="/Discourse/assets/js/sec-modals.js"></script>
-    <script src="/Discourse/assets/js/sec-posts.js"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
 
     <script>
         $(document).ready(function() {
@@ -725,7 +724,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
         <i class="bi bi-check-circle-fill text-success fs-6"></i><span></span>
     </div>
 
-    <script src="/Discourse/assets/js/sec-posts.js"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
 
 </body>
 

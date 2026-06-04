@@ -123,6 +123,10 @@
   flex-shrink: 0;
 }
 
+.discourse-report-option-icon i {
+  color: currentColor !important;
+}
+
 .discourse-report-icon-red    { background: #fce4ec; color: #e53935; }
 .discourse-report-icon-purple { background: #ede7f6; color: #7b1fa2; }
 .discourse-report-icon-amber  { background: #fff8e1; color: #f57f17; }

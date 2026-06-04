@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 // Fetch all communities
 $db_communities = [];
@@ -92,7 +92,7 @@ if (empty($initials)) {
   <link rel="stylesheet" href="/Discourse/assets/css/style.keenicons.css">
   <link rel="stylesheet" href="/Discourse/assets/css/style.bundle.v2.full.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="/Discourse/assets/css/sec-modals.css" rel="stylesheet">
+  <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
 
   <!-- jQuery -->
   <script src="/Discourse/assets/js/jquery.js"></script>
@@ -103,10 +103,10 @@ if (empty($initials)) {
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
   data-kt-app-layout="light-header" class="app-default">
-  <?php include(dirname(dirname(__DIR__)) . "/partials/_page-loader.php"); ?>
+  <?php include(dirname(__DIR__) . "/partials/_page-loader.php"); ?>
   <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
     <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-      <?php include(dirname(dirname(__DIR__)) . "/partials/_header.php"); ?>
+      <?php include(dirname(__DIR__) . "/partials/_header.php"); ?>
       <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
           <div class="d-flex flex-column flex-column-fluid">
@@ -125,8 +125,8 @@ if (empty($initials)) {
               </div>
 
               <div class="app-container container-xxl pb-10">
-                <form id="createPostForm" action="/Discourse/pages/version/create-post-action.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="redirect_back" value="/Discourse/pages/version/create-post.php">
+                <form id="createPostForm" action="/Discourse/posts/index-ajax-add-post.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="redirect_back" value="/Discourse/posts/index.php?action=create">
                 <textarea name="body" id="body-hidden" style="display:none;"></textarea>
                 <div class="row g-6">
                     <!-- Main Form -->
@@ -136,14 +136,14 @@ if (empty($initials)) {
                                 
                                  <div class="d-flex align-items-center justify-content-between mb-8">
                                      <div class="d-flex align-items-center gap-3">
-                                         <div id="community-preview-icon" class="w-25px h-25px bg-light-success rounded d-flex align-items-center justify-content-center" style="background-color: rgba(26, 139, 68, 0.1); color: #1A8B44;">
-                                             <i class="bi bi-pencil-fill fs-7" style="color: #1A8B44 !important;"></i>
+                                         <div id="community-preview-icon" class="w-25px h-25px bg-light-success rounded d-flex align-items-center justify-content-center" style="background-color: rgba(23, 198, 83, 0.12) !important; color: #17c653 !important;">
+                                             <i class="bi bi-pencil-fill fs-7" style="color: #17c653 !important;"></i>
                                          </div>
                                          <h3 class="fw-bolder text-dark fs-4 m-0">Post Content</h3>
                                      </div>
-                                    <div id="identity-badge" class="d-flex align-items-center gap-2 bg-light-success px-4 py-2 rounded">
-                                        <div id="identity-avatar" class="w-15px h-15px bg-success rounded-circle text-white d-flex align-items-center justify-content-center fs-9"><?php echo htmlspecialchars($initials); ?></div>
-                                        <span id="identity-text" class="text-success fw-bold fs-8">Posting as <?php echo htmlspecialchars($ACCOUNT['display_name'] ?? 'yourself'); ?></span>
+                                    <div id="identity-badge" class="d-flex align-items-center gap-2 bg-light-success px-4 py-2 rounded" style="background-color: rgba(23, 198, 83, 0.12) !important; border: 1px solid rgba(23, 198, 83, 0.2) !important;">
+                                        <div id="identity-avatar" class="w-15px h-15px bg-success rounded-circle text-white d-flex align-items-center justify-content-center fs-9" style="background-color: #17c653 !important; color: #fff !important;"><?php echo htmlspecialchars($initials); ?></div>
+                                        <span id="identity-text" class="text-success fw-bold fs-8" style="color: #17c653 !important;">Posting as <?php echo htmlspecialchars($ACCOUNT['display_name'] ?? 'yourself'); ?></span>
                                     </div>
                                 </div>
                                 
@@ -358,13 +358,13 @@ if (empty($initials)) {
               </div>
              </main>
            </div>
-           <?php include(dirname(dirname(__DIR__)) . "/partials/_discourse-modals.php"); ?>
-           <?php include(dirname(dirname(__DIR__)) . "/partials/_footer.php"); ?>
+           <?php include(dirname(__DIR__) . "/partials/_discourse-modals.php"); ?>
+           <?php include(dirname(__DIR__) . "/partials/_footer.php"); ?>
         </div>
       </div>
     </div>
   </div>
-  <?php include(dirname(dirname(__DIR__)) . "/partials/_scrolltop.php"); ?>
+  <?php include(dirname(__DIR__) . "/partials/_scrolltop.php"); ?>
 
   <!-- Link Modal -->
   <div class="modal fade" id="modal-link" tabindex="-1" aria-hidden="true">
@@ -457,26 +457,32 @@ if (empty($initials)) {
           if ($(this).is(':checked')) {
               $('#identity-badge')
                   .removeClass('bg-light-success')
-                  .addClass('bg-light-secondary border border-gray-300');
+                  .addClass('bg-light-secondary border border-gray-300')
+                  .css({ 'background-color': '', 'border': '' });
               $('#identity-avatar')
                   .removeClass('bg-success')
                   .addClass('bg-secondary text-gray-700')
+                  .css({ 'background-color': '', 'color': '' })
                   .text('A');
               $('#identity-text')
                   .removeClass('text-success')
                   .addClass('text-gray-700')
+                  .css('color', '')
                   .text('Posting anonymously');
           } else {
               $('#identity-badge')
                   .removeClass('bg-light-secondary border border-gray-300')
-                  .addClass('bg-light-success');
+                  .addClass('bg-light-success')
+                  .css({ 'background-color': 'rgba(23, 198, 83, 0.12)', 'border': '1px solid rgba(23, 198, 83, 0.2)' });
               $('#identity-avatar')
                   .removeClass('bg-secondary text-gray-700')
                   .addClass('bg-success')
+                  .css({ 'background-color': '#17c653', 'color': '#fff' })
                   .text(userInitials);
               $('#identity-text')
                   .removeClass('text-gray-700')
                   .addClass('text-success')
+                  .css('color', '#17c653')
                   .text('Posting as ' + userDisplayName);
           }
       });
@@ -565,9 +571,9 @@ if (empty($initials)) {
           if (!opt.length || !opt.val()) {
               previewIcon.css({
                   'background-image': '',
-                  'background-color': 'rgba(26, 139, 68, 0.1)',
-                  'color': '#1A8B44'
-              }).html('<i class="bi bi-pencil-fill fs-7" style="color: #1A8B44 !important;"></i>');
+                  'background-color': 'rgba(23, 198, 83, 0.12)',
+                  'color': '#17c653'
+              }).html('<i class="bi bi-pencil-fill fs-7" style="color: #17c653 !important;"></i>');
               return;
           }
           

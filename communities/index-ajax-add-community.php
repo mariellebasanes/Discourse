@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 header('Content-Type: application/json');
 
@@ -79,7 +79,7 @@ $inserted   = false;
 $logo_url   = '';
 
 if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
-    $target_dir = dirname(dirname(__DIR__)) . '/assets/images/communities/';
+    $target_dir = dirname(__DIR__) . '/assets/images/communities/';
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);
     }

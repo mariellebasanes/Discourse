@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 header('Content-Type: application/json');
 
@@ -11,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
 $body = isset($_POST['body']) ? trim($_POST['body']) : '';
+$parent_id = isset($_POST['parent_id']) && intval($_POST['parent_id']) > 0 ? intval($_POST['parent_id']) : null;
+$is_anonymous = isset($_POST['is_anonymous']) ? intval($_POST['is_anonymous']) : 0;
 
 if ($post_id <= 0 || empty($body)) {
     echo json_encode(['success' => false, 'message' => 'Missing comment content or post reference.']);
@@ -31,6 +33,8 @@ if (isset($_SESSION['mock_posts']) && is_array($_SESSION['mock_posts'])) {
                 'author_id' => $author_id,
                 'author_name' => $author_name,
                 'body' => $body,
+                'parent_id' => $parent_id,
+                'is_anonymous' => $is_anonymous,
                 'created_at' => date('Y-m-d H:i:s'),
                 'avatar_md' => $ACCOUNT['avatar_md'] ?? '/Discourse/assets/images/anonymous.png'
             ];
@@ -45,9 +49,9 @@ if (!$EDITH) {
     exit;
 }
 
-$stmt = $EDITH->prepare("INSERT INTO comments (post_id, author_id, author_name, body) VALUES (?, ?, ?, ?)");
+$stmt = $EDITH->prepare("INSERT INTO comments (post_id, author_id, author_name, body, parent_id, is_anonymous) VALUES (?, ?, ?, ?, ?, ?)");
 if ($stmt) {
-    $stmt->bind_param("isss", $post_id, $author_id, $author_name, $body);
+    $stmt->bind_param("isssii", $post_id, $author_id, $author_name, $body, $parent_id, $is_anonymous);
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);
     } else {

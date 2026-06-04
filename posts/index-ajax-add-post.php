@@ -1,6 +1,6 @@
 <?php
 define('MBG', TRUE);
-include_once(dirname(dirname(__DIR__)) . '/functions-new.php');
+include_once(dirname(__DIR__) . '/functions-new.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: /Discourse/index.php");
@@ -13,7 +13,7 @@ $community = isset($_POST['community']) ? trim($_POST['community']) : '';
 $topic = isset($_POST['topic']) ? trim($_POST['topic']) : 'GENERAL';
 $tags = isset($_POST['tags']) ? trim($_POST['tags']) : '';
 $is_anonymous = (isset($_POST['is_anonymous']) && $_POST['is_anonymous'] == '1') ? 1 : 0;
-$redirect_back_url = isset($_POST['redirect_back']) ? $_POST['redirect_back'] : '/Discourse/pages/version/create-post.php';
+$redirect_back_url = isset($_POST['redirect_back']) ? $_POST['redirect_back'] : '/Discourse/posts/index.php?action=create';
 
 if (empty($title) || empty($topic) || empty($body)) {
     $redirect_back = $redirect_back_url . "?error=missing_fields";
@@ -64,7 +64,7 @@ $author_id = $identification; // From functions-new.php
 // Handle post image upload
 $image_url = null;
 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-    $target_dir = dirname(dirname(__DIR__)) . '/assets/images/posts/';
+    $target_dir = dirname(__DIR__) . '/assets/images/posts/';
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);
     }
@@ -134,7 +134,7 @@ if (!$inserted_id) {
 // Redirect back to homepage or community dashboard
 $redirect_url = "/Discourse/index.php";
 if (!empty($community)) {
-    $redirect_url = "/Discourse/pages/version/community.php?c=" . urlencode($community);
+    $redirect_url = "/Discourse/communities/index.php?c=" . urlencode($community);
 }
 
 $status_param = $inserted_id ? "status=post_success" : "status=post_error";

@@ -319,7 +319,7 @@
     if (confirm('Are you sure you want to permanently delete this post? This cannot be undone.')) {
       if (typeof KTApp !== 'undefined') KTApp.showPageLoading();
       $.ajax({
-        url: '/Discourse/pages/version/delete-post-action.php',
+        url: '/Discourse/posts/index-ajax-delete-post.php',
         method: 'POST',
         data: { id: postId },
         dataType: 'json',

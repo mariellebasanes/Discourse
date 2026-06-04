@@ -34,6 +34,16 @@ try {
               FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE,
               FOREIGN KEY (`hashtag_id`) REFERENCES `hashtags` (`id`) ON DELETE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
+
+            $EDITH->query("CREATE TABLE IF NOT EXISTS `followers` (
+              `id` INT AUTO_INCREMENT PRIMARY KEY,
+              `follower_id` VARCHAR(20) NOT NULL,
+              `following_id` VARCHAR(20) NOT NULL,
+              `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              UNIQUE KEY `follower_following` (`follower_id`, `following_id`),
+              FOREIGN KEY (`follower_id`) REFERENCES `accounts` (`identification`) ON DELETE CASCADE,
+              FOREIGN KEY (`following_id`) REFERENCES `accounts` (`identification`) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
             
             // Create indexes
             $res = $EDITH->query("SHOW KEYS FROM `posts` WHERE Key_name = 'idx_posts_topic'");
@@ -43,6 +53,24 @@ try {
             $res = $EDITH->query("SHOW KEYS FROM `posts` WHERE Key_name = 'idx_posts_community'");
             if ($res && $res->num_rows === 0) {
                 $EDITH->query("ALTER TABLE `posts` ADD INDEX `idx_posts_community` (`community`)");
+            }
+            
+            // Ensure logo_url column exists in communities
+            $res_logo = $EDITH->query("SHOW COLUMNS FROM `communities` LIKE 'logo_url'");
+            if ($res_logo && $res_logo->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `communities` ADD COLUMN `logo_url` VARCHAR(255) DEFAULT NULL");
+            }
+            
+            // Ensure is_announcement column exists in posts
+            $res_ann = $EDITH->query("SHOW COLUMNS FROM `posts` LIKE 'is_announcement'");
+            if ($res_ann && $res_ann->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `posts` ADD COLUMN `is_announcement` TINYINT(4) NOT NULL DEFAULT 0");
+            }
+            
+            // Ensure is_highlighted column exists in posts
+            $res_hl = $EDITH->query("SHOW COLUMNS FROM `posts` LIKE 'is_highlighted'");
+            if ($res_hl && $res_hl->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `posts` ADD COLUMN `is_highlighted` TINYINT(4) NOT NULL DEFAULT 0");
             }
             
             // Automatic backfill migration
@@ -476,9 +504,71 @@ if (!function_exists('getCategoryBadgeStyle')) {
         } else {
           return ['class' => 'badge-light-secondary', 'icon' => 'bi-tag',               'icon_color' => 'text-secondary'];
         }
-    }
+}
   }
 }
+
+if (!function_exists('getCommunityIconDetails')) {
+  function getCommunityIconDetails($name, $category = null)
+  {
+    $name_lower = strtolower($name);
+
+    // Default: FEU Tech — matches sidebar: bg-light-success text-success, bi-cpu
+    $icon       = "bi-cpu";
+    $bg_class   = "bg-light-success";
+    $text_class = "text-success";
+
+    if (strpos($name_lower, 'life') !== false) {
+      // FEU Life — matches sidebar: bg-light-danger text-danger, bi-heart-fill
+      $icon       = "bi-heart-fill";
+      $bg_class   = "bg-light-danger";
+      $text_class = "text-danger";
+    } elseif (strpos($name_lower, 'culture') !== false || strpos($name_lower, 'hub') !== false) {
+      // CultureHub — matches sidebar: bg-light-primary text-primary, bi-music-note-beamed
+      $icon       = "bi-music-note-beamed";
+      $bg_class   = "bg-light-primary";
+      $text_class = "text-primary";
+    } elseif (strpos($name_lower, 'fresh') !== false || strpos($name_lower, 'study') !== false || strpos($name_lower, 'group') !== false) {
+      $icon       = "bi-people-fill";
+      $bg_class   = "bg-light-info";
+      $text_class = "text-info";
+    } elseif (strpos($name_lower, 'food') !== false || strpos($name_lower, 'trip') !== false) {
+      $icon       = "bi-cup-hot-fill";
+      $bg_class   = "bg-light-warning";
+      $text_class = "text-warning";
+    } elseif (strpos($name_lower, 'cosplay') !== false || strpos($name_lower, 'artist') !== false) {
+      $icon       = "bi-palette-fill";
+      $bg_class   = "bg-light-primary";
+      $text_class = "text-primary";
+    } elseif (strpos($name_lower, 'enroll') !== false || strpos($name_lower, 'thesis') !== false || strpos($name_lower, 'advice') !== false) {
+      $icon       = "bi-journal-bookmark-fill";
+      $bg_class   = "bg-light-warning";
+      $text_class = "text-warning";
+    } elseif (strpos($name_lower, 'innovat') !== false) {
+      $icon       = "bi-lightbulb-fill";
+      $bg_class   = "bg-light-warning";
+      $text_class = "text-warning";
+    } elseif (strpos($name_lower, 'alabang') !== false) {
+      $icon       = "bi-building-fill";
+      $bg_class   = "bg-light-warning";
+      $text_class = "text-warning";
+    } elseif (strpos($name_lower, 'diliman') !== false) {
+      $icon       = "bi-mortarboard-fill";
+      $bg_class   = "bg-light-info";
+      $text_class = "text-info";
+    }
+
+    return [
+      'icon'       => $icon,
+      'bg_class'   => $bg_class,
+      'text_class' => $text_class,
+      // keep hex keys as empty so old code doesn't break
+      'bg_hex'     => '',
+      'color_hex'  => '',
+    ];
+  }
+}
+
 
 if (!function_exists('renderCategoryBadge')) {
     function renderCategoryBadge($category) {
@@ -542,7 +632,7 @@ if (!function_exists('renderTopicBadge')) {
         if (!function_exists('getCategoryBadgeStyle')) return '';
         $badge = getCategoryBadgeStyle(strtoupper(trim($topic)));
         $label = strtoupper(trim($topic));
-        $url   = '/Discourse/pages/view/topic.php?t=' . urlencode($label);
+        $url   = '/Discourse/topics/index.php?t=' . urlencode($label);
         return '<a href="' . $url . '" class="badge ' . $badge['class'] . ' rounded-pill px-3 py-2 fs-8 fw-bold text-decoration-none me-1">'
              . htmlspecialchars($label)
              . '</a>';
@@ -559,7 +649,7 @@ if (!function_exists('renderHashtagBadges')) {
         foreach ($tags as $t) {
             $t = trim($t);
             if ($t === '') continue;
-            $url = '/Discourse/pages/view/hashtag.php?tag=' . urlencode($t);
+            $url = '/Discourse/hashtags/index.php?tag=' . urlencode($t);
             $html .= '<a href="' . $url . '" class="badge rounded-pill px-2 py-1 fs-9 fw-semibold text-decoration-none text-muted" '
                    . 'style="background:#f1f3f4;border:1px solid #e0e0e0;" '
                    . 'onmouseover="this.style.background=\'#e8ede9\'" onmouseout="this.style.background=\'#f1f3f4\'">'
@@ -613,13 +703,17 @@ if (!function_exists('linkHashtags')) {
     function linkHashtags($text) {
         if (empty($text)) return '';
         return preg_replace_callback(
-            '/(?<![a-zA-Z0-9&])#([a-zA-Z0-9_]+)/',
+            '/(<[^>]*>)|(?<![a-zA-Z0-9&])#([a-zA-Z0-9_]+)/i',
             function($matches) {
-                $tag = $matches[1];
+                // If it matched an HTML tag (Group 1 is not empty), return the whole tag unmodified
+                if (!empty($matches[1])) {
+                    return $matches[1];
+                }
+                $tag = $matches[2];
                 if (is_numeric($tag)) {
                     return $matches[0];
                 }
-                $url = '/Discourse/pages/view/hashtag.php?tag=' . urlencode(strtolower($tag));
+                $url = '/Discourse/hashtags/index.php?tag=' . urlencode(strtolower($tag));
                 return '<a href="' . $url . '" class="text-primary text-decoration-none fw-semibold">#' . htmlspecialchars($tag) . '</a>';
             },
             $text
