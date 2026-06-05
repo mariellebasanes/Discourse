@@ -220,7 +220,7 @@ switch ($backParam) {
     <script src="/Discourse/assets/js/jquery.js"></script>
     <link href="/Discourse/assets/css/discourse-css/view-post.css" rel="stylesheet" type="text/css" />
     <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet" type="text/css" />
-    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet" type="text/css" />
+    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.7" rel="stylesheet" type="text/css" />
     <link href="/Discourse/assets/css/dc-editor.css" rel="stylesheet" type="text/css" />
     <style>
         .anon-toggle-wrapper {
@@ -350,7 +350,7 @@ switch ($backParam) {
                             $communityLabel = strtoupper($community) . ' Community';
                             ?>
                             <div class="page-banner w-100 py-4 mb-5">
-                                <div class="container-xxl d-flex align-items-center justify-content-between">
+                                <div class="app-container container-xxl d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center gap-4">
                                         <!-- FIX 1: text_class moved to <i> tag -->
                                         <div class="w-40px h-40px d-flex align-items-center justify-content-center rounded-1 shadow-sm <?php echo $bannerComm['bg_class']; ?>"
@@ -381,7 +381,13 @@ switch ($backParam) {
                                                 <div class="d-flex align-items-center justify-content-between mb-6">
                                                     <div class="d-flex align-items-center gap-3">
                                                         <div class="symbol symbol-35px symbol-circle">
-                                                            <div class="symbol-label bg-success text-white fw-bold fs-6"><?php echo $authorInitials; ?></div>
+                                                            <?php if ($isAnon) { ?>
+                                                                <div class="symbol-label text-white fw-bold fs-6" style="background-color: #ea580c !important;">A</div>
+                                                            <?php } elseif (!empty($dbAvatar)) { ?>
+                                                                <img src="<?php echo htmlspecialchars($dbAvatar); ?>" alt="Author Avatar" class="h-35px w-35px rounded-circle" style="object-fit:cover;">
+                                                            <?php } else { ?>
+                                                                <div class="symbol-label text-white fw-bold fs-6" style="background-color: #17c653 !important;"><?php echo htmlspecialchars($authorInitials); ?></div>
+                                                            <?php } ?>
                                                         </div>
                                                         <div class="d-flex align-items-center gap-2">
                                                             <a href="<?php echo $authorProfileLink ?? '/Discourse/profiles/index.php'; ?>" class="fw-bolder text-dark text-hover-primary fs-6"><?php echo htmlspecialchars($authorName); ?></a>
@@ -410,14 +416,22 @@ switch ($backParam) {
                                                 <!-- Post Title & Body -->
                                                 <div class="mb-2 text-start d-flex flex-wrap align-items-center gap-1">
                                                     <?php
+                                                    $is_post_announcement = ($post && !empty($post['is_announcement']));
                                                     // Topic = post['topic'], hashtags = post['tags'] (separate from topic)
                                                     $post_topic = $post ? ($post['topic'] ?? $tag) : $tag;
                                                     $post_tags  = $post ? ($post['tags']  ?? '') : '';
-                                                    echo renderTopicBadge($post_topic);
-                                                    echo renderHashtagBadges($post_tags, 6);
+                                                    echo renderTopicBadge($is_post_announcement ? 'ANNOUNCEMENT' : $post_topic);
+                                                    if (!$is_post_announcement) {
+                                                        echo renderHashtagBadges($post_tags, 6);
+                                                    }
                                                     ?>
                                                 </div>
                                                 <h1 class="fw-bolder text-dark fs-2x mb-4"><?php echo $postTitle; ?></h1>
+                                                <?php if ($post && !empty($post['image_url'])): ?>
+                                                <div class="mt-2 mb-4">
+                                                    <img src="<?php echo htmlspecialchars($post['image_url']); ?>" alt="Post image" class="img-fluid rounded shadow-sm" style="max-height: 450px; width: auto; object-fit: cover;">
+                                                </div>
+                                                <?php endif; ?>
                                                 <div class="text-gray-800 fs-6 lh-lg mb-6">
                                                     <?php
                                                     if ($post && !empty($post['image_url'])) {
@@ -460,22 +474,22 @@ switch ($backParam) {
                                                 <!-- Toolbar Actions -->
                                                 <div class="d-flex align-items-center justify-content-between mb-8 mt-2">
                                                     <div class="d-flex align-items-center gap-1">
-                                                        <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
+                                                        <button type="button" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
                                                             <i class="bi bi-hand-thumbs-up fs-7"></i> <span class="fw-bold fs-8"><?php echo $post ? ($post['upvotes'] ?? 0) : ($showImage ? '49' : '12'); ?></span>
                                                         </button>
-                                                        <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
+                                                        <button type="button" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
                                                             <i class="bi bi-hand-thumbs-down fs-7"></i> <span class="fw-bold fs-8">1</span>
                                                         </button>
-                                                        <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
+                                                        <button type="button" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
                                                             <i class="bi bi-chat fs-7"></i> <span class="fw-bold fs-8" id="comment-count-text-btn"><?php echo $post ? count($comments) : ($showImage ? '1' : '3'); ?></span>
                                                         </button>
-                                                        <button class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
+                                                        <button type="button" class="btn btn-sm btn-light-muted vote-btn d-flex align-items-center gap-1 px-3 py-2 rounded-pill">
                                                              <i class="bi bi-share fs-7"></i> <span class="fw-bold fs-8">Share</span>
                                                          </button>
                                                         <?php
                                                          $is_saved = ($post && IS_POST_SAVED($post['id'], $identification));
                                                          ?>
-                                                         <button class="btn btn-sm <?php echo $is_saved ? 'saved btn-light-primary' : 'btn-light-muted'; ?> vote-btn btn-save d-flex align-items-center gap-1 px-3 py-2 rounded-pill" id="save-post-btn">
+                                                         <button type="button" class="btn btn-sm <?php echo $is_saved ? 'saved btn-light-primary' : 'btn-light-muted'; ?> vote-btn btn-save d-flex align-items-center gap-1 px-3 py-2 rounded-pill" id="save-post-btn">
                                                              <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> fs-7"></i> <span class="fw-bold fs-8"><?php echo $is_saved ? 'Saved' : 'Save'; ?></span>
                                                          </button>
                                                     </div>
@@ -490,7 +504,7 @@ switch ($backParam) {
                                                             </button>
                                                             <?php } ?>
                                                         <?php } ?>
-                                                        <button class="btn btn-sm btn-light-muted vote-btn text-danger dc-post-report d-flex align-items-center gap-1 px-3 py-2 rounded-pill"
+                                                        <button type="button" class="btn btn-sm btn-light-muted vote-btn text-danger dc-post-report d-flex align-items-center gap-1 px-3 py-2 rounded-pill"
                                                             data-bs-toggle="modal" data-bs-target="#modalReportPost">
                                                             <i class="bi bi-flag fs-7 text-danger"></i> <span class="fw-bold fs-8">Report</span>
                                                         </button>
@@ -540,7 +554,7 @@ switch ($backParam) {
                                                                 <div class="d-flex align-items-center gap-2 mb-1">
                                                                     <span class="fw-bolder text-dark fs-7"><?php echo htmlspecialchars($cName); ?></span>
                                                                     <?php if ($isCommentAnon) { ?>
-                                                                        <span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>
+                                                                        <span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;color:inherit !important;"></i>Anonymous</span>
                                                                     <?php } ?>
                                                                     <span class="text-muted fs-9"><?php echo get_relative_time($comment['created_at']); ?></span>
                                                                 </div>
@@ -574,7 +588,7 @@ switch ($backParam) {
                                                                         <?php if ($rAvatar) { ?>
                                                                             <img src="<?php echo htmlspecialchars($rAvatar); ?>" class="rounded-circle" style="width: 28px; height: 28px; object-fit: cover;" alt="<?php echo htmlspecialchars($rName); ?>">
                                                                         <?php } else { ?>
-                                                                            <div class="symbol-label text-white fw-bold fs-8" style="width:28px;height:28px;background:<?php echo $rBg; ?>;"><?php echo htmlspecialchars($rInitials); ?></div>
+                                                                            <div class="symbol-label text-white fw-bold fs-8 rounded-circle d-flex align-items-center justify-content-center" style="width:28px;height:28px;background:<?php echo $rBg; ?>;"><?php echo htmlspecialchars($rInitials); ?></div>
                                                                         <?php } ?>
                                                                     </div>
                                                                     <div class="flex-grow-1">
@@ -582,7 +596,7 @@ switch ($backParam) {
                                                                             <span class="fw-bolder text-dark fs-7"><?php echo htmlspecialchars($rName); ?></span>
                                                                             <span class="text-muted fs-9 me-1">replying to</span><span class="fw-bold text-success fs-9">@<?php echo htmlspecialchars($replyingToName); ?></span>
                                                                             <?php if ($isReplyAnon) { ?>
-                                                                                <span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>
+                                                                                <span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;color:inherit !important;"></i>Anonymous</span>
                                                                             <?php } ?>
                                                                             <span class="text-muted fs-9"><?php echo get_relative_time($reply['created_at']); ?></span>
                                                                         </div>
@@ -687,7 +701,16 @@ switch ($backParam) {
                                                 <!-- Write Comment -->
                                                 <div class="d-flex align-items-start mt-8" id="comment-composer">
                                                     <div class="symbol symbol-35px symbol-circle me-3 flex-shrink-0 mt-1" id="commenter-avatar">
-                                                        <div class="symbol-label text-white fw-bold fs-6" id="commenter-initials" style="background-color: #17c653 !important;"><?php echo htmlspecialchars($loggedInInitials); ?></div>
+                                                        <?php 
+                                                        $hasRealAvatar = !empty($ACCOUNT['avatar_md']);
+                                                        ?>
+                                                        <img src="<?php echo htmlspecialchars($ACCOUNT['avatar_md'] ?? ''); ?>" 
+                                                             alt="User Avatar" 
+                                                             id="commenter-img" 
+                                                             class="h-35px w-35px rounded-circle <?php echo $hasRealAvatar ? '' : 'd-none'; ?>">
+                                                        <div class="symbol-label text-white fw-bold fs-6 <?php echo $hasRealAvatar ? 'd-none' : ''; ?>" 
+                                                             id="commenter-initials" 
+                                                             style="background-color: #17c653 !important;"><?php echo htmlspecialchars($loggedInInitials); ?></div>
                                                     </div>
                                                     <div class="comment-input-row flex-grow-1">
                                                         <div class="comment-input-wrapper">
@@ -889,6 +912,7 @@ switch ($backParam) {
     <?php include(dirname(__DIR__) . "/partials/_discourse-modals.php"); ?>
     <?php include(dirname(__DIR__) . "/partials/_scrolltop.php"); ?>
     <script src="/Discourse/assets/js/sec-modals.js"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.5"></script>
 
     <script>
         $(document).ready(function() {
@@ -898,19 +922,38 @@ switch ($backParam) {
             const postId = <?php echo json_encode($post ? $post['id'] : 0); ?>;
             const realName = '<?php echo addslashes($loggedInName); ?>';
             const realInitials = '<?php echo $loggedInInitials; ?>';
+            const realAvatar = <?php echo json_encode($ACCOUNT['avatar_md'] ?? ''); ?>;
+            const hasRealAvatar = <?php echo json_encode(!empty($ACCOUNT['avatar_md'])); ?>;
 
             $('#anon-toggle-checkbox').on('change', function() {
                 isAnonymous = $(this).is(':checked');
                 const wrapper = $('#anon-toggle-wrapper');
-                const avatar = $('#commenter-initials');
+                const initials = $('#commenter-initials');
+                const img = $('#commenter-img');
                 if (isAnonymous) {
                     wrapper.addClass('is-anon');
-                    avatar.text('A').css('background', '#ea580c');
+                    img.addClass('d-none');
+                    initials.removeClass('d-none').text('A').attr('style', 'background-color: #ea580c !important;');
                 } else {
                     wrapper.removeClass('is-anon');
-                    avatar.text(realInitials).css('background', '');
+                    if (hasRealAvatar) {
+                        img.removeClass('d-none');
+                        initials.addClass('d-none');
+                    } else {
+                        img.addClass('d-none');
+                        initials.removeClass('d-none').text(realInitials).attr('style', 'background-color: #17c653 !important;');
+                    }
                 }
             });
+
+             // Comment button scroll to composer
+             $('#comment-count-text-btn').closest('button').on('click', function(e) {
+                 e.preventDefault();
+                 $('html, body').animate({
+                     scrollTop: $('#main-comment-input').offset().top - 150
+                 }, 300);
+                 $('#main-comment-input').focus();
+             });
 
             // Follow / Unfollow
             $('#follow-btn').on('click', function() {
@@ -1029,10 +1072,13 @@ switch ($backParam) {
                 const initials = isAnonymous ? 'A' : realInitials;
                 const bg       = isAnonymous ? '#ea580c' : '#17c653';
                 const uid      = 'reply-anon-' + commentId;
+                const imgHideClass = (isAnonymous || !realAvatar) ? 'd-none' : '';
+                const initialsHideClass = (!isAnonymous && realAvatar) ? 'd-none' : '';
                 return `
                 <div class="d-flex align-items-start gap-2 inline-composer" data-for="${commentId}" data-reply-anon="${isAnonymous ? '1' : '0'}">
-                    <div class="flex-shrink-0">
-                        <div class="reply-composer-avatar symbol-label rounded-circle d-flex align-items-center justify-content-center text-white fw-bold fs-9"
+                    <div class="flex-shrink-0" style="width:26px;height:26px;">
+                        <img src="${realAvatar}" alt="User Avatar" class="reply-composer-img rounded-circle ${imgHideClass}" style="width:26px;height:26px;object-fit:cover;">
+                        <div class="reply-composer-avatar symbol-label rounded-circle d-flex align-items-center justify-content-center text-white fw-bold fs-9 ${initialsHideClass}"
                              style="width:26px;height:26px;background:${bg};flex-shrink:0;">${initials}</div>
                     </div>
                     <div class="flex-grow-1">
@@ -1060,18 +1106,26 @@ switch ($backParam) {
             $(document).on('change', '.reply-anon-checkbox', function() {
                 const composer  = $(this).closest('.inline-composer');
                 const wrapper   = $(this).closest('.reply-anon-toggle');
-                const avatar    = composer.find('.reply-composer-avatar');
+                const initialsEl = composer.find('.reply-composer-avatar');
+                const imgEl      = composer.find('.reply-composer-img');
                 const label     = wrapper.find('.anon-label');
                 const isAnon    = $(this).is(':checked');
                 composer.attr('data-reply-anon', isAnon ? '1' : '0');
                 if (isAnon) {
                     wrapper.addClass('is-anon');
                     label.text('Anonymous');
-                    avatar.text('A').css('background', '#ea580c');
+                    imgEl.addClass('d-none');
+                    initialsEl.removeClass('d-none').text('A').css('background-color', '#ea580c');
                 } else {
                     wrapper.removeClass('is-anon');
                     label.text('Post anonymously');
-                    avatar.text(realInitials).css('background', '#17c653');
+                    if (realAvatar) {
+                        imgEl.removeClass('d-none');
+                        initialsEl.addClass('d-none');
+                    } else {
+                        imgEl.addClass('d-none');
+                        initialsEl.removeClass('d-none').text(realInitials).css('background-color', '#17c653');
+                    }
                 }
             });
 
@@ -1152,7 +1206,7 @@ switch ($backParam) {
                 const displayInitials = replyIsAnon ? 'A' : realInitials;
                 const avatarBg = replyIsAnon ? '#ea580c' : '#17c653';
                 const anonBadgeHtml = replyIsAnon
-                    ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>`
+                    ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;color:inherit !important;"></i>Anonymous</span>`
                     : '';
 
                 const replyHtml = `<div class="mb-3 pb-2 border-start border-2 ps-3" style="border-color:#d1fae5!important;">${buildCommentHtml(displayName, displayInitials, avatarBg, text, anonBadgeHtml, replyingToName)}</div>`;
@@ -1215,7 +1269,7 @@ switch ($backParam) {
                 const displayInitials = isAnonymous ? 'A' : realInitials;
                 const avatarBg = isAnonymous ? '#ea580c' : '#17c653';
                 const anonBadgeHtml = isAnonymous
-                    ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;"></i>Anonymous</span>`
+                    ? `<span class="badge ms-1 rounded-pill" style="font-size:9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;"><i class="bi bi-incognito me-1" style="font-size:8px;color:inherit !important;"></i>Anonymous</span>`
                     : '';
                 const newBlockHtml = `<div class="mb-4">${buildCommentHtml(displayName, displayInitials, avatarBg, text, null)}<div class="reply-thread-area ps-5 mt-2"></div><div class="reply-composer ps-5 mt-1" style="display:none;"></div></div>`;
                 $('#comments-container').append(newBlockHtml);

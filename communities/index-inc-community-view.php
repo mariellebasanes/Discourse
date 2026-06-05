@@ -126,7 +126,7 @@ if ($EDITH) {
   <link href="/Discourse/assets/css/sec-hero.css" rel="stylesheet">
   <link href="/Discourse/assets/css/sec-sidebar.css" rel="stylesheet">
   <link href="/Discourse/assets/css/sec-search-filter.css" rel="stylesheet">
-  <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet">
+  <link href="/Discourse/assets/css/sec-posts.css?v=1.0.7" rel="stylesheet">
   <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
 
   <!-- jQuery -->
@@ -199,7 +199,7 @@ if ($EDITH) {
               <!-- Full-width Community Banner -->
               <div class="community-banner w-100 mb-8 py-10 position-relative">
                 <div class="community-banner-glow"></div>
-                <div class="container-xxl position-relative z-index-1">
+                <div class="app-container container-xxl position-relative z-index-1">
                   <div class="d-flex align-items-center flex-wrap gap-6">
                     <!-- Community Logo -->
                     <div class="flex-shrink-0">
@@ -473,11 +473,11 @@ if ($EDITH) {
                           ?>
                           <!-- Vote Column -->
                           <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:<?php echo $vote_bg; ?>;">
-                            <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
+                            <button type="button" class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
                               <i class="bi bi-hand-thumbs-up p-0"></i>
                             </button>
                             <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['votes']; ?></span>
-                            <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
+                            <button type="button" class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
                               <i class="bi bi-hand-thumbs-down p-0"></i>
                             </button>
                           </div>
@@ -528,7 +528,10 @@ if ($EDITH) {
                               <div class="col-12 mb-2">
                                 <div class="d-flex flex-column gap-2 text-start">
                                   <div class="d-flex flex-wrap align-items-center gap-1">
-                                    <?php echo renderTopicBadge($post['tag']); ?>
+                                    <?php 
+                                    $is_post_announcement = !empty($post['is_announcement']);
+                                    echo renderTopicBadge($is_post_announcement ? 'ANNOUNCEMENT' : $post['tag']); 
+                                    ?>
                                   </div>
                                   <a href="/Discourse/posts/index.php?id=<?php echo $post['id']; ?>&back=community&community=<?php echo urlencode($community_name); ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                                     <?php echo htmlspecialchars($post['title']); ?>
@@ -542,10 +545,12 @@ if ($EDITH) {
                                       <img src="<?php echo htmlspecialchars($post['image_url']); ?>" alt="Post image" class="img-fluid rounded shadow-sm" style="max-height: 350px; width: auto; object-fit: cover;">
                                   </div>
                                   <?php endif; ?>
+                                  <?php if (!$is_post_announcement): ?>
                                   <?php $c_htags = renderHashtagBadges($post['tags'] ?? ''); if ($c_htags): ?>
                                   <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
                                     <?php echo $c_htags; ?>
                                   </div>
+                                  <?php endif; ?>
                                   <?php endif; ?>
                                 </div>
                               </div>
@@ -555,9 +560,9 @@ if ($EDITH) {
                             <!-- Actions Row -->
                             <div class="row">
                               <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $c_commentCount; ?> Comment<?php echo $c_commentCount == 1 ? '' : 's'; ?></button>
-                                <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                <button class="btn btn-sm dc-post-save"
+                                <button type="button" class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $c_commentCount; ?> Comment<?php echo $c_commentCount == 1 ? '' : 's'; ?></button>
+                                <button type="button" class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                <button type="button" class="btn btn-sm dc-post-save"
                                         data-on="<?php echo $c_saved ? '1' : '0'; ?>">
                                   <i class="bi <?php echo $c_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                   <?php echo $c_saved ? 'Saved' : 'Save'; ?>
@@ -565,7 +570,7 @@ if ($EDITH) {
                                 <?php if ($is_community_admin) { 
                                   $c_highlighted = ($post['is_highlighted'] == 1);
                                 ?>
-                                <button class="btn btn-sm dc-post-highlight text-warning"
+                                <button type="button" class="btn btn-sm dc-post-highlight text-warning"
                                         data-post-id="<?php echo $post['id']; ?>"
                                         data-highlighted="<?php echo $c_highlighted ? '1' : '0'; ?>"
                                         style="<?php echo $c_highlighted ? 'background:rgba(255,193,7,.12);color:#b58105;border-color:#ffc107;' : ''; ?>">
@@ -1388,7 +1393,7 @@ if ($EDITH) {
   <div id="dc-feed-toast" style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:1090;" class="d-flex align-items-center gap-2 px-4 py-2 bg-light border rounded-2 fs-6 text-gray-700 shadow-sm">
     <i class="bi bi-check-circle-fill text-success fs-6"></i><span></span>
   </div>
-  <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
+  <script src="/Discourse/assets/js/sec-posts.js?v=1.0.5"></script>
 </body>
 
 </html>

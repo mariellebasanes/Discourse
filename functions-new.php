@@ -73,6 +73,24 @@ try {
                 $EDITH->query("ALTER TABLE `posts` ADD COLUMN `is_highlighted` TINYINT(4) NOT NULL DEFAULT 0");
             }
             
+            // Ensure cover_md, program, campus, bio columns exist in accounts
+            $res_acct = $EDITH->query("SHOW COLUMNS FROM `accounts` LIKE 'cover_md'");
+            if ($res_acct && $res_acct->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `accounts` ADD COLUMN `cover_md` VARCHAR(255) DEFAULT NULL");
+            }
+            $res_acct = $EDITH->query("SHOW COLUMNS FROM `accounts` LIKE 'program'");
+            if ($res_acct && $res_acct->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `accounts` ADD COLUMN `program` VARCHAR(150) DEFAULT NULL");
+            }
+            $res_acct = $EDITH->query("SHOW COLUMNS FROM `accounts` LIKE 'campus'");
+            if ($res_acct && $res_acct->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `accounts` ADD COLUMN `campus` VARCHAR(150) DEFAULT NULL");
+            }
+            $res_acct = $EDITH->query("SHOW COLUMNS FROM `accounts` LIKE 'bio'");
+            if ($res_acct && $res_acct->num_rows === 0) {
+                $EDITH->query("ALTER TABLE `accounts` ADD COLUMN `bio` TEXT DEFAULT NULL");
+            }
+            
             // Automatic backfill migration
             $res_count = $EDITH->query("SELECT COUNT(*) as cnt FROM `post_hashtags`");
             if ($res_count) {
@@ -459,6 +477,8 @@ if (!function_exists('getCategoryBadgeStyle')) {
   {
     $cat = strtoupper(trim($category));
     switch ($cat) {
+      case 'ANNOUNCEMENT':
+        return ['class' => 'badge-light-success',  'icon' => 'bi-megaphone',         'icon_color' => 'text-success'];
       case 'TECHNOLOGY':
         return ['class' => 'badge-light-primary',  'icon' => 'bi-cpu',               'icon_color' => 'text-primary'];
       case 'CULTURE':

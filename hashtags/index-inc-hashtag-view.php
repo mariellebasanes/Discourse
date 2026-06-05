@@ -84,7 +84,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet">
     <link href="/Discourse/assets/css/sec-sidebar.css" rel="stylesheet">
-    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet">
+    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.7" rel="stylesheet">
     <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
     <script src="/Discourse/assets/js/jquery.js"></script>
 </head>
@@ -107,7 +107,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                             <!-- Banner -->
                             <div class="w-100 mb-8 py-10 position-relative" style="background:#0b3220;border-bottom:3px solid #fbc501;overflow:hidden;">
                                 <div class="position-absolute w-100 h-100 top-0 start-0" style="background:radial-gradient(circle at 75% 50%,rgba(5,177,102,.15) 0%,transparent 60%);pointer-events:none;"></div>
-                                <div class="container-xxl position-relative" style="z-index:1;">
+                                <div class="app-container container-xxl position-relative" style="z-index:1;">
                                     <div class="d-flex align-items-center flex-wrap gap-6">
 
                                         <!-- Hashtag icon -->
@@ -187,9 +187,9 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                 <div class="d-flex">
                                                     <!-- Vote column -->
                                                     <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
-                                                        <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote"><i class="bi bi-hand-thumbs-up p-0"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote"><i class="bi bi-hand-thumbs-up p-0"></i></button>
                                                         <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['upvotes'] ?? 0; ?></span>
-                                                        <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote"><i class="bi bi-hand-thumbs-down p-0"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote"><i class="bi bi-hand-thumbs-down p-0"></i></button>
                                                     </div>
 
                                                     <!-- Content -->
@@ -226,7 +226,10 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                             <div class="col-12 mb-2">
                                                                 <div class="d-flex flex-column gap-2 text-start">
                                                                     <div class="d-flex flex-wrap align-items-center gap-1">
-                                                                        <?php echo renderTopicBadge($post['topic'] ?? ''); ?>
+                                                                        <?php 
+                                                                        $is_post_announcement = !empty($post['is_announcement']);
+                                                                        echo renderTopicBadge($is_post_announcement ? 'ANNOUNCEMENT' : ($post['topic'] ?? '')); 
+                                                                        ?>
                                                                     </div>
                                                                     <a href="<?php echo $postHref; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link"><?php echo htmlspecialchars($post['title']); ?></a>
                                                                     <div class="dc-body-wrap">
@@ -234,19 +237,22 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                                         <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                                                     </div>
                                                                     <?php
-                                                                    $tagsRaw = $post['tags'] ?? '';
-                                                                    $tagArr  = array_filter(array_map('trim', preg_split('/[,•]+/', $tagsRaw)));
-                                                                    if (!empty($tagArr)): ?>
-                                                                    <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
-                                                                        <?php foreach ($tagArr as $ht) {
-                                                                            $isActive = (strtolower($ht) === strtolower($tag));
-                                                                            $url = '/Discourse/hashtags/index.php?tag=' . urlencode($ht);
-                                                                            echo '<a href="' . $url . '" class="badge rounded-pill px-2 py-1 fs-9 fw-semibold text-decoration-none" '
-                                                                               . 'style="' . ($isActive ? 'background:#0b301f;color:#fff;border:1px solid #0b301f;' : 'background:#f1f3f4;color:#555;border:1px solid #e0e0e0;') . '">'
-                                                                               . '#' . htmlspecialchars(strtolower($ht)) . '</a> ';
-                                                                        } ?>
-                                                                    </div>
-                                                                    <?php endif; ?>
+                                                                    if (!$is_post_announcement) {
+                                                                        $tagsRaw = $post['tags'] ?? '';
+                                                                        $tagArr  = array_filter(array_map('trim', preg_split('/[,•]+/', $tagsRaw)));
+                                                                        if (!empty($tagArr)): ?>
+                                                                        <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+                                                                            <?php foreach ($tagArr as $ht) {
+                                                                                $isActive = (strtolower($ht) === strtolower($tag));
+                                                                                $url = '/Discourse/hashtags/index.php?tag=' . urlencode($ht);
+                                                                                echo '<a href="' . $url . '" class="badge rounded-pill px-2 py-1 fs-9 fw-semibold text-decoration-none" '
+                                                                                   . 'style="' . ($isActive ? 'background:#0b301f;color:#fff;border:1px solid #0b301f;' : 'background:#f1f3f4;color:#555;border:1px solid #e0e0e0;') . '">'
+                                                                                   . '#' . htmlspecialchars(strtolower($ht)) . '</a> ';
+                                                                            } ?>
+                                                                        </div>
+                                                                        <?php endif;
+                                                                    }
+                                                                    ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -254,9 +260,9 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
                                                         <!-- Actions -->
                                                         <div class="row">
                                                             <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                                                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comments_count']; ?> Comment<?php echo $post['comments_count'] !== 1 ? 's' : ''; ?></button>
-                                                                <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                                                <button class="btn btn-sm dc-post-save"
+                                                                <button type="button" class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comments_count']; ?> Comment<?php echo $post['comments_count'] !== 1 ? 's' : ''; ?></button>
+                                                                <button type="button" class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                                                <button type="button" class="btn btn-sm dc-post-save"
                                                                     data-on="<?php echo $is_saved ? '1' : '0'; ?>">
                                                                     <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                                                     <?php echo $is_saved ? 'Saved' : 'Save'; ?>
@@ -358,7 +364,7 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
     <?php include(dirname(__DIR__) . "/partials/_discourse-modals.php"); ?>
 
     <script src="/Discourse/assets/js/dashboard.js"></script>
-    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.5"></script>
     <script src="/Discourse/assets/js/sec-modals.js"></script>
 
     <script>
@@ -439,6 +445,6 @@ $META_TITLE = $tagDisplay . ' — Discourse Hashtag';
         });
     });
     </script>
-    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.5"></script>
 </body>
 </html>

@@ -279,11 +279,11 @@ if (!function_exists('renderPostCardMarkup')) {
             ?>
             <!-- Vote Column -->
             <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:<?php echo $vote_bg; ?>;">
-              <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
+              <button type="button" class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
                 <i class="bi bi-hand-thumbs-up p-0"></i>
               </button>
               <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['upvotes']; ?></span>
-              <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
+              <button type="button" class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
                 <i class="bi bi-hand-thumbs-down p-0"></i>
               </button>
             </div>
@@ -334,7 +334,10 @@ if (!function_exists('renderPostCardMarkup')) {
                 <div class="col-12 mb-2">
                   <div class="d-flex flex-column gap-2 text-start">
                     <div class="d-flex flex-wrap align-items-center gap-1">
-                      <?php echo renderTopicBadge($post['topic']); ?>
+                      <?php 
+                      $is_post_announcement = !empty($post['is_announcement']);
+                      echo renderTopicBadge($is_post_announcement ? 'ANNOUNCEMENT' : $post['topic']); 
+                      ?>
                     </div>
                     <a href="/Discourse/posts/index.php?id=<?php echo $post['id']; ?>&back=dashboard" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                       <?php echo htmlspecialchars($post['title']); ?>
@@ -348,10 +351,12 @@ if (!function_exists('renderPostCardMarkup')) {
                         <img src="<?php echo htmlspecialchars($post['image_url']); ?>" alt="Post image" class="img-fluid rounded shadow-sm" style="max-height: 350px; width: auto; object-fit: cover;">
                     </div>
                     <?php endif; ?>
+                    <?php if (!$is_post_announcement): ?>
                     <?php $htags = renderHashtagBadges($post['tags'] ?? ''); if ($htags): ?>
                     <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
                       <?php echo $htags; ?>
                     </div>
+                    <?php endif; ?>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -378,12 +383,12 @@ if (!function_exists('renderPostCardMarkup')) {
               <!-- Actions Row -->
               <div class="row">
                 <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                  <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comment_count']; ?> Comment<?php echo $post['comment_count'] == 1 ? '' : 's'; ?></button>
-                  <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                  <button type="button" class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comment_count']; ?> Comment<?php echo $post['comment_count'] == 1 ? '' : 's'; ?></button>
+                  <button type="button" class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
                   <?php 
                   $is_saved = IS_POST_SAVED($post['id'], $identification);
                   ?>
-                   <button class="btn btn-sm dc-post-save" 
+                   <button type="button" class="btn btn-sm dc-post-save" 
                            data-on="<?php echo $is_saved ? '1' : '0'; ?>">
                        <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                       <?php echo $is_saved ? 'Saved' : 'Save'; ?>

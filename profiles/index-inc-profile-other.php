@@ -38,7 +38,7 @@ if ($EDITH && $other_id) {
 
     // Posts
     $stmt = $EDITH->prepare(
-        "SELECT p.id, p.title, p.body, p.topic, p.community, p.upvotes, p.downvotes, p.created_at,
+        "SELECT p.id, p.title, p.body, p.topic, p.tags, p.community, p.upvotes, p.downvotes, p.created_at, p.is_announcement, p.image_url, p.is_anonymous,
                 (SELECT COUNT(*) FROM comments c WHERE c.post_id=p.id) AS comment_count
          FROM posts p WHERE p.author_id=? AND p.is_anonymous=0
          ORDER BY p.created_at DESC LIMIT 20"
@@ -99,7 +99,7 @@ if (!function_exists('profile_relative_time')) {
   <script src="/Discourse/assets/js/jquery.js"></script>
 
   <link href="/Discourse/assets/css/discourse-css/profile-other.css" rel="stylesheet" type="text/css" />
-  <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet" type="text/css" />
+  <link href="/Discourse/assets/css/sec-posts.css?v=1.0.7" rel="stylesheet" type="text/css" />
 </head>
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
@@ -121,7 +121,13 @@ if (!function_exists('profile_relative_time')) {
                     <!-- Profile Header Card -->
                     <div class="card border-0 shadow-sm mb-6 overflow-hidden">
                       <!-- Cover Photo -->
-                      <div class="h-150px w-100 position-relative" style="background: linear-gradient(135deg, #1e7145 0%, #155d38 100%);">
+                      <?php 
+                      $coverStyle = 'background: linear-gradient(135deg, #1e7145 0%, #155d38 100%);';
+                      if (!empty($other_account['cover_md'])) {
+                          $coverStyle = 'background-image: url(\'' . htmlspecialchars($other_account['cover_md']) . '\'); background-size: cover; background-position: center;';
+                      }
+                      ?>
+                      <div class="h-150px w-100 position-relative" style="<?php echo $coverStyle; ?>">
                         <!-- Decorative patterns -->
                         <div class="position-absolute top-0 end-0 mt-n10 me-n10 opacity-25">
                           <i class="ki-duotone ki-abstract-14 text-white" style="font-size: 150px;"><span class="path1"></span><span class="path2"></span></i>
@@ -144,9 +150,9 @@ if (!function_exists('profile_relative_time')) {
                                 <i class="ki-duotone ki-verify text-success fs-4 ms-2" title="Verified Student"><span class="path1"></span><span class="path2"></span></i>
                               </h2>
                               <div class="d-flex align-items-center flex-wrap gap-2 text-muted fw-semibold fs-6">
-                                <span><i class="ki-duotone ki-book-open text-gray-500 me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i> BS Computer Science</span>
+                                <span><i class="ki-duotone ki-book-open text-gray-500 me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i> <?php echo htmlspecialchars($other_account['program'] ?? 'BS Computer Science'); ?></span>
                                 <span>·</span>
-                                <span><i class="ki-duotone ki-geolocation text-gray-500 me-1"><span class="path1"></span><span class="path2"></span></i> FEU Tech</span>
+                                <span><i class="ki-duotone ki-geolocation text-gray-500 me-1"><span class="path1"></span><span class="path2"></span></i> <?php echo htmlspecialchars($other_account['campus'] ?? 'FEU Tech'); ?></span>
                               </div>
                             </div>
                             <!-- Actions (Follow) -->
@@ -185,7 +191,7 @@ if (!function_exists('profile_relative_time')) {
                             <div class="mb-4">
                               <h4 class="fw-bolder text-dark fs-6 mb-2">About Me</h4>
                               <p class="text-gray-600 fs-6 lh-lg mb-0">
-                                Enthusiastic computer science student passionate about web development, AI, and building communities. Always eager to help out fellow Tamaraws! 💚💛
+                                <?php echo nl2br(htmlspecialchars($other_account['bio'] ?? 'Enthusiastic computer science student passionate about web development, AI, and building communities. Always eager to help out fellow Tamaraws! 💚💛')); ?>
                               </p>
                             </div>
                           </div>
@@ -287,11 +293,11 @@ if (!function_exists('profile_relative_time')) {
 
                           <!-- Vote Column -->
                           <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
-                            <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
+                            <button type="button" class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
                               <i class="bi bi-hand-thumbs-up p-0"></i>
                             </button>
                             <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['upvotes']; ?></span>
-                            <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
+                            <button type="button" class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
                               <i class="bi bi-hand-thumbs-down p-0"></i>
                             </button>
                           </div>
@@ -310,7 +316,7 @@ if (!function_exists('profile_relative_time')) {
                                     </div>
                                     <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/<?php echo htmlspecialchars($post['community'] ?? ''); ?></span>
                                   </a>
-                                  <button class="btn btn-sm dc-post-report" data-bs-toggle="modal" data-bs-target="#modalReportPost">
+                                  <button type="button" class="btn btn-sm dc-post-report" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                                     <i class="bi bi-flag me-1"></i> Report
                                   </button>
                                 </div>
@@ -331,7 +337,10 @@ if (!function_exists('profile_relative_time')) {
                               <div class="col-12 mb-2">
                                 <div class="d-flex flex-column gap-2 text-start">
                                   <div class="d-flex flex-wrap align-items-center gap-1">
-                                    <?php echo renderTopicBadge($post['topic'] ?? 'GENERAL'); ?>
+                                    <?php 
+                                    $is_post_announcement = !empty($post['is_announcement']);
+                                    echo renderTopicBadge($is_post_announcement ? 'ANNOUNCEMENT' : ($post['topic'] ?? 'GENERAL')); 
+                                    ?>
                                   </div>
                                   <a href="/Discourse/posts/index.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                                     <?php echo htmlspecialchars($post['title']); ?>
@@ -342,10 +351,12 @@ if (!function_exists('profile_relative_time')) {
                                     <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                   </div>
                                   <?php endif; ?>
+                                  <?php if (!$is_post_announcement): ?>
                                   <?php $po_htags = renderHashtagBadges($post['tags'] ?? ''); if ($po_htags): ?>
                                   <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
                                     <?php echo $po_htags; ?>
                                   </div>
+                                  <?php endif; ?>
                                   <?php endif; ?>
                                 </div>
                               </div>
@@ -355,10 +366,10 @@ if (!function_exists('profile_relative_time')) {
                             <!-- Actions Row -->
                             <div class="row">
                               <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $po_commentCount; ?> Comment<?php echo $po_commentCount == 1 ? '' : 's'; ?></button>
-                                <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                <button type="button" class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $po_commentCount; ?> Comment<?php echo $po_commentCount == 1 ? '' : 's'; ?></button>
+                                <button type="button" class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
                                  <?php $po_saved = IS_POST_SAVED($post['id'], $identification); ?>
-                                 <button class="btn btn-sm dc-post-save" data-on="<?php echo $po_saved ? '1' : '0'; ?>">
+                                 <button type="button" class="btn btn-sm dc-post-save" data-on="<?php echo $po_saved ? '1' : '0'; ?>">
                                      <i class="bi <?php echo $po_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i> <?php echo $po_saved ? 'Saved' : 'Save'; ?>
                                  </button>
                               </div>
@@ -521,7 +532,7 @@ if (!function_exists('profile_relative_time')) {
       });
     });
   </script>
-  <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
+  <script src="/Discourse/assets/js/sec-posts.js?v=1.0.5"></script>
 </body>
 
 </html>

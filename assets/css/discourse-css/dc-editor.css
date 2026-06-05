@@ -476,3 +476,47 @@
 .bg-light-success {
   background-color: #e8ede9 !important;
 }
+
+/* Code block wrapper and header */
+.dc-code-block-wrapper {
+  margin: 12px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #313244;
+  background: #1e1e2e;
+}
+
+.dc-code-block-header {
+  background: #11111b;
+  color: #a6adc8;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 1px solid #313244;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.dc-code-block-header span {
+  letter-spacing: 0.08em;
+}
+
+.dc-code-block-wrapper .dc-code-block {
+  margin: 0;
+  border-radius: 0 0 8px 8px;
+}
+
+/* Inline code styles */
+code.dc-inline-code {
+  background: #f0faf5;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #1a5c38;
+  border: 1px solid #dce8df;
+}

@@ -114,7 +114,7 @@ if (empty($initials)) {
               
               <!-- Banner -->
               <div class="page-banner w-100 py-10 mb-8">
-                <div class="container-xxl d-flex align-items-center justify-content-between">
+                <div class="app-container container-xxl d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-yellow fw-bold fs-8 text-uppercase tracking-wider mb-1 d-block">NEW POST</span>
                         <h1 class="text-white fw-bolder fs-2tx mb-2">Create a Post</h1>
@@ -247,7 +247,7 @@ if (empty($initials)) {
                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/></svg>
                                        </button>
                                        <span class="dc-tb-sep"></span>
-                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Inline Code" onclick="fmt('insertHTML','&lt;code style=&quot;background:#f0faf5;border-radius:4px;padding:1px 5px;font-family:monospace;font-size:12px;color:#1a5c38;&quot;&gt;code&lt;/code&gt;')">
+                                       <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Inline Code" onclick="insertInlineCode()">
                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                                        </button>
                                        <button type="button" class="btn btn-sm btn-icon btn-light-success" title="Blockquote" onclick="fmt('formatBlock','blockquote')">
@@ -700,7 +700,7 @@ if (empty($initials)) {
           var editor = document.getElementById('dc-editor');
           var bodyHidden = document.getElementById('body-hidden');
           if (editor && bodyHidden) {
-              bodyHidden.value = editor.innerHTML;
+              bodyHidden.value = typeof window.getEditorHtml === 'function' ? window.getEditorHtml() : editor.innerHTML;
           }
           
           if (typeof KTApp !== 'undefined') KTApp.showPageLoading();

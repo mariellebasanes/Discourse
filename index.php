@@ -16,7 +16,7 @@ $META_TITLE = "Dashboard · Discourse";
   <link href="assets/css/sec-hero.css" rel="stylesheet">
   <link href="assets/css/sec-sidebar.css" rel="stylesheet">
   <link href="assets/css/sec-search-filter.css" rel="stylesheet">
-  <link href="assets/css/sec-posts.css?v=1.0.4" rel="stylesheet">
+  <link href="assets/css/sec-posts.css?v=1.0.7" rel="stylesheet">
   <link href="assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
 </head>
 
@@ -63,7 +63,7 @@ $META_TITLE = "Dashboard · Discourse";
   <script src="assets/js/sec-hero.js"></script>
   <script src="assets/js/sec-sidebar.js"></script>
   <script src="assets/js/sec-search-filter.js"></script>
-  <script src="assets/js/sec-posts.js?v=1.0.4"></script>
+  <script src="assets/js/sec-posts.js?v=1.0.5"></script>
   <script src="assets/js/sec-modals.js"></script>
 </body>
 

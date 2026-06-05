@@ -14,8 +14,16 @@
 }
 
 /* ── Vote button colors ──────────────────────────────────── */
-.dc-vote-up:hover  { color: #2D6A4F !important; }
-.dc-vote-down:hover { color: #c62828 !important; }
+.dc-vote-up,
+.dc-vote-down {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease, background-color 0.15s ease !important;
+}
+.dc-vote-up:hover  { color: #2D6A4F !important; transform: scale(1.06) translateY(-1.5px) !important; }
+.dc-vote-down:hover { color: #c62828 !important; transform: scale(1.06) translateY(-1.5px) !important; }
+.dc-vote-up:active,
+.dc-vote-down:active {
+  transform: scale(0.94) !important;
+}
 
 /* ── Poll option buttons ─────────────────────────────────── */
 .discourse-poll-option {
@@ -102,6 +110,8 @@
 .dc-post-comment i,
 .dc-post-share i,
 .dc-post-report i,
+.vote-btn i,
+.reply-btn i,
 #profile-follow-btn i,
 #follow-btn i {
   color: currentColor !important;
@@ -119,3 +129,221 @@
 #save-post-btn.saved i {
   color: #0d6efd !important; /* matching blue icon */
 }
+
+/* Ensure saved state hover retains its styling instead of turning white */
+.dc-post-save[data-on="1"]:hover,
+#save-post-btn.saved:hover {
+  background-color: rgba(13, 110, 253, 0.18) !important;
+  color: #0d6efd !important;
+  border: 1px solid #0d6efd !important;
+}
+
+.dc-post-save[data-on="1"]:hover i,
+#save-post-btn.saved:hover i {
+  color: #0d6efd !important;
+}
+
+/* Ensure dynamic active voted states (success/danger) retain their colors on hover */
+.btn-light-success.text-success:hover {
+  background-color: rgba(23, 198, 83, 0.15) !important;
+  color: #17c653 !important;
+}
+.btn-light-success.text-success:hover i {
+  color: #17c653 !important;
+}
+
+.btn-light-danger.text-danger:hover {
+  background-color: rgba(248, 40, 90, 0.15) !important;
+  color: #f8285a !important;
+}
+.btn-light-danger.text-danger:hover i {
+  color: #f8285a !important;
+}
+
+/* ── Post & Comment action buttons hover adjustments and animations ── */
+.dc-post-comment,
+.dc-post-share,
+.dc-post-save:not([data-on="1"]):not(.saved),
+.dc-post-report,
+.dc-post-highlight:not(.text-warning) {
+  background: transparent !important;
+  color: #5e6278 !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease, background-color 0.15s ease !important;
+}
+
+.vote-btn,
+.reply-btn {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease, background-color 0.15s ease !important;
+}
+
+/* Hover state for transparent buttons */
+.dc-post-comment:hover,
+.dc-post-share:hover,
+.dc-post-save:not([data-on="1"]):not(.saved):hover,
+.dc-post-report:hover,
+.dc-post-highlight:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #5e6278 !important;
+  transform: scale(1.06) translateY(-1.5px) !important;
+}
+
+/* Hover state for pill buttons (retain grey background instead of turning white/transparent) */
+.vote-btn:not(.saved):not(.vp-active-vote):not(.text-success):not(.text-danger):hover,
+.reply-btn:hover {
+  background-color: #eff2f5 !important;
+  color: #3f4254 !important;
+  transform: scale(1.06) translateY(-1.5px) !important;
+}
+
+/* For active/saved hover: keep their active colors but apply the same transform animation */
+.dc-post-save[data-on="1"]:hover,
+#save-post-btn.saved:hover,
+.vote-btn.vp-active-vote:hover,
+.vote-btn.saved:hover,
+.btn-light-success.text-success:hover,
+.btn-light-danger.text-danger:hover {
+  transform: scale(1.06) translateY(-1.5px) !important;
+}
+
+/* Micro-animations for the icons inside on hover */
+.dc-post-comment:hover i,
+.vote-btn:hover .bi-chat,
+.reply-btn:hover i {
+  animation: dc-comment-bounce 0.5s ease-in-out infinite alternate;
+}
+
+.dc-post-share:hover i,
+.vote-btn:hover .bi-share {
+  animation: dc-share-wiggle 0.5s ease-in-out;
+}
+
+.dc-post-save:hover i,
+.vote-btn:hover .bi-bookmark,
+.vote-btn:hover .bi-bookmark-fill {
+  transform: scale(1.2) !important;
+  transition: transform 0.15s ease !important;
+}
+
+.dc-post-report:hover i,
+.vote-btn:hover .bi-flag {
+  animation: dc-report-shake 0.4s ease-in-out;
+}
+
+/* Click/Active state: tactile scale down and subtle dark color shift */
+.dc-post-comment:active,
+.dc-post-share:active,
+.dc-post-save:active,
+.dc-post-report:active,
+.dc-post-highlight:active {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  color: #1e293b !important;
+  transform: scale(0.94) !important;
+}
+
+.vote-btn:not(.saved):not(.vp-active-vote):not(.text-success):not(.text-danger):active,
+.reply-btn:active {
+  background-color: #e4e6ef !important;
+  color: #1e293b !important;
+  transform: scale(0.94) !important;
+}
+
+/* Keyframes for the micro-animations */
+@keyframes dc-comment-bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-3px); }
+}
+
+@keyframes dc-share-wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-12deg); }
+  75% { transform: rotate(12deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes dc-report-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1.5px); }
+  75% { transform: translateX(1.5px); }
+}
+
+/* ── Override framework's custom hover color rule that forces icons white ── */
+.btn.dc-post-comment:hover i,
+.btn.dc-post-comment:hover [class*="bi-"],
+.btn.dc-post-share:hover i,
+.btn.dc-post-share:hover [class*="bi-"],
+.btn.dc-post-save:hover i,
+.btn.dc-post-save:hover [class*="bi-"],
+.btn.dc-post-report:hover i,
+.btn.dc-post-report:hover [class*="bi-"],
+.btn.dc-post-highlight:hover i,
+.btn.dc-post-highlight:hover [class*="bi-"],
+.btn.vote-btn:hover i,
+.btn.vote-btn:hover [class*="bi-"],
+.btn.vote-btn-v2:hover i,
+.btn.vote-btn-v2:hover [class*="bi-"],
+.btn.reply-btn:hover i,
+.btn.reply-btn:hover [class*="bi-"],
+.btn.dc-vote-up:hover i,
+.btn.dc-vote-up:hover [class*="bi-"],
+.btn.dc-vote-down:hover i,
+.btn.dc-vote-down:hover [class*="bi-"] {
+  color: currentColor !important;
+}
+
+/* Code block wrapper and header */
+.dc-code-block-wrapper {
+  margin: 12px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #313244;
+  background: #1e1e2e;
+}
+
+.dc-code-block-header {
+  background: #11111b;
+  color: #a6adc8;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 1px solid #313244;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.dc-code-block-header span {
+  letter-spacing: 0.08em;
+}
+
+.dc-code-block-wrapper .dc-code-block {
+  margin: 0;
+  border-radius: 0 0 8px 8px;
+}
+
+/* Inline code styles */
+code.dc-inline-code {
+  background: #f0faf5;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #1a5c38;
+  border: 1px solid #dce8df;
+}
+
+/* Syntax Highlighting Colors */
+.hl-keyword { color: #cba6f7; font-weight: bold; }
+.hl-comment { color: #6c7086; font-style: italic; }
+.hl-string  { color: #a6e3a1; }
+.hl-number  { color: #fab387; }
+.hl-type    { color: #f9e2af; }
+.hl-function { color: #89b4fa; }
+.hl-operator { color: #89dceb; }
+.hl-preprocessor { color: #f38ba8; }
+
+

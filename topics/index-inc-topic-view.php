@@ -164,7 +164,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
     <link href="/Discourse/assets/css/dashboard.css" rel="stylesheet">
     <link href="/Discourse/assets/css/sec-sidebar.css" rel="stylesheet">
     <link href="/Discourse/assets/css/sec-search-filter.css" rel="stylesheet">
-    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet">
+    <link href="/Discourse/assets/css/sec-posts.css?v=1.0.7" rel="stylesheet">
     <link href="/Discourse/assets/css/sec-modals.css?v=1.0.1" rel="stylesheet">
 
     <!-- jQuery -->
@@ -194,7 +194,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                 <div class="position-absolute" style="top:-30px;right:200px;width:160px;height:160px;background:rgba(255,255,255,0.04);border-radius:50%;"></div>
                                 <div class="position-absolute" style="bottom:-20px;right:80px;width:100px;height:100px;background:rgba(255,255,255,0.04);border-radius:50%;"></div>
 
-                                <div class="container-xxl position-relative" style="z-index:1;">
+                                <div class="app-container container-xxl position-relative" style="z-index:1;">
                                     <div class="d-flex align-items-center flex-wrap gap-6">
 
                                         <!-- Topic Icon -->
@@ -311,11 +311,11 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
 
                                                     <!-- Vote Column -->
                                                     <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
-                                                        <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
+                                                        <button type="button" class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
                                                             <i class="bi bi-hand-thumbs-up p-0"></i>
                                                         </button>
                                                         <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['votes']; ?></span>
-                                                        <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
+                                                        <button type="button" class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
                                                             <i class="bi bi-hand-thumbs-down p-0"></i>
                                                         </button>
                                                     </div>
@@ -354,7 +354,10 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                             <div class="col-12 mb-2">
                                                                 <div class="d-flex flex-column gap-2 text-start">
                                                                     <div class="d-flex flex-wrap align-items-center gap-1">
-                                                                        <?php echo renderTopicBadge($topic); ?>
+                                                                        <?php 
+                                                                        $is_post_announcement = !empty($post['is_announcement']);
+                                                                        echo renderTopicBadge($is_post_announcement ? 'ANNOUNCEMENT' : $topic); 
+                                                                        ?>
                                                                     </div>
                                                                     <a href="<?php echo $t_postHref; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                                                                         <?php echo htmlspecialchars($post['title']); ?>
@@ -363,10 +366,12 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                                         <span class="fs-7 text-gray-700 dc-body-clamp"><?php echo linkHashtags(strip_tags($post['body'])); ?></span>
                                                                         <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                                                     </div>
+                                                                    <?php if (!$is_post_announcement): ?>
                                                                     <?php $t_htags = renderHashtagBadges($post['tags'] ?? ''); if ($t_htags): ?>
                                                                     <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
                                                                         <?php echo $t_htags; ?>
                                                                     </div>
+                                                                    <?php endif; ?>
                                                                     <?php endif; ?>
                                                                 </div>
                                                             </div>
@@ -375,9 +380,9 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
                                                         <!-- Actions -->
                                                         <div class="row">
                                                             <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                                                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $t_commentCount; ?> Comment<?php echo $t_commentCount !== 1 ? 's' : ''; ?></button>
-                                                                <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                                                <button class="btn btn-sm dc-post-save"
+                                                                <button type="button" class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $t_commentCount; ?> Comment<?php echo $t_commentCount !== 1 ? 's' : ''; ?></button>
+                                                                <button type="button" class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                                                <button type="button" class="btn btn-sm dc-post-save"
                                                                         data-on="<?php echo $t_saved ? '1' : '0'; ?>">
                                                                     <i class="bi <?php echo $t_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                                                     <?php echo $t_saved ? 'Saved' : 'Save'; ?>
@@ -585,7 +590,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
     <script src="/Discourse/assets/js/dashboard.js"></script>
     <script src="/Discourse/assets/js/sec-sidebar.js"></script>
     <script src="/Discourse/assets/js/sec-modals.js"></script>
-    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.5"></script>
 
     <script>
         $(document).ready(function() {
@@ -724,7 +729,7 @@ $META_TITLE = ucfirst(strtolower($topic)) . " — Discourse Topics";
         <i class="bi bi-check-circle-fill text-success fs-6"></i><span></span>
     </div>
 
-    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
+    <script src="/Discourse/assets/js/sec-posts.js?v=1.0.5"></script>
 
 </body>
 

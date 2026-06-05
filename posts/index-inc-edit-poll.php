@@ -134,7 +134,7 @@ $META_DESC  = "Edit your existing poll.";
                                 </svg>
                               </button>
                               <span class="dc-tb-sep"></span>
-                              <button class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Inline Code" onclick="fmt('insertHTML','<code style=&quot;background:#f0faf5;border-radius:4px;padding:1px 5px;font-family:monospace;font-size:12px;color:#1a5c38;&quot;>code</code>')">
+                              <button type="button" class="btn btn-sm btn-icon btn-light-success" style="background-color:#e8ede9;color:#3a5c45;" title="Inline Code" onclick="insertInlineCode()">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                   <polyline points="16 18 22 12 16 6" />
                                   <polyline points="8 6 2 12 8 18" />

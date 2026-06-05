@@ -35,7 +35,7 @@ if ($EDITH && $identification) {
 
     // Posts tab
     $stmt = $EDITH->prepare(
-        "SELECT p.id, p.title, p.body, p.topic, p.community, p.upvotes, p.downvotes, p.created_at,
+        "SELECT p.id, p.title, p.body, p.topic, p.tags, p.community, p.upvotes, p.downvotes, p.created_at, p.is_announcement, p.image_url, p.is_anonymous,
                 (SELECT COUNT(*) FROM comments c WHERE c.post_id=p.id) AS comment_count
          FROM posts p WHERE p.author_id=? AND p.is_anonymous=0
          ORDER BY p.created_at DESC LIMIT 20"
@@ -112,7 +112,7 @@ if (!function_exists('profile_relative_time')) {
   <script src="/Discourse/assets/js/jquery.js"></script>
 
   <link href="/Discourse/assets/css/discourse-css/profile.css" rel="stylesheet" type="text/css" />
-  <link href="/Discourse/assets/css/sec-posts.css?v=1.0.4" rel="stylesheet" type="text/css" />
+  <link href="/Discourse/assets/css/sec-posts.css?v=1.0.7" rel="stylesheet" type="text/css" />
 </head>
 
 <body id="kt_app_body" data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
@@ -134,7 +134,13 @@ if (!function_exists('profile_relative_time')) {
                     <!-- Profile Header Card -->
                     <div class="card border-0 shadow-sm mb-6 overflow-hidden">
                       <!-- Cover Photo -->
-                      <div class="h-150px w-100 position-relative" style="background: linear-gradient(135deg, #1e7145 0%, #155d38 100%);">
+                      <?php 
+                      $coverStyle = 'background: linear-gradient(135deg, #1e7145 0%, #155d38 100%);';
+                      if (!empty($ACCOUNT['cover_md'])) {
+                          $coverStyle = 'background-image: url(\'' . htmlspecialchars($ACCOUNT['cover_md']) . '\'); background-size: cover; background-position: center;';
+                      }
+                      ?>
+                      <div class="h-150px w-100 position-relative" style="<?php echo $coverStyle; ?>">
                         <!-- Decorative patterns -->
                         <div class="position-absolute top-0 end-0 mt-n10 me-n10 opacity-25">
                           <i class="ki-duotone ki-abstract-14 text-white" style="font-size: 150px;"><span class="path1"></span><span class="path2"></span></i>
@@ -157,9 +163,9 @@ if (!function_exists('profile_relative_time')) {
                                 <i class="ki-duotone ki-verify text-success fs-4 ms-2" title="Verified Student"><span class="path1"></span><span class="path2"></span></i>
                               </h2>
                               <div class="d-flex align-items-center flex-wrap gap-2 text-muted fw-semibold fs-6">
-                                <span><i class="ki-duotone ki-book-open text-gray-500 me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i> BS Computer Science</span>
+                                <span><i class="ki-duotone ki-book-open text-gray-500 me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i> <?php echo htmlspecialchars($ACCOUNT['program'] ?? 'BS Computer Science'); ?></span>
                                 <span>·</span>
-                                <span><i class="ki-duotone ki-geolocation text-gray-500 me-1"><span class="path1"></span><span class="path2"></span></i> FEU Tech</span>
+                                <span><i class="ki-duotone ki-geolocation text-gray-500 me-1"><span class="path1"></span><span class="path2"></span></i> <?php echo htmlspecialchars($ACCOUNT['campus'] ?? 'FEU Tech'); ?></span>
                               </div>
                             </div>
                             <!-- Actions (Settings) -->
@@ -177,7 +183,7 @@ if (!function_exists('profile_relative_time')) {
                             <div class="mb-4">
                               <h4 class="fw-bolder text-dark fs-6 mb-2">About Me</h4>
                               <p class="text-gray-600 fs-6 lh-lg mb-0">
-                                Enthusiastic computer science student passionate about web development, AI, and building communities. Always eager to help out fellow Tamaraws! 💚💛
+                                <?php echo nl2br(htmlspecialchars($ACCOUNT['bio'] ?? 'Enthusiastic computer science student passionate about web development, AI, and building communities. Always eager to help out fellow Tamaraws! 💚💛')); ?>
                               </p>
                             </div>
                           </div>
@@ -298,11 +304,11 @@ if (!function_exists('profile_relative_time')) {
 
                           <!-- Vote Column -->
                           <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
-                            <button class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
+                            <button type="button" class="btn btn-sm btn-tertiary dc-vote-up" title="Upvote">
                               <i class="bi bi-hand-thumbs-up p-0"></i>
                             </button>
                             <span class="fs-7 fw-bold text-gray-600 dc-vote-count"><?php echo $post['upvotes']; ?></span>
-                            <button class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
+                            <button type="button" class="btn btn-sm btn-tertiary dc-vote-down" title="Downvote">
                               <i class="bi bi-hand-thumbs-down p-0"></i>
                             </button>
                           </div>
@@ -342,7 +348,10 @@ if (!function_exists('profile_relative_time')) {
                               <div class="col-12 mb-2">
                                 <div class="d-flex flex-column gap-2 text-start">
                                   <div class="d-flex flex-wrap align-items-center gap-1">
-                                    <?php echo renderTopicBadge($post['tag']); ?>
+                                    <?php 
+                                    $is_post_announcement = !empty($post['is_announcement']);
+                                    echo renderTopicBadge($is_post_announcement ? 'ANNOUNCEMENT' : $post['tag']); 
+                                    ?>
                                   </div>
                                   <a href="/Discourse/posts/index.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary fs-5 fw-bold dc-post-title-link">
                                     <?php echo htmlspecialchars($post['title']); ?>
@@ -353,10 +362,12 @@ if (!function_exists('profile_relative_time')) {
                                     <a href="#" class="dc-see-more-link fw-semibold cursor-pointer d-none" onclick="dcToggleBody(event, this)">See More</a>
                                   </div>
                                   <?php endif; ?>
+                                  <?php if (!$is_post_announcement): ?>
                                   <?php $p_htags = renderHashtagBadges($post['tags'] ?? ''); if ($p_htags): ?>
                                   <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
                                     <?php echo $p_htags; ?>
                                   </div>
+                                  <?php endif; ?>
                                   <?php endif; ?>
                                 </div>
                               </div>
@@ -366,9 +377,9 @@ if (!function_exists('profile_relative_time')) {
                             <!-- Actions Row -->
                             <div class="row">
                               <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                                <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comments']; ?> Comment<?php echo $post['comments'] == 1 ? '' : 's'; ?></button>
-                                <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
-                                 <button class="btn btn-sm dc-post-save"
+                                <button type="button" class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <?php echo $post['comments']; ?> Comment<?php echo $post['comments'] == 1 ? '' : 's'; ?></button>
+                                <button type="button" class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                 <button type="button" class="btn btn-sm dc-post-save"
                                          data-on="<?php echo $p_saved ? '1' : '0'; ?>">
                                   <i class="bi <?php echo $p_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                   <?php echo $p_saved ? 'Saved' : 'Save'; ?>
@@ -543,11 +554,11 @@ if (!function_exists('profile_relative_time')) {
                                   <div class="d-flex">
                                       <!-- Vote Column (Dashboard Style) -->
                                       <div class="d-flex flex-column align-items-center gap-1 p-3" style="width:55px;flex-shrink:0;background-color:#e8ede9;">
-                                          <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-up-btn" title="Upvote">
+                                          <button type="button" class="btn btn-sm btn-tertiary vote-btn-v2 vote-up-btn" title="Upvote">
                                               <i class="bi bi-hand-thumbs-up p-0"></i>
                                           </button>
                                           <span class="fs-7 fw-bold text-gray-600 vote-count-text"><?php echo $post['upvotes']; ?></span>
-                                          <button class="btn btn-sm btn-tertiary vote-btn-v2 vote-down-btn" title="Downvote">
+                                          <button type="button" class="btn btn-sm btn-tertiary vote-btn-v2 vote-down-btn" title="Downvote">
                                               <i class="bi bi-hand-thumbs-down p-0"></i>
                                           </button>
                                       </div>
@@ -565,7 +576,7 @@ if (!function_exists('profile_relative_time')) {
                                                           </div>
                                                           <span class="fw-bold text-gray-800 text-hover-primary fs-7">c/<?php echo htmlspecialchars($post['community']); ?></span>
                                                       </a>
-                                                      <button class="btn btn-sm dc-post-report" data-bs-toggle="modal" data-bs-target="#modalReportPost">
+                                                      <button type="button" class="btn btn-sm dc-post-report" data-bs-toggle="modal" data-bs-target="#modalReportPost">
                                                         <i class="bi bi-flag me-1"></i> Report
                                                       </button>
                                                   </div>
@@ -586,8 +597,13 @@ if (!function_exists('profile_relative_time')) {
                                               <div class="col-12 mb-2">
                                                   <div class="d-flex flex-column gap-2 text-start">
                                                       <div class="d-flex flex-wrap align-items-center gap-1">
-                                                          <?php echo renderTopicBadge($post['topic']); ?>
+                                                          <?php 
+                                                          $is_post_announcement = !empty($post['is_announcement']);
+                                                          echo renderTopicBadge($is_post_announcement ? 'ANNOUNCEMENT' : $post['topic']); 
+                                                          ?>
+                                                          <?php if (!$is_post_announcement): ?>
                                                           <?php echo renderHashtagBadges($post['tags'] ?? ''); ?>
+                                                          <?php endif; ?>
                                                       </div>
                                                       <h3 class="fw-bold fs-5 mb-0">
                                                           <a href="/Discourse/posts/index.php?id=<?php echo $post['id']; ?>" class="text-gray-800 text-hover-primary dc-post-title-link">
@@ -605,12 +621,12 @@ if (!function_exists('profile_relative_time')) {
                                           <!-- Actions Row -->
                                           <div class="row">
                                               <div class="d-flex justify-content-start align-items-center w-100 px-5">
-                                                  <button class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <span class="comment-count-btn-text"><?php echo $post['comment_count']; ?> Comment<?php echo $post['comment_count'] == 1 ? '' : 's'; ?></span></button>
-                                                  <button class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
+                                                  <button type="button" class="btn btn-sm dc-post-comment"><i class="bi bi-chat me-1"></i> <span class="comment-count-btn-text"><?php echo $post['comment_count']; ?> Comment<?php echo $post['comment_count'] == 1 ? '' : 's'; ?></span></button>
+                                                  <button type="button" class="btn btn-sm dc-post-share"><i class="bi bi-share me-1"></i> Share</button>
                                                   <?php 
                                                   $is_saved = IS_POST_SAVED($post['id'], $identification);
                                                   ?>
-                                                   <button class="btn btn-sm dc-post-save" 
+                                                   <button type="button" class="btn btn-sm dc-post-save" 
                                                            data-on="<?php echo $is_saved ? '1' : '0'; ?>">
                                                       <i class="bi <?php echo $is_saved ? 'bi-bookmark-fill' : 'bi-bookmark'; ?> me-1"></i>
                                                       <?php echo $is_saved ? 'Saved' : 'Save'; ?>
@@ -678,38 +694,48 @@ if (!function_exists('profile_relative_time')) {
                               <h2 class="fw-bolder text-dark m-0">Edit Profile</h2>
                           </div>
                           <div class="modal-body px-8 pt-0 pb-8">
-                              <form class="form" action="#" method="POST" onsubmit="event.preventDefault(); $('#edit_profile_modal').modal('hide');">
+                              <form id="edit-profile-form" enctype="multipart/form-data">
                                   <!-- Cover Photo and Avatar Update -->
                                   <div class="mb-8 text-center position-relative">
-                                    <div class="h-100px w-100 rounded-3 mb-4" style="background: linear-gradient(135deg, #1e7145 0%, #155d38 100%);"></div>
+                                    <?php 
+                                    $mCoverStyle = 'background: linear-gradient(135deg, #1e7145 0%, #155d38 100%);';
+                                    if (!empty($ACCOUNT['cover_md'])) {
+                                        $mCoverStyle = 'background-image: url(\'' . htmlspecialchars($ACCOUNT['cover_md']) . '\'); background-size: cover; background-position: center;';
+                                    }
+                                    ?>
+                                    <div class="h-100px w-100 rounded-3 mb-4" style="<?php echo $mCoverStyle; ?>"></div>
                                     <div class="position-absolute" style="top: 30px; left: 50%; transform: translateX(-50%);">
                                       <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true">
                                           <div class="image-input-wrapper w-100px h-100px rounded-circle shadow-sm border border-4 border-white" style="background-image: url(<?php echo htmlspecialchars(getUserAvatar($identification)); ?>); background-position: center; background-size: cover;"></div>
                                           <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar" style="position: absolute; bottom: 0; right: 0;">
                                               <i class="ki-duotone ki-pencil fs-7"><span class="path1"></span><span class="path2"></span></i>
-                                              <input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
+                                              <input type="file" name="avatar" accept=".png, .jpg, .jpeg, .webp" />
                                           </label>
                                       </div>
                                     </div>
                                   </div>
                                   <div class="mt-12 fv-row mb-6 pt-5">
                                       <label class="fs-6 fw-bold mb-2 text-dark">Name</label>
-                                      <input type="text" class="form-control form-control-solid border bg-light" value="<?php echo htmlspecialchars(strtoupper($ACCOUNT['display_name'])); ?>" />
+                                      <input type="text" name="display_name" class="form-control form-control-solid border bg-light" value="<?php echo htmlspecialchars($ACCOUNT['display_name'] ?? ''); ?>" required />
+                                  </div>
+                                  <div class="fv-row mb-6">
+                                      <label class="fs-6 fw-bold mb-2 text-dark">Cover Photo</label>
+                                      <input type="file" name="cover" class="form-control form-control-solid border bg-light" accept=".png, .jpg, .jpeg, .webp" />
                                   </div>
                                   <div class="fv-row mb-6">
                                       <label class="fs-6 fw-bold mb-2 text-dark">Program & Campus</label>
                                       <div class="row g-3">
                                         <div class="col-md-6">
-                                          <input type="text" class="form-control form-control-solid border bg-light" value="BS Computer Science" />
+                                          <input type="text" name="program" class="form-control form-control-solid border bg-light" value="<?php echo htmlspecialchars($ACCOUNT['program'] ?? 'BS Computer Science'); ?>" />
                                         </div>
                                         <div class="col-md-6">
-                                          <input type="text" class="form-control form-control-solid border bg-light" value="FEU Tech" />
+                                          <input type="text" name="campus" class="form-control form-control-solid border bg-light" value="<?php echo htmlspecialchars($ACCOUNT['campus'] ?? 'FEU Tech'); ?>" />
                                         </div>
                                       </div>
                                   </div>
                                   <div class="fv-row mb-8">
                                       <label class="fs-6 fw-bold mb-2 text-dark">About Me</label>
-                                      <textarea class="form-control form-control-solid border bg-light" rows="4">Enthusiastic computer science student passionate about web development, AI, and building communities. Always eager to help out fellow Tamaraws! 💚💛</textarea>
+                                      <textarea name="bio" class="form-control form-control-solid border bg-light" rows="4"><?php echo htmlspecialchars($ACCOUNT['bio'] ?? 'Enthusiastic computer science student passionate about web development, AI, and building communities. Always eager to help out fellow Tamaraws! 💚💛'); ?></textarea>
                                   </div>
                                   <div class="d-flex flex-stack gap-4">
                                       <button type="button" class="btn btn-light bg-white border border-gray-300 fw-bold flex-grow-1" data-bs-dismiss="modal">Cancel</button>
@@ -738,9 +764,44 @@ if (!function_exists('profile_relative_time')) {
         $('.tab-pane').removeClass('active');
         $('#tab-' + tab).addClass('active');
       });
+
+      // Submit Profile Changes via AJAX
+      $('#edit-profile-form').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const submitBtn = form.find('button[type="submit"]');
+        submitBtn.prop('disabled', true);
+        
+        var formData = new FormData(this);
+        
+        $.ajax({
+          url: '/Discourse/profiles/index-ajax-update-profile.php',
+          method: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          dataType: 'json',
+          success: function(res) {
+            if (res.status === 'success') {
+              showFeedToast('Profile updated successfully!');
+              $('#edit_profile_modal').modal('hide');
+              setTimeout(function() {
+                location.reload();
+              }, 1000);
+            } else {
+              alert(res.message || 'Failed to update profile.');
+              submitBtn.prop('disabled', false);
+            }
+          },
+          error: function() {
+            alert('An error occurred. Please try again.');
+            submitBtn.prop('disabled', false);
+          }
+        });
+      });
     });
   </script>
-  <script src="/Discourse/assets/js/sec-posts.js?v=1.0.4"></script>
+  <script src="/Discourse/assets/js/sec-posts.js?v=1.0.5"></script>
 </body>
 
 </html>
